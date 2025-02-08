@@ -6,8 +6,19 @@ const config: Config = {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  safelist: [
+    "focus-visible:ring-2",
+    "focus-visible:ring-flesh-400",
+    "has-[:focus-visible]:ring-2",
+    "has-[:focus-visible]:ring-flesh-400",
+    "transition",
+  ],
   theme: {
     extend: {
+      backgroundImage: {
+        "checkbox-unchecked": "url('/images/icons/checked-false.svg')",
+        "checkbox-checked": "url('/images/icons/checked-true.svg')",
+      },
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
