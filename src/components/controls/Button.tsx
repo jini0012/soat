@@ -5,6 +5,7 @@ export default function Button({
   disabled,
   type,
   size,
+  onClick,
 }: {
   highlight?: boolean;
   children: any;
@@ -34,6 +35,7 @@ export default function Button({
       className={`${className} ${colorClass} border-2 rounded-lg ${sizeClass} font-bold `}
       disabled={disabled}
       type={type}
+      onClick={onClick}
     >
       {children}
     </button>
