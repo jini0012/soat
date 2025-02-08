@@ -18,6 +18,8 @@ const config: Config = {
       backgroundImage: {
         "checkbox-unchecked": "url('/images/icons/checked-false.svg')",
         "checkbox-checked": "url('/images/icons/checked-true.svg')",
+        "chevron-down-dark": "url('/images/icons/chevron-down-dark.svg')",
+        "chevron-down-light": "url('/images/icons/chevron-down-light.svg')",
       },
       colors: {
         background: "var(--background)",
