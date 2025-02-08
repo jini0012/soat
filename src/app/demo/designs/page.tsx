@@ -94,10 +94,6 @@ export default function Designs() {
           </Button>
         </li>
       </ul>
-      <p>
-        추가 예정: 버튼에 마우스를 hover와 active했을 때 색이 변하도록 만들
-        예정입니다.
-      </p>
       <Headings type="h2">2. 텍스트 입력 창</Headings>
       <p>
         텍스트 박스와 관련된 컴포넌트들입니다. 텍스트 박스에 커서를 위치했을 때
