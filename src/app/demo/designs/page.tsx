@@ -2,21 +2,36 @@
 
 import { useState, useEffect } from "react";
 import Button from "@/components/controls/Button";
-import { TextInput } from "@/components/controls/Inputs";
+import { Checkbox, TextInput } from "@/components/controls/Inputs";
+import TextArea from "@/components/controls/TextArea";
+import { Select } from "@/components/controls/Select";
+
+function Headings({ type, children }: { type: string; children: string }) {
+  if (type === "h1") {
+    return <h1 className="font-bold text-xl">{children}</h1>;
+  } else if (type === "h2") {
+    return <h2 className="font-bold text-lg">{children}</h2>;
+  } else if (type === "h3") {
+    return <h3 className="font-bold text-md">{children}</h3>;
+  }
+}
 
 export default function Designs() {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
+  const [textarea, setTextarea] = useState("");
+  const [select, setSelect] = useState("1");
+  const [check, setCheck] = useState(false);
 
   return (
-    <main className="p-4 flex flex-col space-y-4">
-      <h1 className="font-bold text-xl">디자인 데모</h1>
+    <main className="p-4 flex flex-col gap-y-4">
+      <Headings type="h1">디자인 데모</Headings>
       <p>
         이 페이지는 쏘앳에 쓰일 디자인 컴포넌트들의 예시를 보여주는
         페이지입니다.
       </p>
-      <h2 className="font-bold text-lg">1. 버튼</h2>
-      <h3 className="font-bold text-md">1.1. 일반 버튼</h3>
+      <Headings type="h2">1. 버튼</Headings>
+      <Headings type="h3">1.1. 일반 버튼</Headings>
       <ul className="flex flex-row space-x-4">
         <li>
           <Button>일반 버튼</Button>
@@ -29,7 +44,7 @@ export default function Designs() {
         </li>
       </ul>
       <p>일반적으로 쓰일 버튼입니다.</p>
-      <h3 className="font-bold text-md">1.2. 작은 크기의 버튼</h3>
+      <Headings type="h3">1.2. 작은 크기의 버튼</Headings>
       <ul className="flex flex-row space-x-4">
         <li>
           <Button size="small">작은 버튼</Button>
@@ -49,7 +64,7 @@ export default function Designs() {
         작은 크기의 버튼입니다. 인증 번호 발송과 같은 보조 기능을 위해 이 버튼이
         쓰일 수 있습니다.
       </p>
-      <h3 className="font-bold text-md">1.3. 전체 너비 버튼</h3>
+      <Headings type="h3">1.3. 전체 너비 버튼</Headings>
       <ul className="flex flex-col gap-y-2">
         <li>
           <Button size="full">전체 너비 버튼</Button>
@@ -83,14 +98,14 @@ export default function Designs() {
         추가 예정: 버튼에 마우스를 hover와 active했을 때 색이 변하도록 만들
         예정입니다.
       </p>
-      <h2 className="font-bold text-lg">2. 텍스트 Input</h2>
+      <Headings type="h2">2. 텍스트 입력 창</Headings>
       <p>
-        텍스트를 입력할 수 있는 input입니다. 텍스트 박스에 커서를 위치했을 때
+        텍스트 박스와 관련된 컴포넌트들입니다. 텍스트 박스에 커서를 위치했을 때
         표시되는 아웃라인은 스타일링을 위해 브라우저 기본 아웃라인을
         비활성화하였고, 대신 Tailwind CSS의 <code>ring</code> 옵션을
         사용했습니다.
       </p>
-      <h3 className="font-bold text-md">2.1. 텍스트 Input</h3>
+      <Headings type="h3">2.1. 텍스트 Input</Headings>
       <TextInput
         label="수직 레이블의 텍스트 박스"
         value={name}
@@ -103,7 +118,7 @@ export default function Designs() {
         onChange={setName}
       />
       <TextInput
-        placeholder="플레이스홀더가 있는 텍스트 박스"
+        placeholder="레이블이 없는 텍스트 박스"
         value={name}
         onChange={setName}
       />
@@ -145,6 +160,47 @@ export default function Designs() {
           인증 번호 발송
         </Button>
       </TextInput>
+      <Headings type="h3">2.2. Textarea</Headings>
+      <p>여러 줄을 입력할 수 있습니다.</p>
+      <TextArea
+        value={textarea}
+        onChange={setTextarea}
+        placeholder="여기에 텍스트를 입력"
+      />
+      <p>TextInput과 동일하게 레이블을 추가할 수 있습니다.</p>
+      <TextArea
+        label="여러 줄 입력"
+        value={textarea}
+        onChange={setTextarea}
+        placeholder="여기에 텍스트를 입력"
+      />
+
+      <Headings type="h2">3. 셀렉트 박스</Headings>
+      <p>셀렉트 박스입니다.</p>
+      <Select
+        value={select}
+        onChange={setSelect}
+        options={[
+          { value: "1", label: "1번" },
+          { value: "2", label: "2번" },
+          { value: "3", label: "3번" },
+        ]}
+      />
+
+      <Select
+        label="레이블이 있는 셀렉트 박스"
+        value={select}
+        onChange={setSelect}
+        options={[
+          { value: "1", label: "1번" },
+          { value: "2", label: "2번" },
+          { value: "3", label: "3번" },
+        ]}
+      />
+      <Headings type="h2">4. 체크박스</Headings>
+      <Checkbox checked={check} onChange={setCheck}>
+        <a href="https://example.com">이용 약관</a>에 동의합니다.
+      </Checkbox>
     </main>
   );
 }
