@@ -56,6 +56,7 @@ export function TextInput({
       onChange={(e) => onChange(e.target.value)}
       type={type}
       placeholder={placeholder}
+      aria-label={label}
     />
   );
 
