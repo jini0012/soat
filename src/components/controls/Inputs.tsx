@@ -2,7 +2,9 @@
 
 import React from "react";
 import { ReactElement } from "react";
+import { focusRings } from "@/styles/constants";
 
+// Input을 감쌀 경우 사용하는 컨테이너
 function InputContainer({
   input,
   children,
@@ -16,7 +18,9 @@ function InputContainer({
     <div
       className={`${
         className ? className : ""
-      } flex flex-1 w-full pr-1 items-center rounded-lg border-2 overflow-hidden has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-flesh-400 transition`}
+      } flex flex-1 w-full pr-1 items-center rounded-lg border-2 overflow-hidden ${
+        focusRings.container
+      }`}
     >
       {input}
       {children}
@@ -46,10 +50,8 @@ export function TextInput({
   const Input = (
     <input
       className={`${
-        !children
-          ? "border-2 rounded-lg focus-visible:ring-2 focus-visible:ring-flesh-400 transition"
-          : "border-none"
-      } px-4 py-2 flex-1 w-full focus-visible:outline-none `}
+        !children ? `border-2 rounded-lg ${focusRings.default}` : "border-none"
+      } px-4 py-2 flex-1 w-full focus-visible:outline-none bg-background`}
       value={value}
       onChange={(e) => onChange(e.target.value)}
       type={type}
