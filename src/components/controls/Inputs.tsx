@@ -86,3 +86,27 @@ export function TextInput({
     }
   }
 }
+
+export function Checkbox({
+  checked,
+  onChange,
+  className,
+  children,
+}: {
+  checked: boolean;
+  onChange: (checked: boolean) => void;
+  className?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <label className={`w-full flex items-center ${className}`}>
+      <input
+        type="checkbox"
+        className={`bg-cover w-4 h-4 mr-2 appearance-none bg-checkbox-unchecked checked:bg-checkbox-checked ${focusRings.default}`}
+        checked={checked}
+        onChange={(e) => onChange(e.target.checked)}
+      />
+      <>{children}</>
+    </label>
+  );
+}
