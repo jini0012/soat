@@ -17,7 +17,7 @@ export default function Button({
 }) {
   let colorClass = highlight
     ? "bg-flesh-400 border-flesh-400 text-background"
-    : "bg-background border-flesh-400 text-foreground";
+    : "bg-background border-flesh-200 text-foreground";
 
   if (disabled) {
     colorClass = "bg-gray-200 border-gray-200 text-gray-50 cursor-not-allowed";
