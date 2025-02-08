@@ -1,4 +1,4 @@
-export default function Button({
+export function Button({
   highlight,
   children,
   className,
@@ -56,5 +56,20 @@ export default function Button({
     >
       {children}
     </button>
+  );
+}
+
+export function CloseButton({
+  onClick,
+  className,
+}: {
+  onClick?: () => void;
+  className?: string;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className={`bg-cover w-4 h-4 bg-close-btn transition hover:bg-close-btn-hover focus:bg-close-btn-hover active:bg-close-btn-active ${className}`}
+    ></button>
   );
 }
