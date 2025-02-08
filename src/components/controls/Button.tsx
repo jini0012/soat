@@ -16,11 +16,12 @@ export default function Button({
   onClick?: () => void;
 }) {
   let colorClass = highlight
-    ? "bg-flesh-400 border-background text-background"
+    ? "bg-flesh-400 border-flesh-400 text-background"
     : "bg-background border-flesh-400 text-foreground";
 
   if (disabled) {
-    colorClass = "bg-gray-200 text-background cursor-not-allowed";
+    colorClass =
+      "bg-gray-200 border-gray-200 text-background cursor-not-allowed";
   }
 
   let sizeClass = "px-4 py-2";
