@@ -20,6 +20,9 @@ const config: Config = {
         "checkbox-checked": "url('/images/icons/checked-true.svg')",
         "chevron-down-dark": "url('/images/icons/chevron-down-dark.svg')",
         "chevron-down-light": "url('/images/icons/chevron-down-light.svg')",
+        "close-btn": "url('/images/icons/close-btn.svg')",
+        "close-btn-hover": "url('/images/icons/close-btn-hover.svg')",
+        "close-btn-active": "url('/images/icons/close-btn-active.svg')",
       },
       colors: {
         background: "var(--background)",

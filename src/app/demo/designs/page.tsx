@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Button from "@/components/controls/Button";
+import { Button, CloseButton } from "@/components/controls/Button";
 import { Checkbox, TextInput } from "@/components/controls/Inputs";
 import TextArea from "@/components/controls/TextArea";
 import { Select } from "@/components/controls/Select";
@@ -94,6 +94,30 @@ export default function Designs() {
           </Button>
         </li>
       </ul>
+      <Headings type="h3">1.4. 닫기 버튼</Headings>
+      <ul className="flex w-full flex-row gap-x-2">
+        <li className="flex flex-col items-center">
+          <span className="text-sm font-bold">닫기 기본</span>
+          <CloseButton
+            onClick={() => alert("버튼이 작동했습니다!")}
+          ></CloseButton>
+        </li>
+        <li className="flex flex-col items-center">
+          <span className="text-sm font-bold">닫기 hover</span>
+          <CloseButton
+            className="bg-close-btn-hover"
+            onClick={() => alert("버튼이 작동했습니다!")}
+          ></CloseButton>
+        </li>
+        <li className="flex flex-col items-center">
+          <span className="text-sm font-bold">닫기 active</span>
+          <CloseButton
+            className="bg-close-btn-active"
+            onClick={() => alert("버튼이 작동했습니다!")}
+          ></CloseButton>
+        </li>
+      </ul>
+
       <Headings type="h2">2. 텍스트 입력 창</Headings>
       <p>
         텍스트 박스와 관련된 컴포넌트들입니다. 텍스트 박스에 커서를 위치했을 때
