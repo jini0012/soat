@@ -18,6 +18,9 @@ const config: Config = {
       backgroundImage: {
         "checkbox-unchecked": "url('/images/icons/checked-false.svg')",
         "checkbox-checked": "url('/images/icons/checked-true.svg')",
+        "close-btn": "url('/images/icons/close-btn.svg')",
+        "close-btn-hover": "url('/images/icons/close-btn-hover.svg')",
+        "close-btn-active": "url('/images/icons/close-btn-active.svg')",
       },
       colors: {
         background: "var(--background)",
