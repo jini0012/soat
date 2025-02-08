@@ -16,7 +16,7 @@ function InputContainer({
     <div
       className={`${
         className ? className : ""
-      } flex flex-1 w-full pr-1 items-center rounded-lg border-2 overflow-hidden has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-flesh-400`}
+      } flex flex-1 w-full pr-1 items-center rounded-lg border-2 overflow-hidden has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-flesh-400 transition`}
     >
       {input}
       {children}
@@ -47,7 +47,7 @@ export function TextInput({
     <input
       className={`${
         !children
-          ? "border-2 rounded-lg focus-visible:ring-2 focus-visible:ring-flesh-400 "
+          ? "border-2 rounded-lg focus-visible:ring-2 focus-visible:ring-flesh-400 transition"
           : "border-none"
       } px-4 py-2 flex-1 w-full focus-visible:outline-none `}
       value={value}
