@@ -20,8 +20,7 @@ export default function Button({
     : "bg-background border-flesh-400 text-foreground";
 
   if (disabled) {
-    colorClass =
-      "bg-gray-200 border-gray-200 text-background cursor-not-allowed";
+    colorClass = "bg-gray-200 border-gray-200 text-gray-50 cursor-not-allowed";
   }
 
   let sizeClass = "px-4 py-2";
