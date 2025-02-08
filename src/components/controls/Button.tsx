@@ -32,7 +32,7 @@ export default function Button({
 
   return (
     <button
-      className={`${className} ${colorClass} border-2 rounded-lg ${sizeClass} font-bold `}
+      className={`break-keep h-fit ${className} ${colorClass} border-2 rounded-lg ${sizeClass} font-bold `}
       disabled={disabled}
       type={type}
       onClick={onClick}
