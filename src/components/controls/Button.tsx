@@ -31,6 +31,10 @@ export default function Button({
     sizeClass += " w-full";
   }
 
+  if (!className) {
+    className = "";
+  }
+
   return (
     <button
       className={`break-keep h-fit ${className} ${colorClass} border-2 rounded-lg ${sizeClass} font-bold `}
