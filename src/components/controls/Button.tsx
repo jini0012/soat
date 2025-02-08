@@ -13,6 +13,7 @@ export default function Button({
   disabled?: boolean;
   type?: "button" | "submit" | "reset";
   size?: "default" | "small" | "full";
+  onClick?: () => void;
 }) {
   let colorClass = highlight
     ? "bg-flesh-400 border-background text-background"
