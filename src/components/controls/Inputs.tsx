@@ -90,6 +90,64 @@ export function TextInput({
   }
 }
 
+export function JoinInput({
+  label,
+  placeholder,
+  className,
+  validation,
+  children,
+  invalid,
+  disabled,
+  value,
+  onChange,
+  type,
+}: {
+  label: string;
+  placeholder?: string;
+  className?: string;
+  validation?: string;
+  children?: ReactElement;
+  invalid?: boolean;
+  disabled?: boolean;
+  value?: string;
+  onChange: (value: string) => void;
+  type?: "text" | "password" | "email" | "number" | "tel";
+}) {
+  if (invalid) {
+    className = "border-flesh-400";
+  } else if (!!value) {
+    className = "border-black";
+  } else {
+    className = "border-gray-300";
+  }
+
+  return (
+    <>
+      <div>
+        <label
+          className={` flex gap-3 border-b  whitespace-nowrap w-full items-center focus-within:border-black ${
+            className ? className : ""
+          } `}
+        >
+          {label}
+          <input
+            type={type}
+            placeholder={placeholder}
+            onChange={(e) => {
+              onChange(e.target.value);
+            }}
+            className="focus:outline-none w-full"
+            disabled={disabled}
+            aria-label={label}
+          />
+          {children}
+        </label>
+        {invalid && <span className="text-flesh-400">{validation}</span>}
+      </div>
+    </>
+  );
+}
+
 export function Checkbox({
   checked,
   onChange,
