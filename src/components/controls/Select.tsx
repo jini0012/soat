@@ -16,7 +16,7 @@ function SelectInput({
 }) {
   return (
     <select
-      className={`border-2 bg-chevron-down-dark dark:bg-chevron-down-light bg-no-repeat bg-[right_1rem_center] rounded-lg px-4 py-2 w-full appearance-none focus-visible:outline-none bg-background ${className} ${focusRings.default}`}
+      className={`border-2 bg-chevron-down-dark dark:bg-chevron-down-light bg-no-repeat bg-[right_0.5rem_center] bg-[length:0.5rem_0.25rem] rounded-lg px-4 py-2 w-full appearance-none focus-visible:outline-none bg-background ${className} ${focusRings.default}`}
       value={value}
       onChange={(e) => onChange(e.target.value)}
     >
