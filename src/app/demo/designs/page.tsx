@@ -2,7 +2,12 @@
 
 import { useState, useEffect } from "react";
 import { Button, CloseButton } from "@/components/controls/Button";
-import { Checkbox, Radio, TextInput } from "@/components/controls/Inputs";
+import {
+  Checkbox,
+  Radio,
+  TextInput,
+  JoinInput,
+} from "@/components/controls/Inputs";
 import TextArea from "@/components/controls/TextArea";
 import { Select } from "@/components/controls/Select";
 
@@ -18,6 +23,7 @@ function Headings({ type, children }: { type: string; children: string }) {
 
 export default function Designs() {
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [textarea, setTextarea] = useState("");
   const [select, setSelect] = useState("1");
@@ -196,6 +202,68 @@ export default function Designs() {
           인증 번호 발송
         </Button>
       </TextInput>
+
+      <Headings type="h3">2.1.2 텍스트 Input </Headings>
+      <p>회원 가입과 관련된 텍스트 input 입니다.</p>
+      <JoinInput
+        label="비밀번호"
+        placeholder="8~24자의 영문, 숫자, 특수문자"
+        type="password"
+        onChange={setPassword}
+        value={password}
+      ></JoinInput>
+      <p>
+        invalid 할 때의 회원가입 input 입니다.
+        <br />
+        회원가입 텍스트 Input 내부에도 보조 버튼을 추가 할 수 있습니다.
+      </p>
+      <JoinInput
+        label="이메일"
+        validation="이메일 주소 양식에 맞게 작성해주세요"
+        type="email"
+        onChange={setEmail}
+        value={email}
+        invalid
+      >
+        <Button
+          highlight={true}
+          onClick={() => alert("버튼이 작동했습니다!")}
+          size="small"
+          className="mb-[5px]"
+          disabled
+        >
+          인증 번호 받기
+        </Button>
+      </JoinInput>
+      <p>valid 할 때의 회원가입 input 입니다</p>
+
+      <JoinInput label="이메일" type="number" onChange={setEmail} value={email}>
+        <Button
+          highlight={true}
+          onClick={() => alert("버튼이 작동했습니다!")}
+          size="small"
+          className="mb-[5px]"
+        >
+          인증 번호 받기
+        </Button>
+      </JoinInput>
+      <JoinInput
+        label="인증번호"
+        placeholder="인증번호를 입력해주세요"
+        type="text"
+        onChange={setPassword}
+        value={password}
+      >
+        <Button
+          highlight={true}
+          onClick={() => alert("버튼이 작동했습니다!")}
+          size="small"
+          className="mb-[5px]"
+        >
+          확인
+        </Button>
+      </JoinInput>
+
       <Headings type="h3">2.2. Textarea</Headings>
       <p>여러 줄을 입력할 수 있습니다.</p>
       <TextArea
