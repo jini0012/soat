@@ -119,3 +119,48 @@ export function Checkbox({
     </label>
   );
 }
+
+export function Radio({
+  checked,
+  onChange,
+  className,
+  items,
+  align,
+}: {
+  checked: string;
+  onChange: (checked: string) => void;
+  className?: string;
+  items: { value: string; label: string }[];
+  align?: "v" | "h";
+}) {
+  let alignClass = "flex-row gap-x-4";
+  if (align === "v") {
+    alignClass = "flex-col";
+  }
+
+  return (
+    <ul className={`w-full flex ${alignClass} ${className}`}>
+      {items.map((item) => (
+        <li key={item.value}>
+          <label
+            className="flex items-center"
+            tabIndex={0}
+            onKeyDown={(e) =>
+              (e.key === "Enter" || e.key === " ") && onChange(item.value)
+            }
+            aria-label={item.label}
+          >
+            <input
+              type="radio"
+              className={`bg-cover w-4 h-4 mr-2 appearance-none bg-radio-false checked:bg-radio-true ${focusRings.default}`}
+              checked={checked === item.value}
+              onChange={() => onChange(item.value)}
+              tabIndex={-1}
+            />
+            {item.label}
+          </label>
+        </li>
+      ))}
+    </ul>
+  );
+}
