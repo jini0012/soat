@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Button, CloseButton } from "@/components/controls/Button";
-import { Checkbox, TextInput } from "@/components/controls/Inputs";
+import { Checkbox, Radio, TextInput } from "@/components/controls/Inputs";
 import TextArea from "@/components/controls/TextArea";
 import { Select } from "@/components/controls/Select";
 
@@ -28,6 +28,8 @@ export default function Designs() {
   const [day, setDay] = useState("1");
 
   const lastDay = new Date(parseInt(year), parseInt(month), 0).getDate();
+
+  const [radio, setRadio] = useState("1");
 
   return (
     <main className="p-4 flex flex-col gap-y-4">
@@ -269,6 +271,21 @@ export default function Designs() {
       <Checkbox checked={check} onChange={setCheck}>
         <a href="https://example.com">이용 약관</a>에 동의합니다.
       </Checkbox>
+      <Headings type="h2">5. 라디오 버튼</Headings>
+      <p>여러 목록 중에서 하나의 아이템을 선택하는 버튼입니다.</p>
+      <p>
+        라디오 버튼의 <code>items</code> 속성은 배열로 받아, 각 아이템의{" "}
+        <code>value</code>와 <code>label</code>을 받습니다.
+      </p>
+      <Radio
+        checked={radio}
+        onChange={setRadio}
+        items={[
+          { value: "radio1", label: "1번" },
+          { value: "radio2", label: "2번" },
+          { value: "radio3", label: "3번" },
+        ]}
+      />
     </main>
   );
 }
