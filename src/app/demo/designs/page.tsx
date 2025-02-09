@@ -100,7 +100,15 @@ export default function Designs() {
           </Button>
         </li>
       </ul>
-      <Headings type="h3">1.4. 닫기 버튼</Headings>
+      <Headings type="h3">1.4. 링크 버튼</Headings>
+      <p>
+        버튼 컴포넌트에 <code>onClick</code> 대신 <code>href</code> 속성을
+        사용하면, 하이퍼링크로 작동하는 버튼을 만들 수 있습니다.
+      </p>
+      <Button highlight href="https://example.com">
+        https://example.com/
+      </Button>
+      <Headings type="h3">1.5. 닫기 버튼</Headings>
       <ul className="flex w-full flex-row gap-x-2">
         <li className="flex flex-col items-center">
           <span className="text-sm font-bold">닫기 기본</span>
