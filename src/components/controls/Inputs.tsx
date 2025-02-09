@@ -102,7 +102,13 @@ export function Checkbox({
   children: React.ReactNode;
 }) {
   return (
-    <label className={`w-full flex items-center ${className}`}>
+    <label
+      className={`w-full flex items-center ${className}`}
+      tabIndex={0}
+      onKeyDown={(e) =>
+        (e.key === "Enter" || e.key === " ") && onChange(!checked)
+      }
+    >
       <input
         type="checkbox"
         className={`bg-cover w-4 h-4 mr-2 appearance-none bg-checkbox-unchecked checked:bg-checkbox-checked ${focusRings.default}`}
