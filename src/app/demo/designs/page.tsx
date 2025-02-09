@@ -23,6 +23,12 @@ export default function Designs() {
   const [select, setSelect] = useState("1");
   const [check, setCheck] = useState(false);
 
+  const [year, setYear] = useState(new Date().getFullYear().toString());
+  const [month, setMonth] = useState("1");
+  const [day, setDay] = useState("1");
+
+  const lastDay = new Date(parseInt(year), parseInt(month), 0).getDate();
+
   return (
     <main className="p-4 flex flex-col gap-y-4">
       <Headings type="h1">디자인 데모</Headings>
@@ -196,7 +202,9 @@ export default function Designs() {
       />
 
       <Headings type="h2">3. 셀렉트 박스</Headings>
-      <p>셀렉트 박스입니다.</p>
+      <p>
+        셀렉트 박스입니다. 셀렉트 박스의 value는 string을 기준으로 받습니다.
+      </p>
       <Select
         value={select}
         onChange={setSelect}
@@ -217,6 +225,38 @@ export default function Designs() {
           { value: "3", label: "3번" },
         ]}
       />
+      <ul className="grid grid-cols-3 grid-rows-1 w-full gap-x-2">
+        <li>
+          <Select
+            value={year}
+            onChange={setYear}
+            options={Array.from({ length: 120 }, (_, i) => ({
+              value: `${new Date().getFullYear() - i}`,
+              label: `${new Date().getFullYear() - i}년`,
+            }))}
+          />
+        </li>
+        <li>
+          <Select
+            value={month}
+            onChange={setMonth}
+            options={Array.from({ length: 12 }, (_, i) => ({
+              value: `${i + 1}`,
+              label: `${i + 1}월`,
+            }))}
+          />
+        </li>
+        <li>
+          <Select
+            value={day}
+            onChange={setDay}
+            options={Array.from({ length: lastDay }, (_, i) => ({
+              value: `${i + 1}`,
+              label: `${i + 1}일`,
+            }))}
+          />
+        </li>
+      </ul>
       <Headings type="h2">4. 체크박스</Headings>
       <Checkbox checked={check} onChange={setCheck}>
         <a href="https://example.com">이용 약관</a>에 동의합니다.
