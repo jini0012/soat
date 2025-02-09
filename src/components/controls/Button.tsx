@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export function Button({
   highlight,
   children,
@@ -6,6 +8,7 @@ export function Button({
   type,
   size,
   onClick,
+  href,
 }: {
   highlight?: boolean;
   children: any;
@@ -14,6 +17,7 @@ export function Button({
   type?: "button" | "submit" | "reset";
   size?: "default" | "small" | "full";
   onClick?: () => void;
+  href?: string;
 }) {
   let colorClass = highlight
     ? "bg-flesh-400 border-flesh-400 text-background"
@@ -41,10 +45,23 @@ export function Button({
     sizeClass = "px-2 py-1 text-xs";
   } else if (size === "full") {
     sizeClass += " w-full";
+  } else {
+    sizeClass += " w-fit";
   }
 
   if (!className) {
     className = "";
+  }
+
+  if (href) {
+    return (
+      <Link
+        className={`break-keep h-fit block ${className} ${colorClass} border-2 rounded-lg ${sizeClass} font-bold ${hoverClass} ${activeClass} ${focusClass}`}
+        href={href}
+      >
+        {children}
+      </Link>
+    );
   }
 
   return (
