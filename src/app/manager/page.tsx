@@ -1,9 +1,9 @@
-import ManagerHeader from "@/components/manager/ManagerHeader";
+import Header from "@/components/manager/Header";
 
 export default function Home() {
   return (
     <>
-      <ManagerHeader />
+      <Header />
     </>
   );
 }
