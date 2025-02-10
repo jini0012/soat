@@ -35,14 +35,13 @@ export default function JoinForm({
   return (
     <>
       <h2 className="text-xl font-bold mb-3">회원가입</h2>
-      <ul className="flex mb-3 justify-center">
+      <ul className="flex mb-3 justify-center w-full gap-1">
         <li className="flex-1">
           <Button
             type="button"
             onClick={() => setUserType("buyer")}
             highlight={userType === "buyer" ? true : false}
-            className="w-full h-7 text-xs py-[6.5px] font-normal"
-            size="small"
+            className="w-full h-7 text-xs py-[6.5px] font-normal rounded-[10px]"
           >
             회원
           </Button>
@@ -52,8 +51,7 @@ export default function JoinForm({
             type="button"
             onClick={() => setUserType("seller")}
             highlight={userType === "seller" ? true : false}
-            className="w-full h-7 text-xs py-[6.5px] font-normal whitespace-nowrap"
-            size="small"
+            className="w-full h-7 text-xs py-[6.5px] font-normal whitespace-nowrap rounded-[10px]"
           >
             소극장 관리자
           </Button>
@@ -71,7 +69,7 @@ export default function JoinForm({
               setIsSendEmail(true);
             }}
             size="small"
-            className="mb-[5px]"
+            className="mb-1 rounded-[20px] py-[2.5px] px-[8.5px]"
             disabled={isSendEmail}
           >
             인증번호 받기
@@ -86,7 +84,7 @@ export default function JoinForm({
               setIsEmailValid(true);
             }}
             size="small"
-            className="mb-[5px]"
+            className="mb-1 rounded-[20px] py-[2.5px] px-[8.5px]"
             disabled={!isSendEmail || isEmailValid}
           >
             확인
@@ -169,7 +167,7 @@ export default function JoinForm({
             <Button
               highlight={true}
               size="small"
-              className="mb-2"
+              className="mb-2 rounded-[20px] py-[2.5px] px-[10.5px]"
               disabled={!isBusiness || isBusinessNumValid}
               onClick={() => {
                 alert("사업자등록번호 인증이 완료되었습니다.");
