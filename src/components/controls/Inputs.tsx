@@ -136,7 +136,7 @@ export function JoinInput({
             onChange={(e) => {
               onChange(e.target.value);
             }}
-            className="focus:outline-none w-full"
+            className="focus:outline-none w-full placeholder:text-sm"
             disabled={disabled}
             aria-label={label}
           />
