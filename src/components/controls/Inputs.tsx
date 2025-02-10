@@ -123,9 +123,9 @@ export function JoinInput({
 
   return (
     <>
-      <div>
+      <fieldset>
         <label
-          className={` flex gap-3 border-b  whitespace-nowrap w-full items-center focus-within:border-black ${
+          className={` flex mb-[5px] gap-3 border-b whitespace-nowrap w-full items-center focus-within:border-black ${
             className ? className : ""
           } `}
         >
@@ -142,8 +142,10 @@ export function JoinInput({
           />
           {children}
         </label>
-        {invalid && <span className="text-flesh-400">{validation}</span>}
-      </div>
+        <span className="text-flesh-400">
+          {invalid ? validation : "\u00A0"}
+        </span>
+      </fieldset>
     </>
   );
 }
