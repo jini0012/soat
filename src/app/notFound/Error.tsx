@@ -12,20 +12,20 @@ export default function Error({ router }: Props) {
       <p className="text-xl mt-[71px] mb-[70px]">
         요청하신 페이지를 찾을 수 없습니다
       </p>
-      <ul className="flex gap-[5px]">
-        <li>
+      <ul className="flex gap-[5px] w-full justify-center">
+        <li className="w-full max-w-[100px]">
           <Button
             highlight={true}
             href="/"
-            className="w-[100px] h-[30px] text-xs py-[7.5px] font-normal flex items-center justify-center"
+            className="w-full h-[30px] text-xs py-[7.5px] font-normal flex items-center justify-center"
           >
             메인으로
           </Button>
         </li>
-        <li>
+        <li className="w-full max-w-[100px]">
           <Button
             onClick={() => router.back()}
-            className="w-[100px] h-[30px] text-xs py-[7.5px] font-normal flex items-center justify-center"
+            className="w-full h-[30px] text-xs py-[7.5px] font-normal flex items-center justify-center"
           >
             이전페이지로
           </Button>
