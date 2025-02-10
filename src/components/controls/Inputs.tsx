@@ -142,6 +142,7 @@ export function JoinInput({
           />
           {children}
         </label>
+        {/* invalid 문구가 없을때에도 공백을 넣어 빈 공간 유지 */}
         <span className="text-flesh-400 text-xs">
           {invalid ? validation : "\u00A0"}
         </span>
