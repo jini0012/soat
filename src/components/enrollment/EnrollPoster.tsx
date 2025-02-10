@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { EnrollPosterProps } from "./modal";
+import { EnrollPosterProps } from "../../types/enrollment";
 
 export default function EnrollPoster({ onPosterChange }: EnrollPosterProps) {
   const [previewPoster, setPreviewPoster] = useState<string | null>(null);

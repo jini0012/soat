@@ -1,7 +1,7 @@
 "use client";
 import { TextInput } from "@/components/controls/Inputs";
 import React from "react";
-import { EnrollFormItemsProps } from "./modal";
+import { EnrollFormItemsProps } from "../../types/enrollment";
 
 export default function EnrollFormItems({
   type,
