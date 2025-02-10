@@ -1,0 +1,188 @@
+import React from "react";
+import { useState } from "react";
+import { Button } from "@/components/controls/Button";
+import { JoinInput } from "@/components/controls/Inputs";
+import { Checkbox } from "@/components/controls/Inputs";
+import Link from "next/link";
+
+interface JoinFormProps {
+  setUserType: (userType: "buyer" | "seller") => void;
+  userType: "buyer" | "seller";
+  setIsJoin: (isJoin: boolean) => void;
+}
+
+export default function JoinForm({
+  setUserType,
+  userType,
+  setIsJoin,
+}: JoinFormProps) {
+  const [isBusiness, setIsBusiness] = useState<boolean>(false);
+  const [checkAge, setCheckAge] = useState(false);
+  const [checkAgree, setCheckAgree] = useState(false);
+  const [email, setEmail] = useState("");
+  const [isEmailValid, setIsEmailValid] = useState<boolean>(false);
+  const [verifyNum, setVerifyNum] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
+  const [userName, setUserName] = useState("");
+  const [teamName, setTeamName] = useState("");
+  const [managerName, setManagerName] = useState("");
+  const [userPhone, setUserPhone] = useState("");
+  const [businessNum, setBusinessNum] = useState("");
+
+  return (
+    <>
+      <h2 className="text-xl font-bold mb-3">회원가입</h2>
+      <ul className="flex mb-3 justify-center">
+        <li className="flex-1">
+          <Button
+            type="button"
+            onClick={() => setUserType("buyer")}
+            highlight={userType === "buyer" ? true : false}
+            className="w-full h-7 text-xs py-[6.5px] font-normal"
+            size="small"
+          >
+            회원
+          </Button>
+        </li>
+        <li className="flex-1">
+          <Button
+            type="button"
+            onClick={() => setUserType("seller")}
+            highlight={userType === "seller" ? true : false}
+            className="w-full h-7 text-xs py-[6.5px] font-normal whitespace-nowrap"
+            size="small"
+          >
+            소극장 관리자
+          </Button>
+        </li>
+      </ul>
+      <form className="flex flex-col border-2 rounded-lg border-flesh-200 px-5 py-4 ">
+        <JoinInput label="이메일" value={email} onChange={setEmail}>
+          <Button
+            highlight={true}
+            onClick={() => {
+              setIsEmailValid(true);
+              alert(
+                "인증 번호가 이메일로 발송되었습니다. 이메일을 확인해주세요"
+              );
+            }}
+            size="small"
+            className="mb-[5px]"
+            disabled={isEmailValid}
+          >
+            인증번호 받기
+          </Button>
+        </JoinInput>
+        <JoinInput label="인증번호" value={verifyNum} onChange={setVerifyNum}>
+          <Button
+            highlight={true}
+            onClick={() => alert("이메일 인증이 완료되었습니다.")}
+            size="small"
+            className="mb-[5px]"
+            disabled={!isEmailValid}
+          >
+            확인
+          </Button>
+        </JoinInput>
+        <JoinInput
+          label="비밀번호"
+          value={password}
+          onChange={setPassword}
+          placeholder="8~24자의 영문, 숫자, 특수문자"
+        />
+        <JoinInput
+          label="비밀번호 확인"
+          value={passwordConfirm}
+          onChange={setPasswordConfirm}
+        />
+        {userType === "buyer" ? (
+          <JoinInput
+            label="이름"
+            value={userName}
+            onChange={setUserName}
+            placeholder="10자 이내의 국문 또는 영문"
+          />
+        ) : (
+          <>
+            <JoinInput label="팀명" value={teamName} onChange={setTeamName} />
+            <JoinInput
+              label="관리자명"
+              value={managerName}
+              onChange={setManagerName}
+            />
+          </>
+        )}
+        <JoinInput
+          label="휴대폰"
+          value={userPhone}
+          onChange={setUserPhone}
+          placeholder="정확한 휴대폰 번호를 입력해주세요."
+        />
+
+        {userType === "seller" && (
+          <>
+            <ul className="flex justify-center mb-2">
+              <li className="flex-1">
+                <Button
+                  type="button"
+                  size="small"
+                  onClick={() => setIsBusiness(false)}
+                  highlight={!isBusiness}
+                  className="w-full h-7 text-xs py-[6.5px] font-normal"
+                >
+                  사업자가 아닙니다
+                </Button>
+              </li>
+              <li className="flex-1">
+                <Button
+                  type="button"
+                  size="small"
+                  onClick={() => setIsBusiness(true)}
+                  highlight={isBusiness}
+                  className="w-full h-7 text-xs py-[6.5px] font-normal"
+                >
+                  사업자 입니다
+                </Button>
+              </li>
+            </ul>
+            <JoinInput
+              label="사업자등록번호"
+              value={businessNum}
+              onChange={setBusinessNum}
+              disabled={!isBusiness}
+            />
+            <Button
+              highlight={true}
+              size="small"
+              className="mb-2"
+              disabled={!isBusiness}
+            >
+              사업자등록번호 인증
+            </Button>
+          </>
+        )}
+        {userType === "buyer" && (
+          <Checkbox checked={checkAge} onChange={setCheckAge}>
+            <span className="text-xs">저는 만 14세 이상 회원 입니다.</span>
+          </Checkbox>
+        )}
+        <Checkbox checked={checkAgree} onChange={setCheckAgree}>
+          <span className="text-[10px]">
+            SO@의 <Link href="/">이용 정책</Link> 및{" "}
+            <Link href="/">개인정보 처리방침</Link>에 동의합니다.
+          </span>
+        </Checkbox>
+        <Button
+          type="submit"
+          size="small"
+          disabled={(userType === "buyer" && !checkAge) || !checkAgree}
+          className="absolute bottom-[-10px] right-[30px]"
+          onClick={() => setIsJoin(true)}
+        >
+          가입 완료
+        </Button>
+      </form>
+    </>
+  );
+}
