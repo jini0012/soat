@@ -11,7 +11,7 @@ export function Button({
   href,
 }: {
   highlight?: boolean;
-  children: any;
+  children: React.ReactNode;
   className?: string;
   disabled?: boolean;
   type?: "button" | "submit" | "reset";

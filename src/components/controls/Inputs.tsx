@@ -37,6 +37,7 @@ export function TextInput({
   className,
   align,
   children,
+  ariaLabel,
 }: {
   label?: string;
   value: string;
@@ -46,6 +47,7 @@ export function TextInput({
   className?: string;
   align?: "v" | "h";
   children?: ReactElement;
+  ariaLabel?: string;
 }) {
   const Input = (
     <input
@@ -56,7 +58,7 @@ export function TextInput({
       onChange={(e) => onChange(e.target.value)}
       type={type}
       placeholder={placeholder}
-      aria-label={label}
+      aria-label={label || ariaLabel}
     />
   );
 
