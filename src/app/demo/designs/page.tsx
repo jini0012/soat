@@ -204,7 +204,11 @@ export default function Designs() {
       </TextInput>
 
       <Headings type="h3">2.1.2 텍스트 Input </Headings>
-      <p>회원 가입과 관련된 텍스트 input 입니다.</p>
+      <p>
+        회원 가입과 관련된 텍스트 input 입니다. 입력한 값이 invalid 한경우
+        텍스트 하단에 invalid 문구를 띄웁니다. invalid 문구가 나타나는 공간은
+        기본적으로 비어있으며, 공간이 유지됩니다.
+      </p>
       <JoinInput
         label="비밀번호"
         placeholder="8~24자의 영문, 숫자, 특수문자"
