@@ -4,6 +4,7 @@ import { EnrollFormData } from "./modal";
 import EnrollFormItems from "./EnrollFormItems";
 import EnrollPoster from "./EnrollPoster";
 import EnrollCalendar from "./EnrollCalendar";
+import { Button } from "@/components/controls/Button";
 
 export default function EnrollmentPage() {
   const [formData, setFormData] = useState<EnrollFormData>({
@@ -12,8 +13,15 @@ export default function EnrollmentPage() {
     category: "",
     bookingStartDate: "",
     location: "",
+    poster: null,
   });
 
+  const handleOnPoster = (file: File | null) => {
+    setFormData((prev) => ({
+      ...prev,
+      poster: file,
+    }));
+  };
   const handleOnChangeInputs = (field: keyof EnrollFormData, value: string) => {
     setFormData((prev) => ({
       ...prev,
@@ -27,7 +35,7 @@ export default function EnrollmentPage() {
         <div className="flex flex-row gap-16">
           <section className="w-[21.6%]">
             <h3 className="sr-only">공연 포스터</h3>
-            <EnrollPoster />
+            <EnrollPoster onPosterChange={handleOnPoster} />
           </section>
           <section className="w-[45.3%]">
             <h3 className="sr-only">공연 정보</h3>
@@ -47,6 +55,9 @@ export default function EnrollmentPage() {
         </div>
         <section className="bg-gray-700 w-full h-[50vh]">
           <h3 className="sr-only">공연 상세 정보</h3>
+        </section>
+        <section>
+          <Button type="submit">등록</Button>
         </section>
       </form>
     </section>
