@@ -1,8 +1,8 @@
 import Link from "next/link";
 
-export default function ManagerHeader() {
+export default function Header() {
   return (
-    <header className="flex justify-between items-center p-3                              ">
+    <header className="flex justify-between items-center p-3                            ">
       <h1>
         <Link href={"/manager"}>
           <img src="/images/icons/logo-temp.svg" alt="쏘앳" />
