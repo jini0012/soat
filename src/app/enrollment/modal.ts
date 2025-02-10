@@ -4,8 +4,9 @@ export interface EnrollFormData {
   category: string;
   bookingStartDate: string;
   location: string;
+  poster: File | null;
 }
 
-export interface EnrollFormItemsProps extends EnrollFormData {
+export interface EnrollFormItemsProps extends Omit<EnrollFormData, "poster"> {
   onChange: (field: keyof EnrollFormData, value: string) => void;
 }
