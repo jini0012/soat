@@ -123,9 +123,9 @@ export function JoinInput({
 
   return (
     <>
-      <div>
+      <fieldset>
         <label
-          className={` flex gap-3 border-b  whitespace-nowrap w-full items-center focus-within:border-black ${
+          className={` flex mb-[5px] gap-3 border-b whitespace-nowrap w-full items-center focus-within:border-black ${
             className ? className : ""
           } `}
         >
@@ -136,14 +136,17 @@ export function JoinInput({
             onChange={(e) => {
               onChange(e.target.value);
             }}
-            className="focus:outline-none w-full"
+            className="focus:outline-none w-full placeholder:text-sm"
             disabled={disabled}
             aria-label={label}
           />
           {children}
         </label>
-        {invalid && <span className="text-flesh-400">{validation}</span>}
-      </div>
+        {/* invalid 문구가 없을때에도 공백을 넣어 빈 공간 유지 */}
+        <span className="text-flesh-400">
+          {invalid ? validation : "\u00A0"}
+        </span>
+      </fieldset>
     </>
   );
 }
