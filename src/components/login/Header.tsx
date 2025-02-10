@@ -5,7 +5,11 @@ export default function Header() {
     <header className="m-auto w-[360px] flex justify-center mt-[50px] ">
       <h1 className="font-bold text-5xl italic py-5">
         <Link href={"/"} className="text-flesh-600">
-          SO@
+          <img
+            src="images/icons/logo-temp.svg"
+            alt="soat"
+            className="w-[123px]"
+          />
         </Link>
       </h1>
     </header>
