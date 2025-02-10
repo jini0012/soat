@@ -37,6 +37,7 @@ export function TextInput({
   className,
   align,
   children,
+  ariaLabel,
 }: {
   label?: string;
   value: string;
@@ -46,6 +47,7 @@ export function TextInput({
   className?: string;
   align?: "v" | "h";
   children?: ReactElement;
+  ariaLabel?: string;
 }) {
   const Input = (
     <input
@@ -56,7 +58,7 @@ export function TextInput({
       onChange={(e) => onChange(e.target.value)}
       type={type}
       placeholder={placeholder}
-      aria-label={label}
+      aria-label={label || ariaLabel}
     />
   );
 
@@ -88,6 +90,67 @@ export function TextInput({
       return Input;
     }
   }
+}
+
+export function JoinInput({
+  label,
+  placeholder,
+  className,
+  validation,
+  children,
+  invalid,
+  disabled,
+  value,
+  onChange,
+  type,
+}: {
+  label: string;
+  placeholder?: string;
+  className?: string;
+  validation?: string;
+  children?: ReactElement;
+  invalid?: boolean;
+  disabled?: boolean;
+  value?: string;
+  onChange: (value: string) => void;
+  type?: "text" | "password" | "email" | "number" | "tel";
+}) {
+  if (invalid) {
+    className = "border-flesh-400";
+  } else if (!!value) {
+    className = "border-black";
+  } else {
+    className = "border-gray-300";
+  }
+
+  return (
+    <>
+      <fieldset>
+        <label
+          className={` flex mb-[5px] gap-3 border-b whitespace-nowrap w-full items-center focus-within:border-black ${
+            className ? className : ""
+          } `}
+        >
+          {label}
+          <input
+            type={type}
+            placeholder={placeholder}
+            onChange={(e) => {
+              onChange(e.target.value);
+            }}
+            className="focus:outline-none w-full placeholder:text-sm"
+            disabled={disabled}
+            aria-label={label}
+          />
+          {children}
+        </label>
+        {/* invalid 문구가 없을때에도 공백을 넣어 빈 공간 유지 */}
+        <span className="text-flesh-400 text-xs">
+          {invalid ? validation : "\u00A0"}
+        </span>
+      </fieldset>
+    </>
+  );
 }
 
 export function Checkbox({
