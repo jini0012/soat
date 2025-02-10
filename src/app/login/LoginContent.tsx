@@ -9,64 +9,87 @@ export default function LoginContent() {
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
 
+  const lineStyles = {
+    width: userType === "TICKETUSER" ? "264px" : "264px",
+    left: userType === "TICKETUSER" ? "0" : "auto",
+    right: userType === "TICKETUSER" ? "auto" : "0",
+    height: "1px",
+    top: "65px",
+  };
+
   return (
-    <main
-      className={`mt-[100px] relative mx-auto  flex flex-col items-center  border border-[#c4c4c4] rounded-md`}
-    >
-      <ul className="flex gap-2 absolute max-w-[410px] justify-between top-[-50px]">
-        <li
-          className={`text-black cursor-pointer transition-colors text-center border border-[#c4c4c4] rounded-md ${
-            userType === "TICKETUSER" ? "bg-white-100" : "bg-[#F2F2F2]"
-          }`}
-          onClick={() => setUserType("TICKETUSER")}
-          role="button"
-          tabIndex={0}
-        >
-          예매회원 로그인
-        </li>
-        <span className="text-red-500"></span>
-        <li
-          className={`text-black cursor-pointer transition-colors text-center border border-[#c4c4c4] rounded-md ${
-            userType === "MANAGER" ? "bg-white-100" : "bg-[#F2F2F2]"
-          }`}
-          onClick={() => setUserType("MANAGER")}
-          role="button"
-          tabIndex={0}
-        >
-          공연 관리자 로그인
-        </li>
-      </ul>
-      <form className="flex flex-col gap-[10px] w-full px-8 py-6">
-        <TextInput
-          value={email}
-          onChange={setEmail}
-          type="email"
-          placeholder="e-mail"
-          className="w-full"
-        />
-        <TextInput
-          value={password}
-          onChange={setPassword}
-          type="password"
-          placeholder="Password"
-          className="w-full"
-        />
-        <span></span>
-        <Checkbox checked={rememberMe} onChange={setRememberMe}>
-          아이디 저장
-        </Checkbox>
-        <Button highlight size="full" type="submit">
-          로그인
-        </Button>
-      </form>
-      <ul className="flex gap-3">
-        <li>
-          <a href="/">회원가입</a>
-        </li>
-        <li className="before:content-[' | '] before:mx-2 before:text-gray-400">
-          <a href="/">비밀번호 찾기</a>
-        </li>
-      </ul>
-    </main>
+    <div className="w-full h-screen flex justify-center items-start pt-8">
+      <main className="relative w-full max-w-lg mx-auto">
+        <div className="flex gap-0 -mb-1">
+          <button
+            className={`relative flex-1 py-5 px-6 rounded-t-lg border z-10 transition-colors text-foreground
+            ${
+              userType === "TICKETUSER"
+                ? "bg-white border-gray-300"
+                : "bg-gray-100 border-gray-200"
+            }`}
+            onClick={() => setUserType("TICKETUSER")}
+          >
+            예매회원 로그인
+          </button>
+          <button
+            className={`relative flex-1 py-3 px-6 rounded-t-lg border -ml-4 transition-colors text-foreground
+            ${
+              userType === "MANAGER"
+                ? "bg-white border-gray-300 z-20"
+                : "bg-gray-100 border-gray-200 z-0"
+            }`}
+            onClick={() => setUserType("MANAGER")}
+          >
+            공연 관리자 로그인
+          </button>
+        </div>
+
+        <div className="absolute bg-background z-20" style={lineStyles}></div>
+
+        <div className="bg-white p-8 rounded-b-xl border border-gray-300">
+          <form className="space-y-4">
+            <div>
+              <TextInput
+                type="email"
+                placeholder="이메일"
+                value={email}
+                onChange={setEmail}
+                className="w-full"
+              />
+            </div>
+            <div>
+              <TextInput
+                type="password"
+                placeholder="비밀번호"
+                value={password}
+                onChange={setPassword}
+                className="w-full"
+              />
+            </div>
+            <div className="flex justify-end items-center">
+              <label className="flex items-center">
+                <Checkbox checked={rememberMe} onChange={setRememberMe}>
+                  <span className="text-sm text-gray-600">아이디 저장</span>
+                </Checkbox>
+              </label>
+            </div>
+            <Button highlight size="full" type="submit">
+              로그인
+            </Button>
+          </form>
+
+          <div className="mt-6 flex justify-center space-x-4 text-sm">
+            <a href="/" className="text-gray-600 hover:text-gray-900">
+              회원가입
+            </a>
+            <span className="text-gray-300">|</span>
+            <a href="/" className="text-gray-600 hover:text-gray-900">
+              비밀번호 찾기
+            </a>
+          </div>
+        </div>
+      </main>
+    </div>
   );
 }
