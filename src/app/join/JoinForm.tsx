@@ -21,6 +21,7 @@ export default function JoinForm({
   const [checkAgree, setCheckAgree] = useState(false);
   const [email, setEmail] = useState("");
   const [isEmailValid, setIsEmailValid] = useState<boolean>(false);
+  const [isSendEmail, setIsSendEmail] = useState<boolean>(false);
   const [verifyNum, setVerifyNum] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
@@ -29,6 +30,7 @@ export default function JoinForm({
   const [managerName, setManagerName] = useState("");
   const [userPhone, setUserPhone] = useState("");
   const [businessNum, setBusinessNum] = useState("");
+  const [isBusinessNumValid, setIsBusinessNumValid] = useState<boolean>(false);
 
   return (
     <>
@@ -61,15 +63,16 @@ export default function JoinForm({
         <JoinInput label="이메일" value={email} onChange={setEmail}>
           <Button
             highlight={true}
+            type="button"
             onClick={() => {
-              setIsEmailValid(true);
               alert(
                 "인증 번호가 이메일로 발송되었습니다. 이메일을 확인해주세요"
               );
+              setIsSendEmail(true);
             }}
             size="small"
             className="mb-[5px]"
-            disabled={isEmailValid}
+            disabled={isSendEmail}
           >
             인증번호 받기
           </Button>
@@ -77,10 +80,14 @@ export default function JoinForm({
         <JoinInput label="인증번호" value={verifyNum} onChange={setVerifyNum}>
           <Button
             highlight={true}
-            onClick={() => alert("이메일 인증이 완료되었습니다.")}
+            type="button"
+            onClick={() => {
+              alert("이메일 인증이 완료되었습니다.");
+              setIsEmailValid(true);
+            }}
             size="small"
             className="mb-[5px]"
-            disabled={!isEmailValid}
+            disabled={!isSendEmail || isEmailValid}
           >
             확인
           </Button>
@@ -105,11 +112,17 @@ export default function JoinForm({
           />
         ) : (
           <>
-            <JoinInput label="팀명" value={teamName} onChange={setTeamName} />
+            <JoinInput
+              label="팀명"
+              value={teamName}
+              onChange={setTeamName}
+              placeholder="10자 이내의 국문 또는 영문"
+            />
             <JoinInput
               label="관리자명"
               value={managerName}
               onChange={setManagerName}
+              placeholder="10자 이내의 국문 또는 영문"
             />
           </>
         )}
@@ -117,7 +130,7 @@ export default function JoinForm({
           label="휴대폰"
           value={userPhone}
           onChange={setUserPhone}
-          placeholder="정확한 휴대폰 번호를 입력해주세요."
+          placeholder="11자 숫자 (‘-’ 문자 제외)"
         />
 
         {userType === "seller" && (
@@ -151,12 +164,18 @@ export default function JoinForm({
               value={businessNum}
               onChange={setBusinessNum}
               disabled={!isBusiness}
+              placeholder="10자 숫자 (‘-’ 문자 제외)"
             />
             <Button
               highlight={true}
               size="small"
               className="mb-2"
-              disabled={!isBusiness}
+              disabled={!isBusiness || isBusinessNumValid}
+              onClick={() => {
+                alert("사업자등록번호 인증이 완료되었습니다.");
+                setIsBusinessNumValid(true);
+              }}
+              type="button"
             >
               사업자등록번호 인증
             </Button>
