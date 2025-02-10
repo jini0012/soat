@@ -1,9 +1,9 @@
 "use client";
 import React, { useState } from "react";
-import { EnrollFormData } from "./modal";
-import EnrollFormItems from "./EnrollFormItems";
-import EnrollPoster from "./EnrollPoster";
-import EnrollCalendar from "./EnrollCalendar";
+import { EnrollFormData } from "../../types/enrollment";
+import EnrollFormItems from "../../components/enrollment/EnrollFormItems";
+import EnrollPoster from "../../components/enrollment/EnrollPoster";
+import EnrollCalendar from "../../components/enrollment/EnrollCalendar";
 import { Button } from "@/components/controls/Button";
 
 export default function EnrollmentPage() {
