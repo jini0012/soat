@@ -22,6 +22,8 @@ export default function LoginContent() {
   const [password, setPassword] = useState<string>("");
   const [rememberMe, setRememberMe] = useState<boolean>(false);
 
+  const isFormValid = email !== "" && password !== "";
+
   const lineStyles: LineStyles = {
     width: userType === UserType.TICKETUSER ? "264px" : "264px",
     left: userType === UserType.TICKETUSER ? "0" : "auto",
@@ -99,7 +101,7 @@ export default function LoginContent() {
                 </Checkbox>
               </label>
             </div>
-            <Button highlight size="full" type="submit">
+            <Button highlight size="full" type="submit" disabled={!isFormValid}>
               로그인
             </Button>
           </form>
