@@ -62,7 +62,7 @@ export default function LoginContent() {
 
         <div className="absolute bg-background z-20" style={lineStyles}></div>
 
-        <div className="bg-white p-8 rounded-b-xl border border-gray-300">
+        <div className="bg-white p-8 rounded-xl border border-gray-300">
           <form className="space-y-4">
             <div className="[&_input]:pl-9 relative">
               <img
