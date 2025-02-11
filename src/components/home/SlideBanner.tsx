@@ -7,7 +7,7 @@ import "swiper/css/navigation";
 import "swiper/css/autoplay";
 import "swiper/css/pagination";
 
-export default function MySwiper() {
+export default function SlideBanner() {
   return (
     <SwiperWrapper className="relative w-full">
       <Swiper
