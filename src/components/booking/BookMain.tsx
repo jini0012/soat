@@ -13,7 +13,11 @@ export default function BookMain({ showId }: { showId: string }) {
   return (
     <main className="p-6 w-full flex flex-col items-center gap-y-8">
       {process === "captcha" && (
-        <Captcha verifyCallback={setCaptchaToken} setProcess={setProcess} />
+        <Captcha
+          verifyCallback={setCaptchaToken}
+          setProcess={setProcess}
+          nextProcess="seat"
+        />
       )}
       {process === "seat" && <SeatSelection setProcess={setProcess} />}
       {process === "purchaserInfo" && <PurchaserInfo setProcess={setProcess} />}
