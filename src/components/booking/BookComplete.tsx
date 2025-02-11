@@ -4,6 +4,7 @@ import { Button } from "../controls/Button";
 import { Checkbox, Radio, TextInput } from "../controls/Inputs";
 import { Select } from "../controls/Select";
 import BookSection from "./BookSection";
+import ButtonRow from "./ButtonRow";
 
 export default function BookComplete() {
   const [purchaseMethod, setPurchaseMethod] = useState("bank");
@@ -37,16 +38,13 @@ export default function BookComplete() {
           items={[{ value: "bank", label: "무통장 입금" }]}
         />
       </BookSection>
-      <ul className="w-full grid grid-cols-2 gap-x-2 mt-12">
-        <li>
-          <Button size="full">티켓 확인</Button>
-        </li>
-        <li>
-          <Button size="full" highlight>
-            닫기
-          </Button>
-        </li>
-      </ul>
+      <ButtonRow
+        setProcess={() => {}}
+        buttons={[
+          { label: "티켓 확인", process: "ticketCheck", highlight: false },
+          { label: "닫기", process: "close", highlight: true },
+        ]}
+      />
     </>
   );
 }
