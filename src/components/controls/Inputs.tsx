@@ -96,10 +96,8 @@ export function JoinInput({
   label,
   placeholder,
   className,
-  validation,
   children,
   invalid,
-  disabled,
   value,
   onChange,
   type,
@@ -107,16 +105,14 @@ export function JoinInput({
   label: string;
   placeholder?: string;
   className?: string;
-  validation?: string;
   children?: ReactElement;
   invalid?: boolean;
-  disabled?: boolean;
   value?: string;
   onChange: (value: string) => void;
   type?: "text" | "password" | "email" | "number" | "tel";
 }) {
   if (invalid) {
-    className = "border-flesh-400";
+    className = "border-flesh-500";
   } else if (!!value) {
     className = "border-black";
   } else {
@@ -139,20 +135,65 @@ export function JoinInput({
               onChange(e.target.value);
             }}
             className="focus:outline-none w-full placeholder:text-sm"
-            disabled={disabled}
             aria-label={label}
           />
           {children}
         </label>
-        {/* invalid 문구가 없을때에도 공백을 넣어 빈 공간 유지 */}
-        <span className="text-flesh-400 text-xs">
-          {invalid ? validation : "\u00A0"}
-        </span>
       </fieldset>
     </>
   );
 }
+export function SearchInput({
+  label,
+  placeholder,
+  className,
+  inputClassName,
+  children,
+  value,
+  onChange,
+  onSearch,
+  type = "text",
+}: {
+  label: string;
+  placeholder?: string;
+  className?: string;
+  inputClassName?: string;
+  children?: ReactElement;
+  value?: string;
+  onChange: (value: string) => void;
+  onSearch: () => void;
+  type?: "text" | "password" | "email" | "number" | "tel";
+}) {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      onSearch();
+    }
+  };
 
+  return (
+    <fieldset>
+      <label
+        className={`flex mb-[5px] gap-3 border-b whitespace-nowrap w-full items-center focus-within:border-black ${
+          className ? className : ""
+        }`}
+      >
+        {label}
+        <input
+          type={type}
+          value={value}
+          placeholder={placeholder}
+          onChange={(e) => onChange(e.target.value)}
+          onKeyDown={handleKeyDown}
+          className={`focus:outline-none w-full placeholder:text-sm text-black border-b-[2px] border-flesh-500 ${
+            inputClassName ? inputClassName : ""
+          }`}
+          aria-label={label}
+        />
+        {children}
+      </label>
+    </fieldset>
+  );
+}
 export function Checkbox({
   checked,
   onChange,
