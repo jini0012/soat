@@ -3,16 +3,29 @@ import { Button } from "@/components/controls/Button";
 import { TextInput, Checkbox } from "@/components/controls/Inputs";
 import React, { useState } from "react";
 
-export default function LoginContent() {
-  const [userType, setUserType] = useState("TICKETUSER");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [rememberMe, setRememberMe] = useState(false);
+enum UserType {
+  TICKETUSER = "TICKETUSER",
+  MANAGER = "MANAGER",
+}
 
-  const lineStyles = {
-    width: userType === "TICKETUSER" ? "264px" : "264px",
-    left: userType === "TICKETUSER" ? "0" : "auto",
-    right: userType === "TICKETUSER" ? "auto" : "0",
+interface LineStyles {
+  width: string;
+  left: string;
+  right: string;
+  height: string;
+  top: string;
+}
+
+export default function LoginContent() {
+  const [userType, setUserType] = useState<UserType>(UserType.TICKETUSER);
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [rememberMe, setRememberMe] = useState<boolean>(false);
+
+  const lineStyles: LineStyles = {
+    width: userType === UserType.TICKETUSER ? "264px" : "264px",
+    left: userType === UserType.TICKETUSER ? "0" : "auto",
+    right: userType === UserType.TICKETUSER ? "auto" : "0",
     height: "1px",
     top: "65px",
   };
@@ -24,22 +37,24 @@ export default function LoginContent() {
           <button
             className={`relative flex-1 py-5 px-6 rounded-t-lg border z-10 transition-colors text-foreground
             ${
-              userType === "TICKETUSER"
+              userType === UserType.TICKETUSER
                 ? "bg-white border-gray-300"
                 : "bg-gray-100 border-gray-200"
             }`}
-            onClick={() => setUserType("TICKETUSER")}
+            onClick={() => setUserType(UserType.TICKETUSER)}
+            type="button"
           >
             예매회원 로그인
           </button>
           <button
             className={`relative flex-1 py-3 px-6 rounded-t-lg border -ml-4 transition-colors text-foreground
             ${
-              userType === "MANAGER"
+              userType === UserType.MANAGER
                 ? "bg-white border-gray-300 z-20"
                 : "bg-gray-100 border-gray-200 z-0"
             }`}
-            onClick={() => setUserType("MANAGER")}
+            onClick={() => setUserType(UserType.MANAGER)}
+            type="button"
           >
             공연 관리자 로그인
           </button>
@@ -49,19 +64,29 @@ export default function LoginContent() {
 
         <div className="bg-white p-8 rounded-b-xl border border-gray-300">
           <form className="space-y-4">
-            <div>
+            <div className="[&_input]:pl-9 relative">
+              <img
+                src="images/icons/mail-icon.svg"
+                alt="email-icon"
+                className="absolute top-[13px] left-[10px]"
+              />
               <TextInput
                 type="email"
-                placeholder="이메일"
+                placeholder="E-mail"
                 value={email}
                 onChange={setEmail}
-                className="w-full"
+                className="w-full !pl-20"
               />
             </div>
-            <div>
+            <div className="[&_input]:pl-9 relative">
+              <img
+                src="images/icons/lock-closed-icon.svg"
+                alt="password-icon"
+                className="absolute top-[13px] left-[10px]"
+              />
               <TextInput
                 type="password"
-                placeholder="비밀번호"
+                placeholder="Password"
                 value={password}
                 onChange={setPassword}
                 className="w-full"
