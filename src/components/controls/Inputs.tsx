@@ -184,7 +184,7 @@ export function SearchInput({
           placeholder={placeholder}
           onChange={(e) => onChange(e.target.value)}
           onKeyDown={handleKeyDown}
-          className={`focus:outline-none w-full placeholder:text-sm text-black border-b-[2px] border-flesh-400 ${
+          className={`focus:outline-none w-full placeholder:text-sm text-black border-b-[2px] border-flesh-500 ${
             inputClassName ? inputClassName : ""
           }`}
           aria-label={label}
