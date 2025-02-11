@@ -2,6 +2,7 @@
 import { Button } from "@/components/controls/Button";
 import { TextInput, Checkbox } from "@/components/controls/Inputs";
 import React, { useState } from "react";
+import Link from "next/link";
 
 enum UserType {
   TICKETUSER = "TICKETUSER",
@@ -107,9 +108,9 @@ export default function LoginContent() {
           </form>
 
           <div className="mt-6 flex justify-center space-x-4 text-sm">
-            <a href="/" className="text-gray-600 hover:text-gray-900">
+            <Link href="/join" className="text-gray-600 hover:text-gray-900">
               회원가입
-            </a>
+            </Link>
             <span className="text-gray-300">|</span>
             <a href="/" className="text-gray-600 hover:text-gray-900">
               비밀번호 찾기
