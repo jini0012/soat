@@ -26,7 +26,7 @@ export default function CurrentShowSection() {
               성인
             </li>
           </ul>
-          <p className="flex items-center gap-2">
+          <p className="flex items-center gap-2 cursor-pointer">
             더보기 <img src="images/icons/next-icon.svg" alt="더보기" />
           </p>
         </nav>
