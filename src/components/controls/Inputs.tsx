@@ -151,6 +151,7 @@ export function SearchInput({
   children,
   value,
   onChange,
+  onSearch,
   type = "text",
 }: {
   label: string;
@@ -160,12 +161,19 @@ export function SearchInput({
   children?: ReactElement;
   value?: string;
   onChange: (value: string) => void;
+  onSearch: () => void;
   type?: "text" | "password" | "email" | "number" | "tel";
 }) {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      onSearch();
+    }
+  };
+
   return (
     <fieldset>
       <label
-        className={`flex mb-[5px] gap-3 border-b whitespace-nowrap w-full items-center ${
+        className={`flex mb-[5px] gap-3 border-b whitespace-nowrap w-full items-center focus-within:border-black ${
           className ? className : ""
         }`}
       >
@@ -175,6 +183,7 @@ export function SearchInput({
           value={value}
           placeholder={placeholder}
           onChange={(e) => onChange(e.target.value)}
+          onKeyDown={handleKeyDown}
           className={`focus:outline-none w-full placeholder:text-sm text-black border-b-[2px] border-flesh-400 ${
             inputClassName ? inputClassName : ""
           }`}
@@ -185,7 +194,6 @@ export function SearchInput({
     </fieldset>
   );
 }
-
 export function Checkbox({
   checked,
   onChange,
