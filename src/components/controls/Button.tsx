@@ -20,7 +20,7 @@ export function Button({
   href?: string;
 }) {
   let colorClass = highlight
-    ? "bg-flesh-400 border-flesh-400 text-background"
+    ? "bg-flesh-500 border-flesh-500 text-background"
     : "bg-background border-flesh-200 text-foreground";
   let hoverClass = highlight
     ? "hover:bg-flesh-500 hover:border-flesh-500 transition"
