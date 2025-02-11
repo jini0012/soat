@@ -2,6 +2,7 @@
 import { Button } from "@/components/controls/Button";
 import { TextInput, Checkbox } from "@/components/controls/Inputs";
 import React, { useState } from "react";
+import Link from "next/link";
 
 enum UserType {
   TICKETUSER = "TICKETUSER",
@@ -21,6 +22,8 @@ export default function LoginContent() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [rememberMe, setRememberMe] = useState<boolean>(false);
+
+  const isFormValid = email !== "" && password !== "";
 
   const lineStyles: LineStyles = {
     width: userType === UserType.TICKETUSER ? "264px" : "264px",
@@ -64,11 +67,11 @@ export default function LoginContent() {
 
         <div className="bg-white p-8 rounded-xl border border-gray-300">
           <form className="space-y-4">
-            <div className="[&_input]:pl-9 relative">
+            <div className="[&_input]:pl-9 [&_input]:py-4  relative">
               <img
                 src="images/icons/mail-icon.svg"
                 alt="email-icon"
-                className="absolute top-[13px] left-[10px]"
+                className="absolute top-[22px] left-[10px]"
               />
               <TextInput
                 type="email"
@@ -78,11 +81,11 @@ export default function LoginContent() {
                 className="w-full !pl-20"
               />
             </div>
-            <div className="[&_input]:pl-9 relative">
+            <div className="[&_input]:pl-9 [&_input]:py-4  relative">
               <img
                 src="images/icons/lock-closed-icon.svg"
                 alt="password-icon"
-                className="absolute top-[13px] left-[10px]"
+                className="absolute top-[20px] left-[10px]"
               />
               <TextInput
                 type="password"
@@ -99,15 +102,15 @@ export default function LoginContent() {
                 </Checkbox>
               </label>
             </div>
-            <Button highlight size="full" type="submit">
+            <Button highlight size="full" type="submit" disabled={!isFormValid}>
               로그인
             </Button>
           </form>
 
           <div className="mt-6 flex justify-center space-x-4 text-sm">
-            <a href="/" className="text-gray-600 hover:text-gray-900">
+            <Link href="/join" className="text-gray-600 hover:text-gray-900">
               회원가입
-            </a>
+            </Link>
             <span className="text-gray-300">|</span>
             <a href="/" className="text-gray-600 hover:text-gray-900">
               비밀번호 찾기
