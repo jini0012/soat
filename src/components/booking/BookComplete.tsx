@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 import { useState } from "react";
 
 import { Button } from "../controls/Button";
@@ -5,6 +7,7 @@ import { Checkbox, Radio, TextInput } from "../controls/Inputs";
 import { Select } from "../controls/Select";
 import BookSection from "./BookSection";
 import ButtonRow from "./ButtonRow";
+import QRCode from "react-qr-code";
 
 export default function BookComplete() {
   const [purchaseMethod, setPurchaseMethod] = useState("bank");
@@ -31,12 +34,31 @@ export default function BookComplete() {
       </BookSection>
       <BookSection>
         <h3 className="font-bold text-xl">결제하기</h3>
-        <Radio
-          align="h"
-          checked={purchaseMethod}
-          onChange={setPurchaseMethod}
-          items={[{ value: "bank", label: "무통장 입금" }]}
-        />
+        <p className="break-keep">
+          QR 코드를 스캔하거나 계좌번호를 직접 입력하여 송금을 진행해주세요.
+        </p>
+        <div className="w-fit ml-auto mr-auto grid grid-cols-2 grid-rows-2 justify-center items-center gap-x-4">
+          <QRCode
+            className="w-24 h-24 p-2 bg-white ml-auto mr-auto"
+            value="https://example.com"
+          />
+          <ul className="font-bold">
+            <li>새마을금고</li>
+            <li>123-12-12345</li>
+            <li>예금주: 김지훈</li>
+            <li>18,000원</li>
+          </ul>
+          <Button className="col-span-2 ml-auto mr-auto">
+            <Image
+              className="inline-block mr-3"
+              src="/images/icons/toss-128px.png"
+              width={24}
+              height={24}
+              alt=""
+            />
+            토스 앱에서 송금하기
+          </Button>
+        </div>
       </BookSection>
       <ButtonRow
         setProcess={() => {}}
