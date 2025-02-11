@@ -11,8 +11,10 @@ export default function main() {
     <>
       <Header />
       <SlideBanner />
-      <CurrentShowSection />
-      <UpcomingShowsSection />
+      <main className="px-[80px]">
+        <CurrentShowSection />
+        <UpcomingShowsSection />
+      </main>
       <Footer />
     </>
   );
