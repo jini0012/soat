@@ -66,11 +66,11 @@ export default function LoginContent() {
 
         <div className="bg-white p-8 rounded-b-xl border border-gray-300">
           <form className="space-y-4">
-            <div className="[&_input]:pl-9 relative">
+            <div className="[&_input]:pl-9 [&_input]:py-4  relative">
               <img
                 src="images/icons/mail-icon.svg"
                 alt="email-icon"
-                className="absolute top-[13px] left-[10px]"
+                className="absolute top-[22px] left-[10px]"
               />
               <TextInput
                 type="email"
@@ -80,11 +80,11 @@ export default function LoginContent() {
                 className="w-full !pl-20"
               />
             </div>
-            <div className="[&_input]:pl-9 relative">
+            <div className="[&_input]:pl-9 [&_input]:py-4  relative">
               <img
                 src="images/icons/lock-closed-icon.svg"
                 alt="password-icon"
-                className="absolute top-[13px] left-[10px]"
+                className="absolute top-[20px] left-[10px]"
               />
               <TextInput
                 type="password"
