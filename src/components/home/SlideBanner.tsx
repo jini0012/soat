@@ -9,7 +9,7 @@ import "swiper/css/pagination";
 
 export default function SlideBanner() {
   return (
-    <SwiperWrapper className="relative w-full">
+    <SwiperWrapper className="relative w-full mb-[30px]">
       <Swiper
         modules={[Navigation, Pagination, Autoplay]}
         slidesPerView={1}
