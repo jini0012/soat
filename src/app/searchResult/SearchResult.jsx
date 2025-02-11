@@ -1,60 +1,141 @@
+"use client";
+
+import { useState } from "react";
+import SearchResultHeader from "@/components/searchResult/SearchResultHeader";
+import SearchResultItem from "@/components/searchResult/SearchResultItem";
+import SearchOptionFilter from "@/components/searchResult/SearchOptionFilter";
+import SortFilter from "@/components/searchResult/SortFilter";
+// import EmptySearchResult from "@/components/searchResult/EmptySearchResults";
+
+const mockData = [
+  {
+    id: 1,
+    imgUrl: "image1.jpg",
+    title: "공연명 1",
+    team: "팀명 1",
+    date: "2025.03.20",
+    commentCount: 10,
+  },
+  {
+    id: 2,
+    imgUrl: "image2.jpg",
+    title: "공연명 2",
+    team: "팀명 2",
+    date: "2025.03.21",
+    commentCount: 5,
+  },
+  {
+    id: 3,
+    imgUrl: "image3.jpg",
+    title: "공연명 3",
+    team: "팀명 3",
+    date: "2025.03.22",
+    commentCount: 3,
+  },
+  {
+    id: 4,
+    imgUrl: "image4.jpg",
+    title: "공연명 4",
+    team: "팀명 4",
+    date: "2025.03.23",
+    commentCount: 15,
+  },
+  {
+    id: 5,
+    imgUrl: "image5.jpg",
+    title: "공연명 5",
+    team: "팀명 5",
+    date: "2025.03.24",
+    commentCount: 8,
+  },
+  {
+    id: 6,
+    imgUrl: "image6.jpg",
+    title: "공연명 6",
+    team: "팀명 6",
+    date: "2025.03.25",
+    commentCount: 12,
+  },
+  {
+    id: 7,
+    imgUrl: "image7.jpg",
+    title: "공연명 7",
+    team: "팀명 7",
+    date: "2025.03.26",
+    commentCount: 19,
+  },
+  {
+    id: 8,
+    imgUrl: "image8.jpg",
+    title: "공연명 8",
+    team: "팀명 8",
+    date: "2025.03.27",
+    commentCount: 7,
+  },
+];
+
 export default function SearchResult() {
+  const [visibleItems, setVisibleItems] = useState(5); // 처음 5개 항목을 보여줌
+
+  const loadMoreItems = () => {
+    setVisibleItems(visibleItems + 5); // 5개씩 더 보이게 함
+  };
+
   return (
     <>
-      <header>검색창</header>
-      <main>
-        <p>
-          <span>&quot;검색어&quot;</span>검색 결과입니다.
-          {/* 이 값은 동적으로 처리될 예정 */}
+      <SearchResultHeader />
+      <main className="px-[8%]">
+        <p className="font-medium">
+          <span className="text-flesh-500">&quot;쏘앳&quot;</span> 검색
+          결과입니다.
         </p>
-        <section>
+        <section className="flex item-center gap-[9px]">
           <h2 className="sr-only">검색 옵션</h2>
-          <button>카테고리</button>
-          <button>날짜</button>
+          <SearchOptionFilter>카테고리</SearchOptionFilter>
+          <SearchOptionFilter>날짜</SearchOptionFilter>
         </section>
-        <section>
+        <section className="border-b border-b-gray-300 py-1 flex items-center justify-between">
           <h2 className="sr-only">검색 정보</h2>
-          <div>
-            <p>
-              공연 <span>(13건)</span>
-              {/* 이 값은 동적으로 처리될 예정 */}
-            </p>
-            <button>낮은 가격순</button>
-          </div>
+          <p className="font-medium">
+            공연{" "}
+            <span className="text-[13px] font-normal">
+              ({mockData.length}건)
+            </span>
+          </p>
+          <SortFilter />
         </section>
         <section>
           <h2 className="sr-only">검색 결과</h2>
           <ul>
-            <li>
-              <article>
-                <img src="" alt="공연이미지" />
-                <div>
-                  <div>판매예정</div>
-                  <div>D - 16</div>
-                  {/* 이 값은 동적으로 처리될 예정 */}
-                  <h3>공연명</h3>
-                  <p>팀명</p>
-                  <p>날짜</p>
-                  <p>한줄평(10)</p>
-                  {/* 이 값은 동적으로 처리될 예정 */}
-                  <button>예매하기</button>
-                </div>
-              </article>
-            </li>
+            {mockData.slice(0, visibleItems).map((item) => (
+              <SearchResultItem
+                key={item.id}
+                imgUrl={item.imgUrl}
+                title={item.title}
+                team={item.team}
+                date={item.date}
+                commentCount={item.commentCount}
+              />
+            ))}
           </ul>
         </section>
-        <section>
-          <h2 className="sr-only">더보기</h2>
-          <button>검색 결과 더보기</button>
-        </section>
-        {/* 검색 결과 없음 */}
-        <section>
-          <h2 className="sr-only">검색 결과 없음</h2>
-          <p>[검색어] 에 대한 검색결과가 없습니다.</p>
-          <p>다른 키워드로 다시 검색해주세요.</p>
-        </section>
+        {/* 5개 이상의 항목이 있을 때만 "검색 결과 더보기" 버튼을 렌더링 */}
+        {visibleItems < mockData.length && (
+          <section>
+            <h2 className="sr-only">더보기</h2>
+            <button
+              onClick={loadMoreItems}
+              className="w-[100%] border border-flesh-500 rounded-xl p-1 text-[13px] text-flesh-500 font-light my-4"
+            >
+              검색 결과 더보기
+            </button>
+          </section>
+        )}
+        {/* <EmptySearchResult /> */}
       </main>
-      <footer>footer</footer>
+      <footer className="h-[100px] text-center py-10 bg-gray-500 mt-10 text-white">
+        footer
+      </footer>
     </>
   );
 }
