@@ -66,7 +66,7 @@ export function Button({
 
   return (
     <button
-      className={`break-keep h-fit ${className} ${colorClass} border-2 rounded-lg ${sizeClass} font-bold ${hoverClass} ${activeClass} ${focusClass}`}
+      className={`flex justify-center items-center break-keep h-fit ${className} ${colorClass} border-2 rounded-lg ${sizeClass} font-bold ${hoverClass} ${activeClass} ${focusClass}`}
       disabled={disabled}
       type={type}
       onClick={onClick}
