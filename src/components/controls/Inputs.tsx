@@ -112,7 +112,7 @@ export function JoinInput({
   type?: "text" | "password" | "email" | "number" | "tel";
 }) {
   if (invalid) {
-    className = "border-flesh-400";
+    className = "border-flesh-500";
   } else if (!!value) {
     className = "border-black";
   } else {
