@@ -9,73 +9,53 @@ export default function ShowDetailSection() {
   return (
     <section>
       <h2 className="sr-only">공연 정보</h2>
-      <ul className="flex mb-[50px]">
+      <ul className="flex mb-12">
         {/* 공연정보 TAP일때 */}
-        {isTapState === "SHOWDETAIL" ? (
-          <li
-            className="w-[33%] border-b-[3px] text-flesh-500 text-center border-flesh-500 cursor-pointer py-[5px]"
-            onClick={() => {
-              setTapState("SHOWDETAIL");
-            }}
-          >
-            공연정보
-          </li>
-        ) : (
-          <li
-            className="w-[33%] border-b-[3px] text-[#404040] text-center border-[#404040] cursor-pointer py-[5px]"
-            onClick={() => {
-              setTapState("SHOWDETAIL");
-            }}
-          >
-            공연정보
-          </li>
-        )}
+        <li
+          className={`w-1/3 border-b-2 text-center cursor-pointer py-1.5 ${
+            isTapState === "SHOWDETAIL"
+              ? "text-orange-500 border-orange-500"
+              : "text-neutral-700 border-neutral-700"
+          }`}
+          onClick={() => {
+            setTapState("SHOWDETAIL");
+          }}
+        >
+          공연정보
+        </li>
 
         {/* 한줄평 TAP일때 */}
-        {isTapState === "REVIEW" ? (
-          <li
-            className="w-[33%] border-b-[3px] text-flesh-500 text-center border-flesh-500 cursor-pointer py-[5px] "
-            onClick={() => {
-              setTapState("REVIEW");
-            }}
-          >
-            한줄평
-          </li>
-        ) : (
-          <li
-            className="w-[33%] border-b-[3px] text-[#404040] text-center border-[#404040] cursor-pointer py-[5px]"
-            onClick={() => {
-              setTapState("REVIEW");
-            }}
-          >
-            한줄평
-          </li>
-        )}
+        <li
+          className={`w-1/3 border-b-2 text-center cursor-pointer py-1.5 ${
+            isTapState === "REVIEW"
+              ? "text-orange-500 border-orange-500"
+              : "text-neutral-700 border-neutral-700"
+          }`}
+          onClick={() => {
+            setTapState("REVIEW");
+          }}
+        >
+          한줄평
+        </li>
 
         {/* 유의사항 TAP일때 */}
-        {isTapState === "CAUTION" ? (
-          <li
-            className="w-[33%] border-b-[3px] text-flesh-500 text-center border-flesh-500 cursor-pointer py-[5px]"
-            onClick={() => {
-              setTapState("CAUTION");
-            }}
-          >
-            유의사항
-          </li>
-        ) : (
-          <li
-            className="w-[33%] border-b-[3px] text-[#404040] text-center border-[#404040] cursor-pointer py-[5px]"
-            onClick={() => {
-              setTapState("CAUTION");
-            }}
-          >
-            유의사항
-          </li>
-        )}
+        <li
+          className={`w-1/3 border-b-2 text-center cursor-pointer py-1.5 ${
+            isTapState === "CAUTION"
+              ? "text-orange-500 border-orange-500"
+              : "text-neutral-700 border-neutral-700"
+          }`}
+          onClick={() => {
+            setTapState("CAUTION");
+          }}
+        >
+          유의사항
+        </li>
       </ul>
-      {isTapState === "SHOWDETAIL" ? <ShowDetailArea /> : null}
-      {isTapState === "REVIEW" ? <ReviewArea /> : null}
-      {isTapState === "CAUTION" ? <CautionArea /> : null}
+
+      {isTapState === "SHOWDETAIL" && <ShowDetailArea />}
+      {isTapState === "REVIEW" && <ReviewArea />}
+      {isTapState === "CAUTION" && <CautionArea />}
     </section>
   );
 }
