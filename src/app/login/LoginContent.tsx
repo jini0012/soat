@@ -27,8 +27,8 @@ export default function LoginContent() {
 
   const lineStyles: LineStyles = {
     width: userType === UserType.TICKETUSER ? "264px" : "264px",
-    left: userType === UserType.TICKETUSER ? "0" : "auto",
-    right: userType === UserType.TICKETUSER ? "auto" : "0",
+    left: userType === UserType.TICKETUSER ? "1px" : "auto",
+    right: userType === UserType.TICKETUSER ? "auto" : "1px",
     height: "1px",
     top: "65px",
   };
@@ -65,7 +65,7 @@ export default function LoginContent() {
 
         <div className="absolute bg-background z-20" style={lineStyles}></div>
 
-        <div className="bg-white p-8 rounded-xl border border-gray-300">
+        <div className="bg-white p-8 rounded-b-xl border border-gray-300">
           <form className="space-y-4">
             <div className="[&_input]:pl-9 [&_input]:py-4  relative">
               <img
