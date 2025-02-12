@@ -3,17 +3,17 @@
 import React from "react";
 import { ReactElement } from "react";
 import { focusRings } from "@/styles/constants";
+import {
+  CheckboxProps,
+  InputContainerProps,
+  JoinInputProps,
+  RadioProps,
+  SearchInputProps,
+  TextInputProps,
+} from "@/types/controls";
 
 // Input을 감쌀 경우 사용하는 컨테이너
-function InputContainer({
-  input,
-  children,
-  className,
-}: {
-  input: ReactElement;
-  children: ReactElement;
-  className?: string;
-}) {
+function InputContainer({ input, children, className }: InputContainerProps) {
   return (
     <div
       className={`${
@@ -38,17 +38,7 @@ export function TextInput({
   align,
   children,
   ariaLabel,
-}: {
-  label?: string;
-  value: string;
-  onChange: (value: string) => void;
-  type?: "text" | "password" | "email" | "number" | "tel" | "date"; // 추가할 타입이 있다면 여기에 추가
-  placeholder?: string;
-  className?: string;
-  align?: "v" | "h";
-  children?: ReactElement;
-  ariaLabel?: string;
-}) {
+}: TextInputProps) {
   const Input = (
     <input
       className={`${
@@ -101,16 +91,7 @@ export function JoinInput({
   value,
   onChange,
   type,
-}: {
-  label: string;
-  placeholder?: string;
-  className?: string;
-  children?: ReactElement;
-  invalid?: boolean;
-  value?: string;
-  onChange: (value: string) => void;
-  type?: "text" | "password" | "email" | "number" | "tel";
-}) {
+}: JoinInputProps) {
   if (invalid) {
     className = "border-flesh-500";
   } else if (!!value) {
@@ -153,17 +134,7 @@ export function SearchInput({
   onChange,
   onSearch,
   type = "text",
-}: {
-  label: string;
-  placeholder?: string;
-  className?: string;
-  inputClassName?: string;
-  children?: ReactElement;
-  value?: string;
-  onChange: (value: string) => void;
-  onSearch: () => void;
-  type?: "text" | "password" | "email" | "number" | "tel";
-}) {
+}: SearchInputProps) {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       onSearch();
@@ -199,12 +170,7 @@ export function Checkbox({
   onChange,
   className,
   children,
-}: {
-  checked: boolean;
-  onChange: (checked: boolean) => void;
-  className?: string;
-  children: React.ReactNode;
-}) {
+}: CheckboxProps) {
   return (
     <label
       className={`w-full flex items-center ${className}`}
@@ -230,13 +196,7 @@ export function Radio({
   className,
   items,
   align,
-}: {
-  checked: string;
-  onChange: (checked: string) => void;
-  className?: string;
-  items: { value: string; label: string }[];
-  align?: "v" | "h";
-}) {
+}: RadioProps) {
   let alignClass = "flex-row gap-x-4";
   if (align === "v") {
     alignClass = "flex-col";
