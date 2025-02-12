@@ -12,7 +12,7 @@ const mockData = [
     id: 1,
     imgUrl: "image1.jpg",
     title: "공연명 1",
-    team: "팀명 1",
+    venue: "공연장소 1",
     date: "2025.03.20",
     commentCount: 10,
   },
@@ -20,7 +20,7 @@ const mockData = [
     id: 2,
     imgUrl: "image2.jpg",
     title: "공연명 2",
-    team: "팀명 2",
+    venue: "공연장소 2",
     date: "2025.03.21",
     commentCount: 5,
   },
@@ -28,7 +28,7 @@ const mockData = [
     id: 3,
     imgUrl: "image3.jpg",
     title: "공연명 3",
-    team: "팀명 3",
+    venue: "공연장소 3",
     date: "2025.03.22",
     commentCount: 3,
   },
@@ -36,7 +36,7 @@ const mockData = [
     id: 4,
     imgUrl: "image4.jpg",
     title: "공연명 4",
-    team: "팀명 4",
+    venue: "공연장소 4",
     date: "2025.03.23",
     commentCount: 15,
   },
@@ -44,7 +44,7 @@ const mockData = [
     id: 5,
     imgUrl: "image5.jpg",
     title: "공연명 5",
-    team: "팀명 5",
+    venue: "공연장소 5",
     date: "2025.03.24",
     commentCount: 8,
   },
@@ -52,7 +52,7 @@ const mockData = [
     id: 6,
     imgUrl: "image6.jpg",
     title: "공연명 6",
-    team: "팀명 6",
+    venue: "공연장소 6",
     date: "2025.03.25",
     commentCount: 12,
   },
@@ -60,7 +60,7 @@ const mockData = [
     id: 7,
     imgUrl: "image7.jpg",
     title: "공연명 7",
-    team: "팀명 7",
+    venue: "공연장소 7",
     date: "2025.03.26",
     commentCount: 19,
   },
@@ -68,7 +68,7 @@ const mockData = [
     id: 8,
     imgUrl: "image8.jpg",
     title: "공연명 8",
-    team: "팀명 8",
+    venue: "공연장소 8",
     date: "2025.03.27",
     commentCount: 7,
   },
@@ -77,9 +77,9 @@ const mockData = [
 export default function SearchResult() {
   const [visibleItems, setVisibleItems] = useState(5); // 처음 5개 항목을 보여줌
 
-  const loadMoreItems = () => {
+  function loadMoreItems() {
     setVisibleItems(visibleItems + 5); // 5개씩 더 보이게 함
-  };
+  }
 
   return (
     <>
@@ -112,7 +112,7 @@ export default function SearchResult() {
                 key={item.id}
                 imgUrl={item.imgUrl}
                 title={item.title}
-                team={item.team}
+                venue={item.venue}
                 date={item.date}
                 commentCount={item.commentCount}
               />

@@ -1,7 +1,7 @@
 interface SearchResultItemProps {
   imgUrl: string;
   title: string;
-  team: string;
+  venue: string;
   date: string;
   commentCount: number;
 }
@@ -9,7 +9,7 @@ interface SearchResultItemProps {
 export default function SearchResultItem({
   imgUrl,
   title,
-  team,
+  venue,
   date,
   commentCount,
 }: SearchResultItemProps) {
@@ -27,7 +27,7 @@ export default function SearchResultItem({
             </p>
           </div>
           <h3 className="font-semibold text-[15px] mt-2">{title}</h3>
-          <p className="text-[12px] font-light">{team}</p>
+          <p className="text-[12px] font-light">{venue}</p>
           <p className="text-[12px] text-gray-400 font-light">{date}</p>
           <p className="text-[12px] mt-3 font-light">한줄평({commentCount})</p>
         </div>
