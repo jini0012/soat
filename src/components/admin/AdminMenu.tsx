@@ -1,4 +1,5 @@
-import AdminMenuItem from "./AdminMenuItem";
+import AdminMenuItem from "@/components/admin/AdminMenuItem";
+import Link from "next/link";
 
 export default function AdminMenu() {
   const menuData = [
@@ -44,18 +45,18 @@ export default function AdminMenu() {
 
   return (
     <>
-      <aside>
-        <div>
-          <p>관리자님</p>
-          <img src="" alt="창 닫기" />
+      <aside className="w-[240px] h-[100vh] bg-white fixed top-0 left-0 ">
+        <div className="w-[100%] h-[61px] bg-flesh-500 flex items-center justify-center">
+          <p className="text-[18px] font-semibold text-white">관리자님</p>
         </div>
-        <div>
-          <img src="" alt="" />
-          <a href="#">So@ 바로가기</a>
+        <div className="border-b-[1.5px] border-b-flesh-500 h-[35px] flex items-center">
+          <Link href="#" className="no-underline text-flesh-500  px-4">
+            So@ 바로가기
+          </Link>
         </div>
-        <p>사이트 관리</p>
-        <nav>
-          <ul>
+        <nav className="flex flex-col items-start px-[6%]">
+          <p className="text-[12px] text-gray-500 mt-2 mb-2">사이트 관리</p>
+          <ul className="flex flex-col gap-4 w-[100%]">
             {menuData.map((item, index) => (
               <AdminMenuItem
                 key={index}
@@ -64,9 +65,11 @@ export default function AdminMenu() {
               />
             ))}
           </ul>
+          <button className="w-[100%] h-[33px] bg-flesh-500 text-white  mt-[38px]">
+            로그아웃
+          </button>
         </nav>
       </aside>
-      <button>로그아웃</button>
     </>
   );
 }
