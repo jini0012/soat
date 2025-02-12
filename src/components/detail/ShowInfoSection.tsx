@@ -63,7 +63,11 @@ export default function ShowInfoSection() {
           </ul>
         </div>
 
-        <Button highlight className="text-white px-20 py-4 rounded-lg text-2xl">
+        <Button
+          highlight
+          size="full"
+          className="text-white px-20 py-4 rounded-lg text-2xl"
+        >
           예매하기
         </Button>
       </div>
