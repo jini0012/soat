@@ -1,4 +1,8 @@
-import AdminMenu from "./AdminMenu";
+import GeneralUsers from "./GeneralUsers";
 export default function AdminPage() {
-  return <AdminMenu />;
+  return (
+    <>
+      <GeneralUsers />
+    </>
+  );
 }
