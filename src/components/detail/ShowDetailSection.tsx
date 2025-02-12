@@ -1,12 +1,15 @@
 "use client";
 import React, { useState } from "react";
+import ShowDetailArea from "./ShowDetailArea";
+import ReviewArea from "./ReviewArea";
+import CautionArea from "./CautionArea";
 
 export default function ShowDetailSection() {
   const [isTapState, setTapState] = useState("SHOWDETAIL");
   return (
-    <section className="mb-[50px]">
+    <section>
       <h2 className="sr-only">공연 정보</h2>
-      <ul className="flex">
+      <ul className="flex mb-[50px]">
         {/* 공연정보 TAP일때 */}
         {isTapState === "SHOWDETAIL" ? (
           <li
@@ -70,6 +73,9 @@ export default function ShowDetailSection() {
           </li>
         )}
       </ul>
+      {isTapState === "SHOWDETAIL" ? <ShowDetailArea /> : null}
+      {isTapState === "REVIEW" ? <ReviewArea /> : null}
+      {isTapState === "CAUTION" ? <CautionArea /> : null}
     </section>
   );
 }
