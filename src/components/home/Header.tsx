@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from "react";
 import { SearchInput } from "../controls/Inputs";
 import Link from "next/link";
