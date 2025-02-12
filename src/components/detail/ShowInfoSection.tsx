@@ -24,11 +24,13 @@ export default function ShowInfoSection() {
                   2025. 01. 21. - 2025. 01. 25
                 </p>
               </div>
-              <img
-                src="images/icons/share-icon.svg"
-                alt="공유하기"
-                className="ml-4"
-              />
+              <button>
+                <img
+                  src="images/icons/share-icon.svg"
+                  alt="공유하기"
+                  className="ml-4"
+                />
+              </button>
             </div>
           </div>
 
@@ -37,11 +39,13 @@ export default function ShowInfoSection() {
               <p className="flex items-center gap-2 text-[24px] text-[#404040]">
                 <span className="font-semibold ">장소 :</span>
                 인천 어쩌구 멘토님 집 (8석)
-                <img
-                  src="images/icons/map-icon.svg"
-                  alt="지도보기"
-                  className="w-6 h-6 ml-2"
-                />
+                <button>
+                  <img
+                    src="images/icons/map-icon.svg"
+                    alt="지도보기"
+                    className="w-6 h-6 ml-2"
+                  />
+                </button>
               </p>
             </li>
             <li>
