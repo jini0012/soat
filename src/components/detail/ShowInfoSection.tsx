@@ -3,7 +3,7 @@ import { Button } from "../controls/Button";
 
 export default function ShowInfoSection() {
   return (
-    <section className="flex px-24 py-16 gap-12">
+    <section className="flex  py-16 gap-12">
       <div className="w-80">
         <img
           src="images/derme.jpg"
