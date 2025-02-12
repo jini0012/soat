@@ -3,8 +3,10 @@ import React, { useState } from "react";
 import { EnrollFormData } from "../../types/enrollment";
 import EnrollFormItems from "../../components/enrollment/EnrollFormItems";
 import EnrollPoster from "../../components/enrollment/EnrollPoster";
-import EnrollCalendar from "../../components/enrollment/EnrollCalendar";
+import EnrollCalendar from "../../components/enrollment/Calendar/EnrollCalendar";
 import { Button } from "@/components/controls/Button";
+import EnrollModal from "@/components/enrollment/EnrollModal";
+import Modal from "@/components/Modal";
 
 export default function EnrollmentPage() {
   const [formData, setFormData] = useState<EnrollFormData>({
@@ -16,18 +18,29 @@ export default function EnrollmentPage() {
     poster: null,
   });
 
+  const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
+
+  const handleOpenModal = () => {
+    setIsOpenModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsOpenModal(false);
+  };
   const handleOnPoster = (file: File | null) => {
     setFormData((prev) => ({
       ...prev,
       poster: file,
     }));
   };
+
   const handleOnChangeInputs = (field: keyof EnrollFormData, value: string) => {
     setFormData((prev) => ({
       ...prev,
       [field]: value,
     }));
   };
+
   return (
     <section>
       <h2 className="sr-only">공연 정보 등록페이지</h2>
@@ -48,18 +61,21 @@ export default function EnrollmentPage() {
               onChange={handleOnChangeInputs}
             />
           </section>
-          <section className="w-[28.125%]">
+          <section className="w-[28.125%] border rounded-[10px] flex flex-col p-4">
             <h3 className="sr-only">공연 날짜</h3>
-            <EnrollCalendar />
+            <EnrollCalendar openModal={handleOpenModal} />
           </section>
         </div>
         <section className="bg-gray-700 w-full h-[50vh]">
           <h3 className="sr-only">공연 상세 정보</h3>
         </section>
-        <section>
-          <Button type="submit">등록</Button>
-        </section>
       </form>
+      <Modal isOpen={isOpenModal} onClose={handleCloseModal}>
+        <EnrollModal />
+      </Modal>
+      <section className="fixed bottom-0 bg-flesh-300 w-full">
+        <Button type="submit">등록</Button>
+      </section>
     </section>
   );
 }
