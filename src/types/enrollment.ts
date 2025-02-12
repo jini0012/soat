@@ -14,3 +14,18 @@ export interface EnrollPosterProps {
 export interface EnrollFormItemsProps extends Omit<EnrollFormData, "poster"> {
   onChange: (field: keyof EnrollFormData, value: string) => void;
 }
+
+export interface EnrollModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  children: React.ReactElement;
+}
+
+export interface EnrollCalendarProps {
+  openModal: () => void;
+}
+
+export type CalendarValuePiece = Date | null;
+export type CalendarValue =
+  | CalendarValuePiece
+  | [CalendarValuePiece, CalendarValuePiece];
