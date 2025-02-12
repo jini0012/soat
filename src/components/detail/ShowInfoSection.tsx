@@ -3,7 +3,7 @@ import { Button } from "../controls/Button";
 
 export default function ShowInfoSection() {
   return (
-    <section className="flex  py-16 gap-12">
+    <section className="flex py-16 gap-12">
       <div className="w-80">
         <img
           src="images/derme.jpg"
@@ -36,8 +36,8 @@ export default function ShowInfoSection() {
 
           <ul className="space-y-6">
             <li>
-              <p className="flex items-center gap-2 text-[24px] text-[#404040]">
-                <span className="font-semibold ">장소 :</span>
+              <p className="flex items-center gap-2 text-2xl text-neutral-700">
+                <span className="font-semibold">장소 :</span>
                 인천 어쩌구 멘토님 집 (8석)
                 <button>
                   <img
@@ -49,13 +49,13 @@ export default function ShowInfoSection() {
               </p>
             </li>
             <li>
-              <p className="flex items-center gap-2 text-[24px]  text-[#404040]">
+              <p className="flex items-center gap-2 text-2xl text-neutral-700">
                 <span className="font-semibold">예매가 :</span>
                 1,000,000 원
               </p>
             </li>
             <li>
-              <p className="flex items-center gap-2 text-[24px]  text-[#404040]">
+              <p className="flex items-center gap-2 text-2xl text-neutral-700">
                 <span className="font-semibold">카테고리 :</span>
                 코미디 (8석)
               </p>
@@ -63,10 +63,7 @@ export default function ShowInfoSection() {
           </ul>
         </div>
 
-        <Button
-          highlight
-          className="text-white px-20 py-4 rounded-lg  text-[24px]"
-        >
+        <Button highlight className="text-white px-20 py-4 rounded-lg text-2xl">
           예매하기
         </Button>
       </div>
