@@ -27,7 +27,11 @@ export default function EmblaCarousel() {
     if (!emblaApi) return;
     const onSelect = () => setCurrentIndex(emblaApi.selectedScrollSnap());
     emblaApi.on("select", onSelect);
-    return () => emblaApi.off("select", onSelect);
+    return () => {
+      if (emblaApi) {
+        emblaApi.off("select", onSelect);
+      }
+    };
   }, [emblaApi]);
 
   const scrollPrev = useCallback(
@@ -63,6 +67,11 @@ export default function EmblaCarousel() {
     };
   }, [clickedSlide]); // clickedSlide가 변경될 때마다 리스너를 다시 설정
 
+  const handleButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
+    handleDocumentClick(event.nativeEvent);
+  };
+
   return (
     <div className="relative w-full max-w-4xl mx-auto py-6 px-3">
       <div className="overflow-hidden" ref={emblaRef}>
@@ -90,7 +99,7 @@ export default function EmblaCarousel() {
                     className="absolute top-0 left-0 w-full h-full bg-transparent"
                     onClick={() => setClickedSlide(null)} // 슬라이드 외부 클릭 시 닫기
                   />
-                  <PerformanceMoreBtn onClick={handleDocumentClick} />
+                  <PerformanceMoreBtn onClick={handleButtonClick} />
                 </div>
               )}
             </div>
