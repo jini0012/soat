@@ -20,7 +20,7 @@ export function PerformanceButton({
 
   return (
     <button
-      onClick={handleClick} // onClick 처리
+      onClick={handleClick}
       className={`flex justify-center items-center w-full bg-background border-flesh-200 text-foreground py-1.5
           hover:bg-flesh-200 hover:text-foreground hover:border-flesh-200 transition
           active:bg-flesh-300 active:text-foreground active:border-flesh-300
@@ -40,18 +40,18 @@ export default function PerformanceMoreBtn({
       <PerformanceButton
         iconSrc="/images/icons/pen.svg"
         label="예매 정보 수정"
-        onClick={onClick} // 부모의 onClick 전달
+        onClick={onClick}
       />
       <PerformanceButton
         iconSrc="/images/icons/reading-glasses.svg"
         label="예매 확인"
         className="border-y-2 border-flesh-200 border-dashed"
-        onClick={onClick} // 부모의 onClick 전달
+        onClick={onClick}
       />
       <PerformanceButton
         iconSrc="/images/icons/delete.svg"
         label="삭제"
-        onClick={onClick} // 부모의 onClick 전달
+        onClick={onClick}
       />
     </div>
   );
