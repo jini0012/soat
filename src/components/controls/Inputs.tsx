@@ -91,6 +91,8 @@ export function JoinInput({
   value,
   onChange,
   type,
+  disabled,
+  validation,
 }: JoinInputProps) {
   if (invalid) {
     className = "border-flesh-500";
@@ -102,9 +104,9 @@ export function JoinInput({
 
   return (
     <>
-      <fieldset>
+      <fieldset className="h-[43px]">
         <label
-          className={` flex mb-[5px] gap-3 border-b whitespace-nowrap w-full items-center focus-within:border-black ${
+          className={`text-sm h-[23px] flex mb-[5px] gap-3 border-b whitespace-nowrap w-full items-center focus-within:border-black ${
             className ? className : ""
           } `}
         >
@@ -120,6 +122,9 @@ export function JoinInput({
           />
           {children}
         </label>
+        <span className="text-flesh-400 text-xs">
+          {invalid ? validation : "\u00A0"}
+        </span>
       </fieldset>
     </>
   );

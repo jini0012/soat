@@ -37,7 +37,9 @@ export interface TextInputProps extends InputBaseProps {
 
 export interface JoinInputProps extends InputBaseProps {
   label: string; // required
+  validation?: string;
   invalid?: boolean;
+  disabled?: boolean;
 }
 
 export interface SearchInputProps extends InputBaseProps {
