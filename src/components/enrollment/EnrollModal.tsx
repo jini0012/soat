@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { TextInput } from "../controls/Inputs";
 import { Button } from "../controls/Button";
@@ -9,10 +10,15 @@ export default function EnrollModal() {
       <TextInput label="공연명" value={""} readOnly />
       <TextInput label="공연날짜" value={""} readOnly />
       <TextInput label="공연시간" value={""} />
-      <Button type="button">추가</Button>
+      <Button className="ml-auto mt-4" type="button">
+        추가
+      </Button>
       <TextInput label="캐스팅" value={""} />
-      <Button>취소</Button>
-      <Button>등록</Button>
+
+      <footer className="flex justify-between mt-4">
+        <Button type="button">취소</Button>
+        <Button type="button">등록</Button>
+      </footer>
     </>
   );
 }
