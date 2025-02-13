@@ -63,14 +63,14 @@ export default function SiteAdminListPage() {
     <>
       <AdminHeader>시스템 관리</AdminHeader>
       <AdminMain>
-        <SubTabDescription>soat 관리자 계정 관리</SubTabDescription>
+        <SubTabDescription>관리자 계정 관리</SubTabDescription>
         <div className="mt-[20px] mb-4 flex justify-between items-center">
-          <ListTitle>soat 관리자 목록</ListTitle>
+          <ListTitle>관리자 목록</ListTitle>
           <form action="">
             <AdminSearchInput
               id="siteAdminSearchInput"
               name="siteAdminSearch"
-              label="쏘앳 관리자 목록 조회하기"
+              label="관리자 목록 조회하기"
             />
             <QueryButton />
           </form>
