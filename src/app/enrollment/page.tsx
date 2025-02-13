@@ -7,6 +7,7 @@ import EnrollCalendar from "../../components/enrollment/Calendar/EnrollCalendar"
 import { Button } from "@/components/controls/Button";
 import EnrollModal from "@/components/enrollment/EnrollModal";
 import Modal from "@/components/Modal";
+import EnrollEditor from "@/components/enrollment/EnrollEditor";
 
 export default function EnrollmentPage() {
   const [formData, setFormData] = useState<EnrollFormData>({
@@ -27,6 +28,7 @@ export default function EnrollmentPage() {
   const handleCloseModal = () => {
     setIsOpenModal(false);
   };
+
   const handleOnPoster = (file: File | null) => {
     setFormData((prev) => ({
       ...prev,
@@ -42,7 +44,7 @@ export default function EnrollmentPage() {
   };
 
   return (
-    <section>
+    <section className="max-w-[1920px] m-auto mb-[140px] px-[80px]">
       <h2 className="sr-only">공연 정보 등록페이지</h2>
       <form>
         <div className="flex flex-row gap-16">
@@ -66,15 +68,17 @@ export default function EnrollmentPage() {
             <EnrollCalendar openModal={handleOpenModal} />
           </section>
         </div>
-        <section className="bg-gray-700 w-full h-[50vh]">
-          <h3 className="sr-only">공연 상세 정보</h3>
+        <section className="w-full mt-16 min-h-[600px]">
+          <h3 className="mb-4 text-base">공연 세부 정보</h3>
+          <EnrollEditor />
         </section>
       </form>
       <Modal isOpen={isOpenModal} onClose={handleCloseModal}>
         <EnrollModal />
       </Modal>
-      <section className="fixed bottom-0 bg-flesh-300 w-full">
-        <Button type="submit">등록</Button>
+      <section className="fixed left-0 bottom-0 bg-flesh-200 w-full h-[120px] flex justify-end items-center pr-[60px] gap-14">
+        <Button type="button">임시 저장</Button>
+        <Button type="submit">공연 등록</Button>
       </section>
     </section>
   );
