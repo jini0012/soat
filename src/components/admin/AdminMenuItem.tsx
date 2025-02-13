@@ -22,7 +22,7 @@ export default function AdminMenuItem({ title, links }: AdminMenuItemProps) {
   return (
     <li>
       <h2
-        className="bg-chevron-down-dark bg-no-repeat bg-[center_right] bg-[length:16px] font-medium"
+        className="bg-chevron-down-dark bg-no-repeat bg-[center_right] bg-[length:13px] font-medium cursor-pointer"
         onClick={handleToggleSubMenu} // 클릭 시 토글
       >
         {title}
