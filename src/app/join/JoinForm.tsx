@@ -193,9 +193,10 @@ export default function JoinForm({
         <Button
           type="submit"
           size="small"
-          disabled={(userType === "buyer" && !checkAge) || !checkAgree}
+          disabled={!isEmailValid || (userType === "buyer" && !checkAge) || (isBusiness && !isBusinessNumValid) || !checkAgree }
           className="absolute bottom-[-10px] right-[30px]"
           onClick={() => setIsJoin(true)}
+          highlight={true}
         >
           가입 완료
         </Button>
