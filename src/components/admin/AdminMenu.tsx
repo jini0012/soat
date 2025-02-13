@@ -41,7 +41,7 @@ export default function AdminMenu() {
     {
       title: "시스템 관리",
       links: [
-        { text: "soat 관리자 계정 관리", url: "/admin/site-admin-list" },
+        { text: "관리자 계정 관리", url: "/admin/site-admin-list" },
         { text: "서비스 점검 모드 설정", url: "/admin/maintenance-mode" },
         // { text: "로그 관리", url: "#" },
       ],
