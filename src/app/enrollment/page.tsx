@@ -7,7 +7,7 @@ import EnrollCalendar from "../../components/enrollment/Calendar/EnrollCalendar"
 import { Button } from "@/components/controls/Button";
 import EnrollModal from "@/components/enrollment/EnrollModal";
 import Modal from "@/components/Modal";
-import EnrollEditor from "@/components/enrollment/EnrollEditor";
+import Editor from "@/components/editor/Editor";
 
 export default function EnrollmentPage() {
   const [formData, setFormData] = useState<EnrollFormData>({
@@ -70,16 +70,16 @@ export default function EnrollmentPage() {
         </div>
         <section className="w-full mt-16 min-h-[600px]">
           <h3 className="mb-4 text-base">공연 세부 정보</h3>
-          <EnrollEditor />
+          <Editor />
         </section>
       </form>
       <Modal isOpen={isOpenModal} onClose={handleCloseModal}>
         <EnrollModal />
       </Modal>
-      <section className="fixed left-0 bottom-0 bg-flesh-200 w-full h-[120px] flex justify-end items-center pr-[60px] gap-14">
+      <footer className="fixed left-0 bottom-0 bg-flesh-200 w-full h-[120px] flex justify-end items-center pr-[60px] gap-14">
         <Button type="button">임시 저장</Button>
         <Button type="submit">공연 등록</Button>
-      </section>
+      </footer>
     </section>
   );
 }
