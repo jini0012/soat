@@ -6,41 +6,53 @@ export default function AdminMenu() {
     {
       title: "회원관리",
       links: [
-        { text: "일반회원 조회 및 상태 관리", url: "#" },
-        { text: "소극장 관리자 회원 조회 및 상태 관리", url: "#" },
-        { text: "신규 소극장 관리자 승인", url: "#" },
+        {
+          text: "일반회원 조회 및 상태 관리",
+          url: "/admin",
+        },
+        {
+          text: "소극장 관리자 회원 조회 및 상태 관리",
+          url: "/admin/theater-admin-users",
+        },
+        {
+          text: "신규 소극장 관리자 승인",
+          url: "/admin/theater-admin-approval",
+        },
       ],
     },
     {
       title: "공연관리",
       links: [
-        { text: "공연 조회 및 상태 관리", url: "#" },
-        { text: "한줄평 조회 및 상태 관리", url: "#" },
+        { text: "공연 조회 및 상태 관리", url: "/admin/performance-list" },
+        { text: "한줄평 조회 및 상태 관리", url: "/admin/review-list" },
       ],
     },
     {
       title: "컨텐츠관리",
       links: [
-        { text: "메인 배너 등록 및 관리", url: "#" },
-        { text: "공지사항 등록 및 관리", url: "#" },
-        { text: "이용약관 / 개인정보처리방침 관리", url: "#" },
+        { text: "메인 배너 등록 및 관리", url: "/admin/banner-list" },
+        // { text: "공지사항 등록 및 관리", url: "#" },
+        {
+          text: "이용약관 / 개인정보처리방침 관리",
+          url: "terms-privacy-settings",
+        },
       ],
     },
     {
       title: "시스템 관리",
       links: [
-        { text: "관리자 계정 관리", url: "#" },
-        { text: "서비스 점검 모드 설정", url: "#" },
-        { text: "로그 관리", url: "#" },
+        { text: "soat 관리자 계정 관리", url: "/admin/site-admin-list" },
+        { text: "서비스 점검 모드 설정", url: "/admin/maintenance-mode" },
+        // { text: "로그 관리", url: "#" },
       ],
     },
-    {
-      title: "고객지원",
-      links: [
-        { text: "1:1 문의 관리", url: "#" },
-        { text: "FAQ 관리", url: "#" },
-      ],
-    },
+    // {
+    //   title: "고객지원",
+    //   links: [
+    //     { text: "1:1 문의 관리", url: "#" },
+    //     { text: "FAQ 관리", url: "#" },
+    //   ],
+    // },
   ];
 
   return (
