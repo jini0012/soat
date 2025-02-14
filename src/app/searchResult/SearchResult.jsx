@@ -92,9 +92,9 @@ export default function SearchResult() {
         <section className="flex item-center gap-[9px]">
           <h2 className="sr-only">검색 옵션</h2>
           <SearchOptionFilter>카테고리</SearchOptionFilter>
-          <SearchOptionFilter>날짜</SearchOptionFilter>
+          <SearchOptionFilter>판매중</SearchOptionFilter>
         </section>
-        <section className="border-b border-b-gray-300 py-1 flex items-center justify-between">
+        <section className="border-b border-b-gray-300 py-3 flex items-center justify-between">
           <h2 className="sr-only">검색 정보</h2>
           <p className="font-medium">
             공연{" "}
@@ -125,7 +125,7 @@ export default function SearchResult() {
             <h2 className="sr-only">더보기</h2>
             <button
               onClick={loadMoreItems}
-              className="w-[100%] border border-flesh-500 rounded-xl p-1 text-[13px] text-flesh-500 font-light my-4"
+              className="w-[100%] border border-flesh-500 active:bg-gray-100 rounded-xl p-1 text-[13px] text-flesh-500 font-light my-4"
             >
               검색 결과 더보기
             </button>
