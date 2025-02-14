@@ -31,7 +31,7 @@ export default function Ticket({
   const timeStr = `${hours}:${minutes}`;
 
   return (
-    <article className="flex flex-col w-72 h-fit gap-y-4 border-2 rounded-md shadow-lg m-8 p-4">
+    <article className="flex text-black bg-white flex-col w-72 h-fit gap-y-4 border-2 rounded-md shadow-lg m-8 p-4">
       <div className="w-fit flex flex-col justify-center items-center gap-y-2 ml-auto mr-auto">
         <h4 className="sr-only">티켓: {title}</h4>
         <p className="text-xl font-bold">{title}</p>
