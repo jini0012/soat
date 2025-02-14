@@ -7,7 +7,10 @@ import EnrollCalendar from "../../components/enrollment/Calendar/EnrollCalendar"
 import { Button } from "@/components/controls/Button";
 import EnrollModal from "@/components/enrollment/EnrollModal";
 import Modal from "@/components/Modal";
-import Editor from "@/components/editor/Editor";
+import dynamic from "next/dynamic";
+const Editor = dynamic(() => import("@/components/editor/Editor"), {
+  ssr: false,
+});
 
 export default function EnrollmentPage() {
   const [formData, setFormData] = useState<EnrollFormData>({
