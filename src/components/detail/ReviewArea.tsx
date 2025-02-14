@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import TextArea from "../controls/TextArea";
 import { Star } from "lucide-react";
 import ReviewList from "./ReviewList";
+import { Button } from "../controls/Button";
 
 export default function ReviewArea() {
   const [isReview, setReview] = useState("");
@@ -50,9 +51,9 @@ export default function ReviewArea() {
               {isReview.length}/140
             </span>
             <div className="flex justify-end">
-              <button className="bg-flesh-500 text-white px-4 py-2 rounded ">
+              <Button highlight className=" text-white ">
                 작성하기
-              </button>
+              </Button>
             </div>
           </div>
         </li>
