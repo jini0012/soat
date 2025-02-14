@@ -12,7 +12,7 @@ export default function TableRow<T>({
   return (
     <tr className="text-[10px] border-b border-gray-300">
       {headers.map((header) => (
-        <td key={header} className="text-center py-1">
+        <td key={header} className="text-center py-1 cursor-pointer">
           {/* 필드명 기반으로 데이터 출력 ex: rowData["name"] */}
           {rowData[fieldMapping[header]] as React.ReactNode}
         </td>
