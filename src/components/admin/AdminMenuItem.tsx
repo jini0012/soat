@@ -30,7 +30,7 @@ export default function AdminMenuItem({ title, links }: AdminMenuItemProps) {
       {isOpenSubMenu && (
         <ul className="flex flex-col gap-1 mt-1">
           {links.map((link) => (
-            <li key={link.url} className="pl-2 text-[12px]">
+            <li key={link.url} className="pl-2 text-xs active:text-flesh-600">
               <Link href={link.url} className="no-underline text-inherit">
                 {link.text}
               </Link>
