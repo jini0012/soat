@@ -69,7 +69,7 @@ export default function JoinForm({
               setIsSendEmail(true);
             }}
             size="small"
-            className="mb-1 rounded-[50px] py-[2.5px] px-[8.5px]"
+            className="mb-1 rounded-[100px] py-[2.5px] px-[8.5px]"
             disabled={isSendEmail}
           >
             인증번호 받기
@@ -84,7 +84,7 @@ export default function JoinForm({
               setIsEmailValid(true);
             }}
             size="small"
-            className="mb-1 rounded-[50px] py-[2.5px] px-[8.5px]"
+            className="mb-1 rounded-[100px] py-[2.5px] px-[8.5px]"
             disabled={!isSendEmail || isEmailValid}
           >
             확인
@@ -167,7 +167,7 @@ export default function JoinForm({
             <Button
               highlight={true}
               size="small"
-              className="mb-2 rounded-[50px] py-[2.5px] px-[10.5px]"
+              className="mb-2 rounded-[100px] py-[2.5px] px-[10.5px]"
               disabled={!isBusiness || isBusinessNumValid}
               onClick={() => {
                 alert("사업자등록번호 인증이 완료되었습니다.");
