@@ -81,14 +81,14 @@ export default function TermsPage() {
       <div className="w-full flex justify-end gap-2 ">
         <button
           onClick={handleEditToggle}
-          className="w-[70px] py-1 rounded-md text-[14px] bold-medium border border-flesh-500 flex items-center justify-center"
+          className="w-[70px] py-1 rounded-md text-sm bold-medium border border-flesh-500 flex items-center justify-center"
         >
           {isEditing ? "취소" : "수정하기"}
         </button>
         {isEditing && (
           <button
             onClick={handleSave}
-            className="w-[70px] py-1 rounded-md text-white text-[14px] bold-medium flex items-center justify-center bg-flesh-500"
+            className="w-[70px] py-1 rounded-md text-white text-sm bold-medium flex items-center justify-center bg-flesh-500"
           >
             저장
           </button>

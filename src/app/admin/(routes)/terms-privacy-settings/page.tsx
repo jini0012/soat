@@ -10,7 +10,7 @@ export default function TermsAndPrivacySettingsPage() {
       <AdminHeader>컨텐츠 관리</AdminHeader>
       <AdminMain>
         <SubTabDescription>이용약관 / 개인정보처리방침 관리</SubTabDescription>
-        <p className="mt-5 mb-6 text-[12px]">이용약관 | 개인정보처리방침</p>
+        <p className="mt-5 mb-6 text-xs">이용약관 | 개인정보처리방침</p>
         <ListTitle>이용약관</ListTitle>
         <TermsPage />
       </AdminMain>
