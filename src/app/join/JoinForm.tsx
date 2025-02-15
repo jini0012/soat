@@ -57,7 +57,7 @@ export default function JoinForm({
           </Button>
         </li>
       </ul>
-      <form className="flex flex-col border-2 rounded-lg border-flesh-200 px-5 py-4 gap-[10px] mb-[14px]">
+      <form className="flex flex-col border-2 rounded-lg border-flesh-200 px-5 py-4 gap-[10px] mb-[14px] relative">
         <JoinInput label="이메일" value={email} onChange={setEmail}>
           <Button
             highlight={true}
@@ -199,7 +199,7 @@ export default function JoinForm({
             (isBusiness && !isBusinessNumValid) ||
             !checkAgree
           }
-          className="absolute bottom-[-12px] right-[30px] max-w-[87px] max-h-[30px] text-sm py-[19.5px] px-[7.5px]"
+          className="absolute bottom-[-54px] right-[0px] max-w-[87px] max-h-[30px] text-sm py-[19.5px] px-[7.5px]"
           onClick={() => setIsJoin(true)}
           highlight={true}
         >
