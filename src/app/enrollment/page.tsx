@@ -21,7 +21,7 @@ export default function EnrollmentPage() {
     location: "",
     poster: null,
   });
-
+  const [selectedDate, setSelectedDate] = useState<string>("");
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
 
   const handleOpenModal = () => {
@@ -68,7 +68,10 @@ export default function EnrollmentPage() {
           </section>
           <section className="w-[28.125%] border rounded-[10px] flex flex-col p-4">
             <h3 className="sr-only">공연 날짜</h3>
-            <EnrollCalendar openModal={handleOpenModal} />
+            <EnrollCalendar
+              openModal={handleOpenModal}
+              setSelectedDate={setSelectedDate}
+            />
           </section>
         </div>
         <section className="w-full mt-16 min-h-[600px]">
@@ -77,7 +80,7 @@ export default function EnrollmentPage() {
         </section>
       </form>
       <Modal isOpen={isOpenModal} onClose={handleCloseModal}>
-        <EnrollModal />
+        <EnrollModal title={formData.title} selectedDate={selectedDate} />
       </Modal>
       <footer className="fixed left-0 bottom-0 bg-flesh-200 w-full h-[120px] flex justify-end items-center pr-[60px] gap-14">
         <Button type="button">임시 저장</Button>
