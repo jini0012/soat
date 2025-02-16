@@ -117,13 +117,20 @@ export function JoinInput({
             onChange={(e) => {
               onChange(e.target.value);
             }}
-            className="focus:outline-none w-full placeholder:text-sm"
+            className={`focus:outline-none w-full placeholder:text-sm ${
+              disabled && "bg-white"
+            }`}
             aria-label={label}
+            disabled={disabled}
           />
           {children}
         </label>
-        <span className="text-flesh-400 text-xs">
-          {invalid ? validation : "\u00A0"}
+        <span
+          className={`text-flesh-400 ${
+            validation?.includes("이메일") ? "text-[10px]" : "text-xs"
+          }`}
+        >
+          {validation ? validation : "\u00A0"}
         </span>
       </fieldset>
     </>
