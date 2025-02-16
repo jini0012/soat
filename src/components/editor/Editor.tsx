@@ -21,6 +21,9 @@ export default function Editor() {
   const editor = useEditor({
     extensions: [StarterKit],
     content: `<p>Hello World</p>`,
+    editorProps: {
+      attributes: { class: "focus:outline-none" },
+    },
   });
 
   const headingButtons: ToolbarButtonsConfig[] = [
@@ -29,6 +32,7 @@ export default function Editor() {
     { type: "heading", label: "헤딩 3", icon: Heading3, level: 3 },
     { type: "heading", label: "헤딩 4", icon: Heading4, level: 4 },
   ];
+
   const buttons: ToolbarButtonsConfig[] = [
     { type: "Bold", label: "굵게", icon: Bold },
     { type: "Italic", label: "기울임", icon: Italic },
@@ -99,7 +103,7 @@ export default function Editor() {
         })}
       </section>
       <EditorContent
-        className=" w-full prose border focus:outline-none focus-visible:outline-none"
+        className=" w-full prose border min-h-[600px]"
         editor={editor}
       />
     </div>
