@@ -15,14 +15,13 @@ export interface EnrollFormItemsProps extends Omit<EnrollFormData, "poster"> {
   onChange: (field: keyof EnrollFormData, value: string) => void;
 }
 
-export interface EnrollModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  children: React.ReactElement;
+export interface EnrollModalProps extends Pick<EnrollFormData, "title"> {
+  selectedDate: string;
 }
 
 export interface EnrollCalendarProps {
   openModal: () => void;
+  setSelectedDate: (date: string) => void;
 }
 
 export type CalendarValuePiece = Date | null;
