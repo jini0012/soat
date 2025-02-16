@@ -1,4 +1,4 @@
-import { ReactElement } from "react";
+import { ReactElement, MouseEvent } from "react";
 
 // 기본 공통 속성
 interface BaseProps {
@@ -20,7 +20,7 @@ export interface ButtonProps extends BaseProps {
   disabled?: boolean;
   type?: "button" | "submit" | "reset";
   size?: "default" | "small" | "full";
-  onClick?: () => void;
+  onClick?: (e: MouseEvent<HTMLButtonElement>) => void;
   href?: string;
 }
 
