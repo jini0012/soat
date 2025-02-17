@@ -19,6 +19,7 @@ export default function EnrollmentPage() {
     category: "",
     bookingStartDate: "",
     location: "",
+    performances: [],
     poster: null,
   });
   const [selectedDate, setSelectedDate] = useState<string>("");
@@ -37,6 +38,22 @@ export default function EnrollmentPage() {
       ...prev,
       poster: file,
     }));
+  };
+
+  const handleOnPerformance = (time: string, casting: string[]) => {
+    setFormData((prev) => {
+      const prevPerformances = [...prev.performances];
+      const newPerformance = {
+        date: selectedDate,
+        time: time,
+        casting: casting,
+      };
+
+      return {
+        ...prev,
+        performanceTime: [...prevPerformances, newPerformance],
+      };
+    });
   };
 
   const handleOnChangeInputs = (field: keyof EnrollFormData, value: string) => {
@@ -80,7 +97,12 @@ export default function EnrollmentPage() {
         </section>
       </form>
       <Modal isOpen={isOpenModal} onClose={handleCloseModal}>
-        <EnrollModal title={formData.title} selectedDate={selectedDate} />
+        <EnrollModal
+          onConfirm={handleOnPerformance}
+          onClose={handleCloseModal}
+          title={formData.title}
+          selectedDate={selectedDate}
+        />
       </Modal>
       <footer className="fixed left-0 bottom-0 bg-flesh-200 w-full h-[120px] flex justify-end items-center pr-[60px] gap-14">
         <Button type="button">임시 저장</Button>
