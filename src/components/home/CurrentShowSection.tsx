@@ -39,10 +39,10 @@ const SHOWS = [
 
 export default function CurrentShowSection() {
   return (
-    <section className="py-5">
+    <section className="container mx-auto py-5">
       <h2 className="font-bold text-3xl">현재 예매중인 공연</h2>
       <nav className="flex items-center justify-between py-5">
-        <ul className="flex gap-3 items-center justify-between">
+        <ul className="flex gap-3 items-center">
           {CATEGORIES.map((category) => (
             <li
               key={category}
@@ -56,13 +56,13 @@ export default function CurrentShowSection() {
           더보기 <img src="images/icons/next-icon.svg" alt="더보기" />
         </p>
       </nav>
-      <ul className="flex gap-5 justify-between">
+      <ul className="grid grid-cols-4 gap-6">
         {SHOWS.map((show) => (
           <li key={show.id}>
             <img
               src={show.image}
               alt={show.title}
-              className="w-64 h-96 rounded-xl mb-3 cursor-pointer"
+              className="w-full h-[379px] rounded-xl mb-3 cursor-pointer object-cover"
             />
             <p className="font-bold text-xl cursor-pointer">{show.title}</p>
             <p>{show.location}</p>
