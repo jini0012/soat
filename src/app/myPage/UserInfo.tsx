@@ -1,5 +1,5 @@
-import Link from "next/link";
 import Li from "@/components/myPage/UserInfoItem";
+import Link from "next/link";
 
 export default function UserInfo() {
   return (
@@ -11,8 +11,11 @@ export default function UserInfo() {
         <Li type="휴대폰" data="userPhone" />
         <Li type="회원 유형" data="userType" />
         <li className="absolute bottom-[7px] right-[13px]">
-          <Link href={"userUpdate"} className="text-flesh-300 underline">
-            회원 정보 수정하기
+          <Link
+            href="/myPage/edit"
+            className="text-flesh-300 underline hover:text-flesh-500 active:text-flesh-800 focus-visible:outline-none focus-visible:text-flesh-500"
+          >
+            회원 정보 수정
           </Link>
         </li>
       </ul>
