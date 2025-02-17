@@ -43,7 +43,7 @@ export function TextInput({
   label?: string;
   value: string;
   onChange?: (value: string) => void;
-  type?: "text" | "password" | "email" | "number" | "tel" | "date"; // 추가할 타입이 있다면 여기에 추가
+  type?: "text" | "password" | "email" | "number" | "tel" | "date" | "time"; // 추가할 타입이 있다면 여기에 추가
   placeholder?: string;
   className?: string;
   align?: "v" | "h";
@@ -56,11 +56,12 @@ export function TextInput({
       onChange(e.target.value);
     }
   };
+
   const Input = (
     <input
       className={`${
         !children ? `border-2 rounded-lg ${focusRings.default}` : "border-none"
-      } px-4 py-2 flex-1 w-full focus-visible:outline-none bg-background`}
+      } px-4 py-2 flex-1 w-full focus-visible:outline-none bg-background ${className}`}
       value={value}
       onChange={handleOnChange}
       type={type}
