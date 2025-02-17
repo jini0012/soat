@@ -3,12 +3,17 @@ import React, { useState } from "react";
 import { Button } from "../controls/Button";
 import { JoinInput } from "@/components/controls/Inputs";
 import { Checkbox } from "@/components/controls/Inputs";
+import Modal from "../Modal";
+import { CloseButton } from "@/components/controls/Button";
 
 export default function UserInfoUpdate() {
   const [isUpdateType, setIsUpdateType] = useState<string>("password");
   const [password, setPassword] = useState<string>("");
   const [newPassword, setNewPassword] = useState<string>("");
   const [newPasswordConfirm, setNewPasswordConfirm] = useState<string>("");
+  const [isAccountDeleteAgree, setIsAccountDeleteAgree] =
+    useState<boolean>(false);
+  const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   return (
     <>
       <h2 className="text-sm">회원 정보 수정</h2>
@@ -34,32 +39,107 @@ export default function UserInfoUpdate() {
           </Button>
         </li>
       </ul>
-      <form className="flex flex-col border-2 rounded-lg border-flesh-200 px-5 py-[30px] gap-[10px] relative">
+      <form
+        className="flex flex-col border-2 rounded-lg border-flesh-200 px-5 py-[30px] gap-[10px] relative"
+        onSubmit={(e) => {
+          e.preventDefault();
+          setIsOpenModal(true);
+        }}
+      >
         <JoinInput
           label="현재 비밀번호"
           value={password}
           onChange={setPassword}
         />
-        <JoinInput
-          label="새 비밀번호"
-          value={newPassword}
-          onChange={setNewPassword}
-          placeholder="8~24자의 영문, 숫자, 특수문자"
-        />
-        <JoinInput
-          label="비밀번호 확인"
-          value={newPasswordConfirm}
-          onChange={setNewPasswordConfirm}
-        />
-        <Button
-          type="submit"
-          highlight
-          className="absolute bottom-[-50px] right-0 px-[14px] py-[7.5px] text-xs font-normal"
-          disabled={!password || !newPassword || !newPasswordConfirm}
-        >
-          비밀번호 변경하기
-        </Button>
+        {isUpdateType === "password" ? (
+          <>
+            <JoinInput
+              label="새 비밀번호"
+              value={newPassword}
+              onChange={setNewPassword}
+              placeholder="8~24자의 영문, 숫자, 특수문자"
+            />
+            <JoinInput
+              label="비밀번호 확인"
+              value={newPasswordConfirm}
+              onChange={setNewPasswordConfirm}
+            />
+            <Button
+              type="submit"
+              highlight
+              className="absolute bottom-[-50px] right-0 px-[14px] py-[7.5px] text-xs font-normal"
+              disabled={!password || !newPassword || !newPasswordConfirm}
+            >
+              비밀번호 변경하기
+            </Button>
+          </>
+        ) : (
+          <>
+            <h3>[회원 탈퇴 안내]</h3>
+            <p className="text-xs">
+              그동안 <span className="text-flesh-500">SO@</span>을 이용해 주셔서
+              감사합니다.
+            </p>
+            <p className="text-xs">회원 탈퇴 시 아래 내용이 적용 됩니다.</p>
+            <ol className="list-decimal px-[14px] text-xs flex flex-col gap-1">
+              <li>
+                예매 내역 및 공연 기록이 삭제되지 않으며, 환불이 필요한 경우
+                기존 정책에 따라 처리됩니다.
+              </li>
+              <li>탈퇴 후에는 같은 계정으로 다시 가입할 수 없습니다.</li>
+              <li>
+                보유 중인 할인 쿠폰 및 포인트는 모두 소멸되며 복구가 불가능
+                합니다.
+              </li>
+              <li>
+                탈퇴 후에는 공연 관리자와의 소통 내역을 조회할 수 없습니다.
+              </li>
+            </ol>
+            <Checkbox
+              checked={isAccountDeleteAgree}
+              onChange={setIsAccountDeleteAgree}
+              className="text-xs"
+            >
+              <span>위 내용을 확인하였으며, 회원 탈퇴에 동의합니다.</span>
+            </Checkbox>
+            <Button
+              type="submit"
+              highlight
+              className="absolute bottom-[-50px] right-0 px-[14px] py-[7.5px] text-xs font-normal"
+              disabled={!password || !isAccountDeleteAgree}
+            >
+              회원 탈퇴 하기
+            </Button>
+          </>
+        )}
       </form>
+
+      <Modal
+        isOpen={isOpenModal}
+        onClose={() => setIsOpenModal(false)}
+        className="max-w-[300px] flex flex-col justify-center items-center relative h-[210px] gap-5"
+      >
+        <>
+          <CloseButton
+            onClick={() => setIsOpenModal(false)}
+            className="absolute top-4 right-4"
+          />
+          <p className="text-base">
+            {isUpdateType === "password"
+              ? "비밀번호 변경이 완료되었습니다."
+              : "회원 탈퇴가 완료되었습니다."}
+          </p>
+          <Button
+            href="/"
+            highlight
+            onClick={() => setIsOpenModal(false)}
+            size="full"
+            className="max-w-20 flex justify-center text-xs font-normal px-[28.5px] py-[7.5px]"
+          >
+            확인
+          </Button>
+        </>
+      </Modal>
     </>
   );
 }
