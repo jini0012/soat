@@ -29,7 +29,9 @@ export default function SearchResultItem({
           <h3 className="font-semibold text-[15px] mt-1 mb-[0.8px]">{title}</h3>
           <p className="text-xs font-light mb-[0.8px] ">{venue}</p>
           <p className="text-xs text-gray-400 font-light">{date}</p>
-          <p className="text-xs mt-2 mb-2 font-light">한줄평({commentCount})</p>
+          <p className="text-xs mt-2 mb-2 font-light pl-4 bg-star-icon bg-no-repeat  bg-left ">
+            한줄평({commentCount})
+          </p>
           <button className="w-[65px] h-[25px] rounded-md bg-flesh-400 hover:bg-flesh-500 active:bg-flesh-600 text-white font-medium text-xs">
             예매하기
           </button>
