@@ -38,17 +38,24 @@ export function TextInput({
   align,
   children,
   ariaLabel,
+  readOnly,
 }: TextInputProps) {
+  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (onChange) {
+      onChange(e.target.value);
+    }
+  };
   const Input = (
     <input
       className={`${
         !children ? `border-2 rounded-lg ${focusRings.default}` : "border-none"
-      } px-4 py-2 flex-1 w-full focus-visible:outline-none bg-background`}
+      } px-4 py-2 flex-1 w-full focus-visible:outline-none bg-background ${className}`}
       value={value}
-      onChange={(e) => onChange(e.target.value)}
+      onChange={handleOnChange}
       type={type}
       placeholder={placeholder}
       aria-label={label || ariaLabel}
+      readOnly={readOnly}
     />
   );
 
