@@ -8,6 +8,7 @@ export default function EnrollModal({
   title,
   selectedDate,
   onClose,
+  onConfirm,
 }: EnrollModalProps) {
   const [time, setTime] = useState<string>("");
   const [casting, setCasting] = useState<string[]>([""]);
@@ -29,6 +30,15 @@ export default function EnrollModal({
       return;
     }
     setCasting((prev) => prev.slice(0, -1));
+  };
+
+  const handleConfirm = () => {
+    if (casting.some((cast) => cast.trim() === "")) {
+      alert("캐스팅을 모두 작성해주세요.");
+      return;
+    }
+    onConfirm(time, casting);
+    onClose();
   };
 
   return (
@@ -66,7 +76,9 @@ export default function EnrollModal({
         <Button type="button" onClick={onClose}>
           취소
         </Button>
-        <Button type="button">등록</Button>
+        <Button type="button" onClick={handleConfirm}>
+          등록
+        </Button>
       </footer>
     </>
   );
