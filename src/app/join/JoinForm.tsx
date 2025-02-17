@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/controls/Button";
 import { JoinInput } from "@/components/controls/Inputs";
 import { Checkbox } from "@/components/controls/Inputs";
@@ -32,6 +32,18 @@ export default function JoinForm({
   const [businessNum, setBusinessNum] = useState("");
   const [isBusinessNumValid, setIsBusinessNumValid] = useState<boolean>(false);
 
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (isSendEmail && !isEmailValid) {
+      timer = setTimeout(() => {
+        setIsSendEmail(false);
+      }, 60000);
+    }
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
+  }, [isSendEmail, isEmailValid]);
+
   return (
     <>
       <h2 className="text-xl font-bold mb-3">회원가입</h2>
@@ -57,34 +69,48 @@ export default function JoinForm({
           </Button>
         </li>
       </ul>
-      <form className="flex flex-col border-2 rounded-lg border-flesh-200 px-5 py-4 ">
-        <JoinInput label="이메일" value={email} onChange={setEmail}>
+      <form className="flex flex-col border-2 rounded-lg border-flesh-200 px-5 py-4 gap-[10px] mb-[14px] relative">
+        <JoinInput
+          label="이메일"
+          type="email"
+          value={email}
+          onChange={setEmail}
+          validation={
+            isSendEmail && !isEmailValid
+              ? "인증 번호가 이메일로 발송되었습니다. 이메일을 확인해 주세요"
+              : ""
+          }
+          disabled={isSendEmail}
+        >
           <Button
             highlight={true}
             type="button"
-            onClick={() => {
-              alert(
-                "인증 번호가 이메일로 발송되었습니다. 이메일을 확인해주세요"
-              );
+            onClick={(e) => {
               setIsSendEmail(true);
+              (e.target as HTMLButtonElement).textContent = "재전송";
             }}
             size="small"
-            className="mb-1 rounded-[20px] py-[2.5px] px-[8.5px]"
+            className="mb-1 rounded-[100px] py-[2.5px] px-[8.5px]"
             disabled={isSendEmail}
           >
             인증번호 받기
           </Button>
         </JoinInput>
-        <JoinInput label="인증번호" value={verifyNum} onChange={setVerifyNum}>
+        <JoinInput
+          label="인증번호"
+          value={verifyNum}
+          onChange={setVerifyNum}
+          disabled={!isSendEmail || isEmailValid}
+          validation={isEmailValid ? "이메일 인증이 완료되었습니다." : ""}
+        >
           <Button
             highlight={true}
             type="button"
             onClick={() => {
-              alert("이메일 인증이 완료되었습니다.");
               setIsEmailValid(true);
             }}
             size="small"
-            className="mb-1 rounded-[20px] py-[2.5px] px-[8.5px]"
+            className="mb-1 rounded-[100px] py-[2.5px] px-[8.5px]"
             disabled={!isSendEmail || isEmailValid}
           >
             확인
@@ -163,14 +189,18 @@ export default function JoinForm({
               onChange={setBusinessNum}
               disabled={!isBusiness}
               placeholder="10자 숫자 (‘-’ 문자 제외)"
+              validation={
+                isBusiness && isBusinessNumValid && businessNum !== ""
+                  ? "사업자등록번호 인증이 완료되었습니다."
+                  : ""
+              }
             />
             <Button
               highlight={true}
               size="small"
-              className="mb-2 rounded-[20px] py-[2.5px] px-[10.5px]"
+              className="mb-2 rounded-[100px] py-[2.5px] px-[10.5px]"
               disabled={!isBusiness || isBusinessNumValid}
               onClick={() => {
-                alert("사업자등록번호 인증이 완료되었습니다.");
                 setIsBusinessNumValid(true);
               }}
               type="button"
@@ -192,10 +222,16 @@ export default function JoinForm({
         </Checkbox>
         <Button
           type="submit"
-          size="small"
-          disabled={(userType === "buyer" && !checkAge) || !checkAgree}
-          className="absolute bottom-[-10px] right-[30px]"
+          size="full"
+          disabled={
+            !isEmailValid ||
+            (userType === "buyer" && !checkAge) ||
+            (isBusiness && !isBusinessNumValid) ||
+            !checkAgree
+          }
+          className="absolute bottom-[-54px] right-[0px] max-w-[87px] max-h-[30px] text-sm py-[19.5px] px-[7.5px]"
           onClick={() => setIsJoin(true)}
+          highlight={true}
         >
           가입 완료
         </Button>

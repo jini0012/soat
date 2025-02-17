@@ -48,6 +48,7 @@ export default function BookComplete() {
             <li>예금주: 김지훈</li>
             <li>18,000원</li>
           </ul>
+          {/* 아래 버튼은 모바일에서만 보입니다. */}
           <Button className="col-span-2 ml-auto mr-auto">
             <Image
               className="inline-block mr-3"
