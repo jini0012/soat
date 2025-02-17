@@ -10,9 +10,10 @@ interface BaseProps {
 interface InputBaseProps extends BaseProps {
   label?: string;
   value: string;
-  onChange: (value: string) => void;
+  onChange?: (value: string) => void;
   placeholder?: string;
   type?: "text" | "password" | "email" | "number" | "tel" | "date";
+  readOnly?: boolean;
 }
 
 export interface ButtonProps extends BaseProps {
