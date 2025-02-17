@@ -25,6 +25,8 @@ const config: Config = {
         "close-btn-active": "url('/images/icons/close-btn-active.svg')",
         "radio-false": "url('/images/icons/radio-false.svg')",
         "radio-true": "url('/images/icons/radio-true.svg')",
+        "filter-icon": "url('/images/icons/filter-chevron-down.svg')",
+        "star-icon": "url('/images/icons/star-icon.svg')",
       },
       colors: {
         background: "var(--background)",
