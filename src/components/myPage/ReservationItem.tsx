@@ -22,7 +22,7 @@ function Li({
 }: ReservationDataProps) {
   return (
     <li className="w-[90px] h-[162px]">
-      <Link href={`/book/detail/${bookId}`}>
+      <Link href={`/myPage/myBook/${bookId}`}>
         <article className="relative">
           <Image
             className={`bg-flesh-500 rounded-[10px] mb-1 ${
