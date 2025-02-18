@@ -1,5 +1,5 @@
 "use client";
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect } from "react";
 import { GeneralUser } from "@/types/admin";
 import { CloseButton, Button } from "../controls/Button";
 import { Radio } from "../controls/Inputs";

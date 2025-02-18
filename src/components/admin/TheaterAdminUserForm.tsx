@@ -77,7 +77,7 @@ export default function TheaterAdminUserForm({
             { label: "가입유형", value: user.joinType, withButton: true }, // 버튼 추가
             { label: "사업자등록번호", value: "-" },
             { label: "팀명", value: "-" },
-          ].map(({ label, value, withButton }, index) => (
+          ].map(({ label, value }, index) => (
             <div className="flex w-full items-center" key={index}>
               <dt className="mr-2 w-[80px]">{label}</dt>
               <dd className="flex items-center">
