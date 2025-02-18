@@ -6,6 +6,7 @@ import AdminMain from "@/components/admin/AdminMain";
 import ListTitle from "@/components/admin/ListTitle";
 import SubTabDescription from "@/components/admin/SubTabDescription";
 import { Checkbox, Radio } from "@/components/controls/Inputs";
+import { Button } from "@/components/controls/Button";
 
 export default function MaintenanceModePage() {
   const [radio, setRadio] = useState("");
@@ -74,9 +75,9 @@ export default function MaintenanceModePage() {
             </ul>
           </section>
           <div className="mt-8 flex justify-end">
-            <button className="bg-flesh-500 w-[65px] h-[25px] rounded-md text-xs text-white font-semibold">
+            <Button highlight size="small" className="">
               저장하기
-            </button>
+            </Button>
           </div>
         </div>
       </AdminMain>
