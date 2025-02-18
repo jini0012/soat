@@ -1,19 +1,23 @@
-interface TableRowProps<T> {
+interface TableRowProps<T extends Record<string, any>> {
   rowData: T;
   headers: string[];
-  fieldMapping: { [key: string]: keyof T }; // 필드명과 헤더 텍스트를 매핑
+  fieldMapping: Record<string, keyof T>;
+  onClick: () => void;
 }
 
-export default function TableRow<T>({
+export default function TableRow<T extends Record<string, any>>({
   rowData,
   headers,
   fieldMapping,
+  onClick,
 }: TableRowProps<T>) {
   return (
-    <tr className="text-[10px] border-b border-gray-300">
+    <tr
+      className="text-[10px] border-b border-gray-300 cursor-pointer hover:bg-gray-100"
+      onClick={onClick}
+    >
       {headers.map((header) => (
-        <td key={header} className="text-center py-1 cursor-pointer">
-          {/* 필드명 기반으로 데이터 출력 ex: rowData["name"] */}
+        <td key={header} className="text-center py-1">
           {rowData[fieldMapping[header]] as React.ReactNode}
         </td>
       ))}
