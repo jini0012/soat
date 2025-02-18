@@ -1,13 +1,14 @@
-import { Banner } from "@/types/admin";
-import TableRow from "./TableRow";
 import TableHeader from "./TableHeader";
+import { Banner } from "@/types/admin";
 
-export default function TheaterAdminUsersTable({
+export default function BannerListTable({
   data,
+  onRowClick, // onRowClick props 추가
 }: {
-  data: Banner[]; //data의 타입 선언 - 배열로 반환
+  data: Banner[];
+  onRowClick: (banner: any) => void; // 행 클릭 시 호출될 함수
 }) {
-  const headers = ["배너제목", "등록일", "상태"]; //테이블 헤더명 선언
+  const headers = ["배너제목", "등록일", "상태"]; // 테이블 헤더명 선언
 
   const fieldMapping: {
     [key in (typeof headers)[number]]: keyof Banner;
@@ -22,13 +23,22 @@ export default function TheaterAdminUsersTable({
       <TableHeader headers={headers} />
       <tbody>
         {data.length > 0 ? (
-          data.map((theaterAdminUser, index) => (
-            <TableRow
+          data.map((banner, index) => (
+            <tr
               key={index}
-              rowData={theaterAdminUser}
-              headers={headers}
-              fieldMapping={fieldMapping} // 필드 매핑 전달
-            />
+              onClick={() => onRowClick(banner)} // 클릭 시 배너 데이터를 onRowClick에 전달
+              className="cursor-pointer  hover:bg-gray-100"
+            >
+              <td className="text-[10px] text-center py-1 border-t border-gray-300">
+                {banner.bannerTitle}
+              </td>
+              <td className="text-[10px] text-center py-1 border-t border-gray-300">
+                {banner.registrationDate}
+              </td>
+              <td className="text-[10px] text-center py-1 border-t border-gray-300">
+                {banner.bannerStatus}
+              </td>
+            </tr>
           ))
         ) : (
           <tr>
