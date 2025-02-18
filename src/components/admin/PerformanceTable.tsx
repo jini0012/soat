@@ -5,11 +5,7 @@ import TableRow from "./TableRow";
 import TableHeader from "./TableHeader";
 import PerformanceForm from "./PerformanceForm"; // 공연 정보를 담을 폼 컴포넌트 추가
 
-export default function TheaterAdminUsersTable({
-  data,
-}: {
-  data: Performance[];
-}) {
+export default function PerformanceTable({ data }: { data: Performance[] }) {
   const headers = ["공연명", "카테고리", "팀명", "신고여부"];
   const fieldMapping: {
     [key in (typeof headers)[number]]: keyof Performance;
