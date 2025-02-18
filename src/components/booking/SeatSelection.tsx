@@ -1,6 +1,7 @@
 import { Button } from "../controls/Button";
 import React from "react";
 import BookSection from "./BookSection";
+import ButtonRow from "./ButtonRow";
 
 export default function SeatSelection({
   setProcess,
@@ -25,9 +26,10 @@ export default function SeatSelection({
           {/* 임시 */}
         </div>
       </BookSection>
-      <Button size="full" highlight onClick={() => setProcess("purchaserInfo")}>
-        다음
-      </Button>
+      <ButtonRow
+        setProcess={setProcess}
+        buttons={[{ label: "다음", process: "purchaserInfo", highlight: true }]}
+      />
     </>
   );
 }

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ButtonProps } from "@/types/controls";
 
 export function Button({
   highlight,
@@ -9,18 +10,9 @@ export function Button({
   size,
   onClick,
   href,
-}: {
-  highlight?: boolean;
-  children: React.ReactNode;
-  className?: string;
-  disabled?: boolean;
-  type?: "button" | "submit" | "reset";
-  size?: "default" | "small" | "full";
-  onClick?: () => void;
-  href?: string;
-}) {
+}: ButtonProps) {
   let colorClass = highlight
-    ? "bg-flesh-400 border-flesh-400 text-background"
+    ? "bg-flesh-500 border-flesh-500 text-background"
     : "bg-background border-flesh-200 text-foreground";
   let hoverClass = highlight
     ? "hover:bg-flesh-500 hover:border-flesh-500 transition"
@@ -66,7 +58,7 @@ export function Button({
 
   return (
     <button
-      className={`break-keep h-fit ${className} ${colorClass} border-2 rounded-lg ${sizeClass} font-bold ${hoverClass} ${activeClass} ${focusClass}`}
+      className={`flex justify-center items-center break-keep h-fit ${className} ${colorClass} border-2 rounded-lg ${sizeClass} font-bold ${hoverClass} ${activeClass} ${focusClass}`}
       disabled={disabled}
       type={type}
       onClick={onClick}

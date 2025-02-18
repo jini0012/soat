@@ -4,6 +4,7 @@ import { Button } from "../controls/Button";
 import { Checkbox, Radio, TextInput } from "../controls/Inputs";
 import { Select } from "../controls/Select";
 import BookSection from "./BookSection";
+import ButtonRow from "./ButtonRow";
 
 export default function PurchaseMethod({
   setProcess,
@@ -33,22 +34,13 @@ export default function PurchaseMethod({
           items={[{ value: "bank", label: "무통장 입금" }]}
         />
       </BookSection>
-      <ul className="w-full grid grid-cols-2 gap-x-2 mt-12">
-        <li>
-          <Button size="full" onClick={() => setProcess("purchaserInfo")}>
-            뒤로 가기
-          </Button>
-        </li>
-        <li>
-          <Button
-            size="full"
-            highlight
-            onClick={() => setProcess("bookComplete")}
-          >
-            다음
-          </Button>
-        </li>
-      </ul>
+      <ButtonRow
+        setProcess={setProcess}
+        buttons={[
+          { label: "뒤로 가기", process: "purchaserInfo", highlight: false },
+          { label: "다음", process: "bookComplete", highlight: true },
+        ]}
+      />
     </>
   );
 }

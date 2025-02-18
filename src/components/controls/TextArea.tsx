@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { focusRings } from "@/styles/constants";
+import { TextAreaProps } from "@/types/controls";
 
 export default function TextArea({
   label,
@@ -11,16 +12,8 @@ export default function TextArea({
   disabled,
   resize,
   rows,
-}: {
-  label?: string;
-  value: string;
-  onChange: (value: string) => void;
-  placeholder?: string;
-  className?: string;
-  disabled?: boolean;
-  resize?: boolean;
-  rows?: number;
-}) {
+  max,
+}: TextAreaProps) {
   const resizeClass = resize ? "resize" : "resize-none";
 
   if (label) {
@@ -34,6 +27,7 @@ export default function TextArea({
           placeholder={placeholder}
           disabled={disabled}
           rows={rows}
+          maxLength={max}
         />
       </label>
     );
@@ -46,6 +40,7 @@ export default function TextArea({
         placeholder={placeholder}
         disabled={disabled}
         rows={rows}
+        maxLength={max}
       />
     );
   }

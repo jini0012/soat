@@ -1,5 +1,5 @@
 import type { Config } from "tailwindcss";
-
+import typography from "@tailwindcss/typography";
 const config: Config = {
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
@@ -27,6 +27,8 @@ const config: Config = {
         "radio-true": "url('/images/icons/radio-true.svg')",
         "filter-icon": "url('/images/icons/filter-chevron-down.svg')",
         "star-icon": "url('/images/icons/star-icon.svg')",
+        "drag-and-drop": "url('/images/icons/drag-and-drop.svg')",
+        "chevron-up-dark": "url('/images/icons/chevron-up-dark.svg')",
       },
       colors: {
         background: "var(--background)",
@@ -45,8 +47,42 @@ const config: Config = {
           "950": "#440a06",
         },
       },
+      typography: {
+        DEFAULT: {
+          css: {
+            maxWidth: "none",
+            p: {
+              marginTop: "0.25rem",
+              marginBottom: "0.25rem",
+            },
+            ul: {
+              marginTop: "0.25rem",
+              marginBottom: "0.25rem",
+              marginLeft: "0.5rem",
+            },
+            ol: {
+              marginTop: "0.25rem",
+              marginBottom: "0.25rem",
+              marginLeft: "0.5rem",
+            },
+            li: {
+              marginTop: "0.25rem",
+              marginBottom: "0.25rem",
+              marginLeft: "0.5rem",
+            },
+            // 헤딩과 인용구는 기본값 유지
+            "h1, h2, h3, h4, blockquote": {
+              marginTop: "0.75rem",
+              marginBottom: "0.75rem",
+            },
+            blockquote: {
+              marginLeft: "0.5rem",
+            },
+          },
+        },
+      },
     },
   },
-  plugins: [],
+  plugins: [typography],
 };
 export default config;
