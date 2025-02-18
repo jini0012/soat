@@ -14,10 +14,12 @@ export default function Captcha({
   className,
   verifyCallback,
   setProcess,
+  nextProcess,
 }: {
   className?: string;
   verifyCallback?: (token: string) => void;
   setProcess?: (process: string) => void;
+  nextProcess?: string;
 }) {
   const [captchaData, setCaptchaData] = useState<CaptchaData | null>(null);
   const [answer, setAnswer] = useState("");
@@ -68,8 +70,12 @@ export default function Captcha({
 
       const result = await response.json();
       if (result.token) {
-        verifyCallback && verifyCallback(result.token);
-        setProcess && setProcess("seat");
+        if (verifyCallback) {
+          verifyCallback(result.token);
+        }
+        if (setProcess && nextProcess) {
+          setProcess(nextProcess);
+        }
       }
     } catch (error) {
       console.error("검증 실패:", error);

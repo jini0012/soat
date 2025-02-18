@@ -3,8 +3,14 @@ import React, { useState } from "react";
 import { EnrollFormData } from "../../types/enrollment";
 import EnrollFormItems from "../../components/enrollment/EnrollFormItems";
 import EnrollPoster from "../../components/enrollment/EnrollPoster";
-import EnrollCalendar from "../../components/enrollment/EnrollCalendar";
+import EnrollCalendar from "../../components/enrollment/Calendar/EnrollCalendar";
 import { Button } from "@/components/controls/Button";
+import EnrollModal from "@/components/enrollment/EnrollModal";
+import Modal from "@/components/Modal";
+import dynamic from "next/dynamic";
+const Editor = dynamic(() => import("@/components/editor/Editor"), {
+  ssr: false,
+});
 
 export default function EnrollmentPage() {
   const [formData, setFormData] = useState<EnrollFormData>({
@@ -13,8 +19,19 @@ export default function EnrollmentPage() {
     category: "",
     bookingStartDate: "",
     location: "",
+    performances: [],
     poster: null,
   });
+  const [selectedDate, setSelectedDate] = useState<string>("");
+  const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
+
+  const handleOpenModal = () => {
+    setIsOpenModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsOpenModal(false);
+  };
 
   const handleOnPoster = (file: File | null) => {
     setFormData((prev) => ({
@@ -22,14 +39,32 @@ export default function EnrollmentPage() {
       poster: file,
     }));
   };
+
+  const handleOnPerformance = (time: string, casting: string[]) => {
+    setFormData((prev) => {
+      const prevPerformances = [...prev.performances];
+      const newPerformance = {
+        date: selectedDate,
+        time: time,
+        casting: casting,
+      };
+
+      return {
+        ...prev,
+        performanceTime: [...prevPerformances, newPerformance],
+      };
+    });
+  };
+
   const handleOnChangeInputs = (field: keyof EnrollFormData, value: string) => {
     setFormData((prev) => ({
       ...prev,
       [field]: value,
     }));
   };
+
   return (
-    <section>
+    <section className="max-w-[1920px] m-auto mb-[140px] px-[80px]">
       <h2 className="sr-only">공연 정보 등록페이지</h2>
       <form>
         <div className="flex flex-row gap-16">
@@ -48,18 +83,31 @@ export default function EnrollmentPage() {
               onChange={handleOnChangeInputs}
             />
           </section>
-          <section className="w-[28.125%]">
+          <section className="w-[28.125%] border rounded-[10px] flex flex-col p-4">
             <h3 className="sr-only">공연 날짜</h3>
-            <EnrollCalendar />
+            <EnrollCalendar
+              openModal={handleOpenModal}
+              setSelectedDate={setSelectedDate}
+            />
           </section>
         </div>
-        <section className="bg-gray-700 w-full h-[50vh]">
-          <h3 className="sr-only">공연 상세 정보</h3>
-        </section>
-        <section>
-          <Button type="submit">등록</Button>
+        <section className="w-full mt-16 min-h-[600px]">
+          <h3 className="mb-4 text-base">공연 세부 정보</h3>
+          <Editor />
         </section>
       </form>
+      <Modal isOpen={isOpenModal} onClose={handleCloseModal}>
+        <EnrollModal
+          onConfirm={handleOnPerformance}
+          onClose={handleCloseModal}
+          title={formData.title}
+          selectedDate={selectedDate}
+        />
+      </Modal>
+      <footer className="fixed left-0 bottom-0 bg-flesh-200 w-full h-[120px] flex justify-end items-center pr-[60px] gap-14">
+        <Button type="button">임시 저장</Button>
+        <Button type="submit">공연 등록</Button>
+      </footer>
     </section>
   );
 }

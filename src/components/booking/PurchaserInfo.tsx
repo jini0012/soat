@@ -4,6 +4,7 @@ import { Button } from "../controls/Button";
 import { Checkbox, TextInput } from "../controls/Inputs";
 import { Select } from "../controls/Select";
 import BookSection from "./BookSection";
+import ButtonRow from "./ButtonRow";
 
 export default function PurchaserInfo({
   setProcess,
@@ -94,22 +95,13 @@ export default function PurchaserInfo({
           onChange={setPurchaserEmail}
         />
       </BookSection>
-      <ul className="w-full grid grid-cols-2 gap-x-2 mt-12">
-        <li>
-          <Button size="full" onClick={() => setProcess("seat")}>
-            뒤로 가기
-          </Button>
-        </li>
-        <li>
-          <Button
-            size="full"
-            highlight
-            onClick={() => setProcess("purchaseMethod")}
-          >
-            다음
-          </Button>
-        </li>
-      </ul>
+      <ButtonRow
+        setProcess={setProcess}
+        buttons={[
+          { label: "뒤로 가기", process: "seat", highlight: false },
+          { label: "다음", process: "purchaseMethod", highlight: true },
+        ]}
+      />
     </>
   );
 }
