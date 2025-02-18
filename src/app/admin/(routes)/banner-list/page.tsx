@@ -29,7 +29,7 @@ export default function BannerListPage() {
     {
       bannerTitle: "여름 페스티벌",
       registrationDate: "2025.02.01",
-      bannerStatus: "비활성화",
+      bannerStatus: "활성화",
     },
     {
       bannerTitle: "가을 연극제",
