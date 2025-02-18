@@ -1,8 +1,12 @@
-import { DailyPerformances, Performance } from "./../../types/enrollment";
+import {
+  DailyPerformances,
+  EnrollFormFields,
+  Performance,
+} from "./../../types/enrollment";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { format } from "date-fns";
 
-interface EnrollState {
+export interface EnrollState {
   type: string;
   title: string;
   category: string;
@@ -23,7 +27,7 @@ const initialState: EnrollState = {
 };
 
 const enrollSlice = createSlice({
-  name: "enrroll",
+  name: "enroll",
   initialState,
   reducers: {
     setType: (state, action: PayloadAction<string>) => {
@@ -44,6 +48,14 @@ const enrollSlice = createSlice({
     setPoster: (state, action: PayloadAction<File | null>) => {
       state.poster = action.payload;
     },
+
+    updateStringFormField: <T extends keyof EnrollFormFields>(
+      state: EnrollState,
+      action: PayloadAction<{ field: T; value: string }>
+    ) => {
+      state[action.payload.field] = action.payload.value;
+    },
+
     addPerformance: (
       state,
       action: PayloadAction<{
@@ -115,5 +127,6 @@ export const {
   addPerformance,
   updatePerformance,
   removePerformance,
+  updateStringFormField,
 } = enrollSlice.actions;
 export default enrollSlice.reducer;
