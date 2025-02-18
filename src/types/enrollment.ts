@@ -1,27 +1,34 @@
-export interface EnrollFormData {
+export interface Performance {
+  time: string;
+  casting: string[];
+}
+
+export interface DailyPerformances {
+  [date: string]: Performance[];
+}
+
+export interface EnrollFormFields {
   type: string;
   title: string;
   category: string;
   bookingStartDate: string;
   location: string;
+}
+
+export interface EnrollFormData extends EnrollFormFields {
   poster: File | null;
-  performances: {
-    date: string;
-    time: string;
-    casting: string[];
-  }[];
+  performances: DailyPerformances;
 }
 
 export interface EnrollPosterProps {
   onPosterChange: (value: File | null) => void;
 }
 
-export interface EnrollFormItemsProps
-  extends Omit<EnrollFormData, "poster" | "performances"> {
-  onChange: (field: keyof EnrollFormData, value: string) => void;
+export interface EnrollFormItemsProps extends EnrollFormFields {
+  onChange: (field: keyof EnrollFormFields, value: string) => void;
 }
 
-export interface EnrollModalProps extends Pick<EnrollFormData, "title"> {
+export interface EnrollModalProps extends Pick<EnrollFormFields, "title"> {
   onClose: () => void;
   onConfirm: (time: string, casting: string[]) => void;
   selectedDate: string;
