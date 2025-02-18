@@ -12,7 +12,7 @@ interface InputBaseProps extends BaseProps {
   value: string;
   onChange?: (value: string) => void;
   placeholder?: string;
-  type?: "text" | "password" | "email" | "number" | "tel" | "date";
+  type?: "text" | "password" | "email" | "number" | "tel" | "date" | "time";
   readOnly?: boolean;
 }
 
