@@ -26,6 +26,7 @@ const config: Config = {
         "radio-false": "url('/images/icons/radio-false.svg')",
         "radio-true": "url('/images/icons/radio-true.svg')",
         "drag-and-drop": "url('/images/icons/drag-and-drop.svg')",
+        "chevron-up-dark": "url('/images/icons/chevron-up-dark.svg')",
       },
       colors: {
         background: "var(--background)",
