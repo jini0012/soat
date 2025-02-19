@@ -13,7 +13,7 @@ export default function page() {
   return (
     <>
       <Header />
-      <main className="m-auto px-[30px] w-[360px] h-[564px] flex flex-col justify-center items-center">
+      <main className="m-auto px-[30px] w-full h-[calc(100vh-76px)] sm:h-[calc(100vh-132px)] flex flex-col justify-center items-center">
         {isError ? (
           <Error router={router} />
         ) : (
