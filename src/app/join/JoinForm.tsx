@@ -46,14 +46,15 @@ export default function JoinForm({
 
   return (
     <>
-      <h2 className="text-xl font-bold mb-3">회원가입</h2>
-      <ul className="flex mb-3 justify-center w-full gap-1">
+      <h2 className="text-xl font-bold mb-3 sm:text-3xl sm:mb-6">회원가입</h2>
+      <ul className="flex mb-3 justify-center w-[calc(100%-10px)] gap-1 sm:mb-4 sm:max-w-[515px]">
         <li className="flex-1">
           <Button
             type="button"
             onClick={() => setUserType("buyer")}
+            size="full"
             highlight={userType === "buyer" ? true : false}
-            className="w-full h-7 text-xs py-[6.5px] font-normal rounded-[10px]"
+            className="h-7 text-xs py-[6.5px] font-normal sm:h-full sm:text-base sm:py-2 sm:font-bold"
           >
             회원
           </Button>
@@ -62,14 +63,15 @@ export default function JoinForm({
           <Button
             type="button"
             onClick={() => setUserType("seller")}
+            size="full"
             highlight={userType === "seller" ? true : false}
-            className="w-full h-7 text-xs py-[6.5px] font-normal whitespace-nowrap rounded-[10px]"
+            className="h-7 text-xs py-[6.5px] font-normal sm:h-full sm:text-base sm:py-2 sm:font-bold"
           >
             소극장 관리자
           </Button>
         </li>
       </ul>
-      <form className="flex flex-col border-2 rounded-lg border-flesh-200 px-5 py-4 gap-[10px] mb-[14px] relative">
+      <form className="w-full sm:max-w-[525px] flex flex-col border-2 rounded-lg border-flesh-200 px-5 py-4 gap-[10px] relative sm:gap-[20px]">
         <JoinInput
           label="이메일"
           type="email"
@@ -90,7 +92,7 @@ export default function JoinForm({
               (e.target as HTMLButtonElement).textContent = "재전송";
             }}
             size="small"
-            className="mb-1 rounded-[100px] py-[2.5px] px-[8.5px]"
+            className="mb-1 py-[2.5px] sm:max-w-32 sm:py-none sm:text-base sm:font-bold"
             disabled={isSendEmail}
           >
             인증번호 받기
@@ -110,7 +112,7 @@ export default function JoinForm({
               setIsEmailValid(true);
             }}
             size="small"
-            className="mb-1 rounded-[100px] py-[2.5px] px-[8.5px]"
+            className="mb-1 py-[2.5px] sm:max-w-16 sm:py-none sm:text-base sm:font-bold"
             disabled={!isSendEmail || isEmailValid}
           >
             확인
@@ -159,14 +161,14 @@ export default function JoinForm({
 
         {userType === "seller" && (
           <>
-            <ul className="flex justify-center mb-2">
+            <ul className="flex justify-center mb-2 gap-2">
               <li className="flex-1">
                 <Button
                   type="button"
                   size="small"
                   onClick={() => setIsBusiness(false)}
                   highlight={!isBusiness}
-                  className="w-full h-7 text-xs py-[6.5px] font-normal"
+                  className="w-full h-7 text-xs py-[6.5px] font-normal sm:h-full sm:text-base sm:py-2 sm:font-bold"
                 >
                   사업자가 아닙니다
                 </Button>
@@ -177,7 +179,7 @@ export default function JoinForm({
                   size="small"
                   onClick={() => setIsBusiness(true)}
                   highlight={isBusiness}
-                  className="w-full h-7 text-xs py-[6.5px] font-normal"
+                  className="w-full h-7 text-xs py-[6.5px] font-normal sm:h-full sm:text-base sm:py-2 sm:font-bold"
                 >
                   사업자 입니다
                 </Button>
@@ -198,7 +200,7 @@ export default function JoinForm({
             <Button
               highlight={true}
               size="small"
-              className="mb-2 rounded-[100px] py-[2.5px] px-[10.5px]"
+              className="mb-2 py-[2.5px] sm:text-base sm:font-bold"
               disabled={!isBusiness || isBusinessNumValid}
               onClick={() => {
                 setIsBusinessNumValid(true);
@@ -211,12 +213,14 @@ export default function JoinForm({
         )}
         {userType === "buyer" && (
           <Checkbox checked={checkAge} onChange={setCheckAge}>
-            <span className="text-xs">저는 만 14세 이상 회원 입니다.</span>
+            <span className="text-xs sm:text-base">
+              저는 만 14세 이상 회원 입니다.
+            </span>
           </Checkbox>
         )}
         <Checkbox checked={checkAgree} onChange={setCheckAgree}>
-          <span className="text-[10px]">
-            SO@의 <Link href="/">이용 정책</Link> 및{" "}
+          <span className="text-[10px] sm:text-base">
+            SO@의 <Link href="/">이용 정책</Link> 및
             <Link href="/">개인정보 처리방침</Link>에 동의합니다.
           </span>
         </Checkbox>
@@ -229,7 +233,7 @@ export default function JoinForm({
             (isBusiness && !isBusinessNumValid) ||
             !checkAgree
           }
-          className="absolute bottom-[-54px] right-[0px] max-w-[87px] max-h-[30px] text-sm py-[19.5px] px-[7.5px]"
+          className="absolute bottom-[-54px] right-0 max-w-24 max-h-[30px] text-sm py-[19.5px] px-[7.5px] sm:text-base sm:max-w-40 sm:max-h-12 sm:bottom-[-60px]"
           onClick={() => setIsJoin(true)}
           highlight={true}
         >
