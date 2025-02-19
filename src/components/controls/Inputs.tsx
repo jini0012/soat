@@ -119,7 +119,7 @@ export function JoinInput({
     <>
       <fieldset className="h-[43px]">
         <label
-          className={`text-sm h-[23px] flex mb-[5px] gap-3 border-b whitespace-nowrap w-full items-center focus-within:border-black ${
+          className={`text-sm flex mb-[5px] gap-3 border-b whitespace-nowrap w-full items-center focus-within:border-black sm:text-base ${
             className ? className : ""
           } `}
         >
@@ -128,7 +128,7 @@ export function JoinInput({
             type={type}
             placeholder={placeholder}
             onChange={handleOnChange}
-            className={`focus:outline-none w-full placeholder:text-sm ${
+            className={`focus:outline-none w-full placeholder:text-sm sm:placeholder:text-base ${
               disabled && "bg-white"
             }`}
             aria-label={label}
@@ -139,7 +139,7 @@ export function JoinInput({
         <span
           className={`text-flesh-400 ${
             validation?.includes("이메일") ? "text-[10px]" : "text-xs"
-          }`}
+          } sm:text-base`}
         >
           {validation ? validation : "\u00A0"}
         </span>
