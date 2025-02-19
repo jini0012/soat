@@ -21,7 +21,7 @@ export default function JoinGreeting({ userType }: JoinGreetingProps) {
           SO@과 함께 <br />
           다양한 공연 정보와 특별한 혜택을 만나보세요 :)
         </p>
-        <ul className="flex gap-[5px] w-full justify-center sm:max-w-[525px]">
+        <ul className="flex gap-[5px] w-full justify-center max-w-[clamp(205px,50vw,525px)]">
           <li className="flex-1">
             <Button highlight={true} href="/" size="full">
               메인으로
@@ -54,7 +54,7 @@ export default function JoinGreeting({ userType }: JoinGreetingProps) {
           당신의 예술적 비전을 <br />
           SO@에서 마음껏 펼처보세요 :)
         </p>
-        <ul className="flex gap-[5px] w-full justify-center sm:max-w-[525px]">
+        <ul className="flex gap-[5px] w-full justify-center max-w-[clamp(205px,50vw,525px)]">
           <li className="flex-1">
             <Button highlight={true} href="/" size="full">
               메인으로
