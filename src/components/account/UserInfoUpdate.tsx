@@ -16,14 +16,17 @@ export default function UserInfoUpdate() {
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   return (
     <>
-      <h2 className="text-sm">회원 정보 수정</h2>
-      <ul className="flex my-[14px] justify-center w-full gap-1">
+      <h2 className="text-xl font-bold mb-3 sm:text-3xl sm:mb-6">
+        회원 정보 수정
+      </h2>
+      <ul className="flex mb-3 justify-center w-[calc(100%-10px)] gap-1 sm:mb-4 sm:max-w-[515px]">
         <li className="flex-1">
           <Button
             type="button"
             onClick={() => setIsUpdateType("password")}
             highlight={isUpdateType === "password" ? true : false}
-            className="w-full h-7 text-xs py-[6.5px] font-normal rounded-[10px]"
+            size="full"
+            className="h-7 text-xs py-[6.5px] font-normal sm:h-full sm:text-base sm:py-2 sm:font-bold"
           >
             비밀번호 변경
           </Button>
@@ -33,14 +36,15 @@ export default function UserInfoUpdate() {
             type="button"
             onClick={() => setIsUpdateType("accountDelete")}
             highlight={isUpdateType === "accountDelete" ? true : false}
-            className="w-full h-7 text-xs py-[6.5px] font-normal whitespace-nowrap rounded-[10px]"
+            size="full"
+            className="h-7 text-xs py-[6.5px] font-normal sm:h-full sm:text-base sm:py-2 sm:font-bold"
           >
             회원 탈퇴
           </Button>
         </li>
       </ul>
       <form
-        className="flex flex-col border-2 rounded-lg border-flesh-200 px-5 py-[30px] gap-[10px] relative"
+        className="w-full sm:max-w-[525px] flex flex-col border-2 rounded-lg border-flesh-200 px-5 py-[30px] gap-[10px] relative sm:gap-5"
         onSubmit={(e) => {
           e.preventDefault();
           setIsOpenModal(true);
@@ -67,7 +71,7 @@ export default function UserInfoUpdate() {
             <Button
               type="submit"
               highlight
-              className="absolute bottom-[-50px] right-0 px-[14px] py-[7.5px] text-xs font-normal"
+              className="absolute bottom-[-50px] right-0 px-[14px] py-[7.5px] text-xs sm:text-base sm:max-w-40 sm:max-h-12 sm:bottom-[-60px]"
               disabled={!password || !newPassword || !newPasswordConfirm}
             >
               비밀번호 변경하기
@@ -75,13 +79,15 @@ export default function UserInfoUpdate() {
           </>
         ) : (
           <>
-            <h3>[회원 탈퇴 안내]</h3>
-            <p className="text-xs">
+            <h3 className="sm:text-lg sm:font-bold">[회원 탈퇴 안내]</h3>
+            <p className="text-xs sm:text-base">
               그동안 <span className="text-flesh-500">SO@</span>을 이용해 주셔서
               감사합니다.
             </p>
-            <p className="text-xs">회원 탈퇴 시 아래 내용이 적용 됩니다.</p>
-            <ol className="list-decimal px-[14px] text-xs flex flex-col gap-1">
+            <p className="text-xs sm:text-base">
+              회원 탈퇴 시 아래 내용이 적용 됩니다.
+            </p>
+            <ol className="list-decimal px-[14px] text-xs flex flex-col gap-1 sm:text-base">
               <li>
                 예매 내역 및 공연 기록이 삭제되지 않으며, 환불이 필요한 경우
                 기존 정책에 따라 처리됩니다.
@@ -98,14 +104,14 @@ export default function UserInfoUpdate() {
             <Checkbox
               checked={isAccountDeleteAgree}
               onChange={setIsAccountDeleteAgree}
-              className="text-xs"
+              className="text-xs sm:text-base"
             >
               <span>위 내용을 확인하였으며, 회원 탈퇴에 동의합니다.</span>
             </Checkbox>
             <Button
               type="submit"
               highlight
-              className="absolute bottom-[-50px] right-0 px-[14px] py-[7.5px] text-xs font-normal"
+              className="absolute bottom-[-50px] right-0 px-[14px] py-[7.5px] text-xs sm:text-base sm:max-w-40 sm:max-h-12 sm:bottom-[-60px]"
               disabled={!password || !isAccountDeleteAgree}
             >
               회원 탈퇴 하기
