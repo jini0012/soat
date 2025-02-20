@@ -1,8 +1,11 @@
+"use client";
 import React, { useState } from "react";
-import { EnrollPosterProps } from "../../types/enrollment";
+import { useDispatch } from "react-redux";
+import { setPoster } from "@/redux/slices/enrollSlice";
 
-export default function EnrollPoster({ onPosterChange }: EnrollPosterProps) {
+export default function EnrollPoster() {
   const [previewPoster, setPreviewPoster] = useState<string | null>(null);
+  const dispatch = useDispatch();
 
   const handleFileOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files ? e.target.files[0] : null;
@@ -12,7 +15,7 @@ export default function EnrollPoster({ onPosterChange }: EnrollPosterProps) {
 
       reader.onloadend = () => {
         setPreviewPoster(reader.result as string);
-        onPosterChange(file);
+        dispatch(setPoster(file));
       };
 
       reader.readAsDataURL(file);
