@@ -3,15 +3,17 @@ import React, { useState } from "react";
 import { TextInput } from "../controls/Inputs";
 import { Button } from "../controls/Button";
 import { EnrollModalProps } from "@/types/enrollment";
+import { RootState } from "@/redux/store";
+import { useSelector } from "react-redux";
 
 export default function EnrollModal({
-  title,
   selectedDate,
   onClose,
   onConfirm,
 }: EnrollModalProps) {
   const [time, setTime] = useState<string>("");
   const [casting, setCasting] = useState<string[]>([""]);
+  const { title } = useSelector((state: RootState) => state.enroll);
 
   const addCasting = () => {
     setCasting((prev) => [...prev, ""]);
@@ -56,7 +58,7 @@ export default function EnrollModal({
         >
           제거
         </Button>
-        <Button type="button" onClick={addCasting}>
+        <Button highlight type="button" onClick={addCasting}>
           추가
         </Button>
       </div>
@@ -76,7 +78,7 @@ export default function EnrollModal({
         <Button type="button" onClick={onClose}>
           취소
         </Button>
-        <Button type="button" onClick={handleConfirm}>
+        <Button highlight type="button" onClick={handleConfirm}>
           등록
         </Button>
       </footer>
