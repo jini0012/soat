@@ -4,6 +4,7 @@ import {
   Performance,
 } from "./../../types/enrollment";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { JSONContent } from "@tiptap/react";
 import { format } from "date-fns";
 
 export interface EnrollState {
@@ -14,7 +15,7 @@ export interface EnrollState {
   location: string;
   poster: File | null;
   performances: DailyPerformances;
-  content: object;
+  content: JSONContent;
 }
 
 const initialState: EnrollState = {
@@ -50,7 +51,7 @@ const enrollSlice = createSlice({
     setPoster: (state, action: PayloadAction<File | null>) => {
       state.poster = action.payload;
     },
-    setContent: (state, action: PayloadAction<object>) => {
+    setContent: (state, action: PayloadAction<JSONContent>) => {
       state.content = action.payload;
     },
     updateStringFormField: <T extends keyof EnrollFormFields>(
