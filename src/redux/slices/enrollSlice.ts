@@ -14,6 +14,7 @@ export interface EnrollState {
   location: string;
   poster: File | null;
   performances: DailyPerformances;
+  content: object;
 }
 
 const initialState: EnrollState = {
@@ -24,6 +25,7 @@ const initialState: EnrollState = {
   location: "",
   poster: null,
   performances: {},
+  content: {},
 };
 
 const enrollSlice = createSlice({
@@ -48,7 +50,9 @@ const enrollSlice = createSlice({
     setPoster: (state, action: PayloadAction<File | null>) => {
       state.poster = action.payload;
     },
-
+    setContent: (state, action: PayloadAction<object>) => {
+      state.content = action.payload;
+    },
     updateStringFormField: <T extends keyof EnrollFormFields>(
       state: EnrollState,
       action: PayloadAction<{ field: T; value: string }>
@@ -124,6 +128,7 @@ export const {
   setBookingStartDate,
   setLocation,
   setPoster,
+  setContent,
   addPerformance,
   updatePerformance,
   removePerformance,
