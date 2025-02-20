@@ -28,15 +28,10 @@ export interface EnrollFormItemsProps extends EnrollFormFields {
   onChange: (field: keyof EnrollFormFields, value: string) => void;
 }
 
-export interface EnrollModalProps extends Pick<EnrollFormFields, "title"> {
+export interface EnrollModalProps {
   onClose: () => void;
   onConfirm: (time: string, casting: string[]) => void;
   selectedDate: string;
-}
-
-export interface EnrollCalendarProps {
-  openModal: () => void;
-  setSelectedDate: (date: string) => void;
 }
 
 export type CalendarValuePiece = Date | null;
