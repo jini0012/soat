@@ -2,8 +2,19 @@ import { ModalProps } from "@/types/modal";
 import React from "react";
 import ReactDOM from "react-dom";
 
-export default function Modal({ isOpen, onClose, children }: ModalProps) {
+export default function Modal({
+  isOpen,
+  onClose,
+  children,
+  containerId = "modal-root",
+}: ModalProps) {
   if (!isOpen) return null;
+
+  const container = document.getElementById(containerId);
+
+  if (!container) {
+    return null;
+  }
 
   return ReactDOM.createPortal(
     <div
@@ -17,6 +28,6 @@ export default function Modal({ isOpen, onClose, children }: ModalProps) {
         {children}
       </section>
     </div>,
-    document.getElementById("modal-root") as HTMLElement
+    container
   );
 }
