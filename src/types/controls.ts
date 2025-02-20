@@ -80,4 +80,5 @@ export interface TextAreaProps extends BaseProps {
   disabled?: boolean;
   resize?: boolean;
   rows?: number;
+  max?: number;
 }

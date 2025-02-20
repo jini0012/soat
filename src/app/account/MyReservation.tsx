@@ -1,6 +1,6 @@
 import { Button } from "@/components/controls/Button";
 import { truncate } from "fs";
-import { Ul, Li } from "@/components/myPage/ReservationItem";
+import { Ul, Li } from "@/components/account/ReservationItem";
 
 function ReservationList() {
   return (
@@ -17,19 +17,19 @@ function ReservationList() {
       <Ul>
         <Li
           imageUrl="공연이미지"
-          bookId={1}
+          bookId={4}
           title="노는게 제일 조아"
           viewDate="2025.06.03"
         />
         <Li
           imageUrl="공연이미지"
-          bookId={2}
+          bookId={5}
           title="도비는 자유에요! 직장 이직 예쁘게 하는 비법 대공개"
           viewDate="2025.05.05"
         />
         <Li
           imageUrl="공연이미지"
-          bookId={3}
+          bookId={6}
           title="귤락이란 무엇일까"
           viewDate="2025.03.25"
         />
