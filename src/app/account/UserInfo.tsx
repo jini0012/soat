@@ -12,7 +12,7 @@ export default function UserInfo() {
         <Li label="회원 유형" data="userType" />
         <li className="absolute bottom-[7px] right-[13px]">
           <Link
-            href="/myPage/edit"
+            href="/account/edit"
             className="text-flesh-300 underline hover:text-flesh-500 active:text-flesh-800 focus-visible:outline-none focus-visible:text-flesh-500 sm:text-lg"
           >
             회원 정보 수정
