@@ -29,8 +29,7 @@ export default function Toolbar({
   };
 
   return (
-    <section>
-      <h3>툴바 버튼 그룹</h3>
+    <div>
       {headingButtons.map(({ type, label, icon: Icon, level }, index) => {
         const isActive = editor?.isActive(type, { level });
         return (
@@ -66,6 +65,6 @@ export default function Toolbar({
           </button>
         );
       })}
-    </section>
+    </div>
   );
 }
