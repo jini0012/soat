@@ -19,7 +19,7 @@ function Li({
   isViewComplete,
 }: ReservationDataProps) {
   return (
-    <li className="size-full aspect-[90/162] w-[25vw] sm:w-[18vw] lg:w-[20vw] xl:w-[23vw]">
+    <li className="size-full aspect-[90/162] w-[25vw] sm:w-[18vw]">
       <Link href={`/account/mybook/${bookId}`}>
         <article className="relative">
           <img
