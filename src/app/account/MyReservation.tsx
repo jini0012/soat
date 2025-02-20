@@ -1,16 +1,17 @@
 import { Button } from "@/components/controls/Button";
-import { truncate } from "fs";
 import { Ul, Li } from "@/components/account/ReservationItem";
 
 function ReservationList() {
   return (
-    <section className="relative">
-      <h2 className="my-[10px] text-sm">예매 내역</h2>
+    <section className="relative sm:col-span-2 sm:row-start-1 sm:mr-6 md:mx-6">
+      <h2 className="my-[10px] text-sm sm:text-3xl sm:my-6  sm:font-bold">
+        예매 내역
+      </h2>
       <Button
         type="button"
         size="small"
         highlight={true}
-        className="rounded-[30px] py-[2.5px] px-[13px] bg-flesh-500 absolute top-0 right-0"
+        className="rounded-[30px] py-[2.5px] px-[13px] bg-flesh-500 absolute top-2 right-0 sm:text-base sm:font-bold sm:top-6"
       >
         더보기
       </Button>
@@ -41,13 +42,15 @@ function ReservationList() {
 function BeforeReservationList() {
   return (
     <>
-      <section className="relative">
-        <h2 className="my-[10px] text-sm">지난 예매 내역</h2>
+      <section className="relative sm:col-span-2 sm:row-start-2 sm:mr-6 md:mx-6">
+        <h2 className="my-[10px] text-sm sm:text-3xl sm:my-6 sm:font-bold">
+          지난 예매 내역
+        </h2>
         <Button
           type="button"
           size="small"
           highlight={true}
-          className="rounded-[30px] py-[2.5px] px-[13px] bg-flesh-500 absolute top-0 right-0"
+          className="rounded-[30px] py-[2.5px] px-[13px] bg-flesh-500 absolute top-2 right-0 sm:text-base sm:font-bold sm:top-6"
         >
           더보기
         </Button>
