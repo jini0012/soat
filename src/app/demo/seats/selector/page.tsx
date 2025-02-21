@@ -61,6 +61,7 @@ export default function SeatsGeneratorDemo() {
       >
         좌석 정보 콘솔에 출력
       </Button>
+      <Button href="/demo/seats/generator">좌석 배치 생성기로 이동</Button>
     </>
   );
 }
