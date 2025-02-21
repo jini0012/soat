@@ -46,14 +46,51 @@ function TheaterLayoutManager(): JSX.Element {
 
   // 좌석 번호 생성 (통로 고려)
   function getSeatNumber(rowLetter: string, physicalIndex: number): string {
-    const aisles = rowConfigs[rowLetter].aisles;
-    let realSeatNumber = physicalIndex + 1;
-    for (const aisle of Array.from(aisles).sort((a, b) => a - b)) {
-      if (physicalIndex > aisle) {
-        realSeatNumber--;
+    const rowConfig = rowConfigs[rowLetter];
+
+    // 현재 위치가 통로인지 확인
+    const isCurrentAisle = rowConfig.aisles.has(physicalIndex);
+
+    // 통로인 경우 빈 문자열 반환 (좌석 번호 없음)
+    if (isCurrentAisle) {
+      return "";
+    }
+
+    // 해당 위치의 실제 좌석 번호 계산
+    let seatNumber = physicalIndex + 1;
+
+    // 현재 위치 앞에 있는 통로들을 확인
+    for (let i = 0; i < physicalIndex; i++) {
+      if (rowConfig.aisles.has(i) && isColumnAllAisles(i)) {
+        // 해당 열이 모든 행에서 통로인 경우에만 번호를 건너뜀
+        seatNumber--;
       }
     }
-    return `${rowLetter}${realSeatNumber}`;
+
+    return `${rowLetter}${seatNumber}`;
+  }
+
+  // 특정 열이 모든 행에서 통로인지 확인하는 함수
+  function isColumnAllAisles(columnIndex: number): boolean {
+    // 모든 행을 확인
+    const allRows = Object.keys(rowConfigs);
+
+    // 해당 열이 존재하는지 확인 (일부 행은 더 짧을 수 있음)
+    const rowsWithColumn = allRows.filter((row) => {
+      const totalPositions =
+        rowConfigs[row].seats + rowConfigs[row].aisles.size;
+      return columnIndex < totalPositions;
+    });
+
+    // 행이 충분히 있는지 확인 (최소 2개 이상)
+    if (rowsWithColumn.length < 2) {
+      return false;
+    }
+
+    // 해당 열이 존재하는 모든 행에서 통로인지 확인
+    return rowsWithColumn.every((row) =>
+      rowConfigs[row].aisles.has(columnIndex)
+    );
   }
 
   // 행 추가
@@ -236,7 +273,7 @@ function TheaterLayoutManager(): JSX.Element {
                             <BtnUi
                               key={`${rowLetter}-${physicalIndex}`}
                               variant={isAisle ? "ghost" : "outline"}
-                              className={`w-12 h-8 ${
+                              className={`w-6 h-6 p-1 text-xs ${
                                 isAisle ? "bg-gray-200" : ""
                               }`}
                               onClick={() =>

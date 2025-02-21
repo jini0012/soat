@@ -19,19 +19,53 @@ function TheaterSeatSelector({
   occupiedSeats = [],
   onSeatToggle,
 }: TheaterSeatSelectorProps): JSX.Element {
+  // 특정 열이 모든 행에서 통로인지 확인하는 함수
+  const isColumnAllAisles = useCallback(
+    (columnIndex: number): boolean => {
+      // 모든 행을 확인
+      const allRows = Object.keys(layoutData.rowConfigs);
+
+      // 해당 열이 존재하는지 확인 (일부 행은 더 짧을 수 있음)
+      const rowsWithColumn = allRows.filter((row) => {
+        const totalPositions =
+          layoutData.rowConfigs[row].seats +
+          layoutData.rowConfigs[row].aisles.length;
+        return columnIndex < totalPositions;
+      });
+
+      // 행이 충분히 있는지 확인 (최소 2개 이상)
+      if (rowsWithColumn.length < 2) {
+        return false;
+      }
+
+      // 해당 열이 존재하는 모든 행에서 통로인지 확인
+      return rowsWithColumn.every((row) =>
+        layoutData.rowConfigs[row].aisles.includes(columnIndex)
+      );
+    },
+    [layoutData]
+  );
+
   // 좌석 번호 생성 (통로 고려)
   const getSeatNumber = useCallback(
     (rowLetter: string, physicalIndex: number): string => {
-      const aisles = new Set(layoutData.rowConfigs[rowLetter].aisles);
-      let realSeatNumber = physicalIndex + 1;
-      for (const aisle of Array.from(aisles).sort((a, b) => a - b)) {
-        if (physicalIndex > aisle) {
-          realSeatNumber--;
+      const rowConfig = layoutData.rowConfigs[rowLetter];
+      const aisles = new Set(rowConfig.aisles);
+
+      // 해당 위치의 실제 좌석 번호 계산
+      let seatNumber = physicalIndex + 1;
+
+      // 현재 위치 앞에 있는 통로들을 확인
+      for (let i = 0; i < physicalIndex; i++) {
+        if (aisles.has(i) && isColumnAllAisles(i)) {
+          // 해당 열이 모든 행에서 통로인 경우에만 번호를 건너뜀
+          seatNumber--;
         }
       }
-      return `${rowLetter}${realSeatNumber}`;
+
+      return `${rowLetter}${seatNumber}`;
     },
-    [layoutData]
+    [layoutData, isColumnAllAisles]
   );
 
   // 좌석 상태에 따른 스타일 결정
@@ -76,7 +110,7 @@ function TheaterSeatSelector({
             const totalPositions = rowConfig.seats + rowConfig.aisles.length;
 
             return (
-              <div key={rowLetter} className="flex items-center gap-4">
+              <div key={rowLetter} className="flex items-center gap-4 w-full">
                 {/* 좌석 표시 */}
                 <div className="flex gap-1">
                   {Array.from({ length: totalPositions }).map(
