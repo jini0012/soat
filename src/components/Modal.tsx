@@ -6,9 +6,16 @@ export default function Modal({
   isOpen,
   onClose,
   children,
+  containerId = "modal-root",
   className,
 }: ModalProps) {
   if (!isOpen) return null;
+
+  const container = document.getElementById(containerId);
+
+  if (!container) {
+    return null;
+  }
 
   return ReactDOM.createPortal(
     <div
@@ -24,6 +31,6 @@ export default function Modal({
         {children}
       </section>
     </div>,
-    document.getElementById("modal-root") as HTMLElement
+    container
   );
 }

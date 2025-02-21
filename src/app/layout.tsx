@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import ReduxProvider from "@/redux/Provider";
 
 const pretendard = localFont({
   src: "./fonts/PretendardVariable.woff2",
@@ -22,8 +23,10 @@ export default function RootLayout({
   return (
     <html lang="ko" className={`${pretendard.variable}`}>
       <body className={pretendard.className}>
-        {children}
-        <div id="modal-root"></div>
+        <ReduxProvider>
+          {children}
+          <div id="modal-root"></div>
+        </ReduxProvider>
       </body>
     </html>
   );

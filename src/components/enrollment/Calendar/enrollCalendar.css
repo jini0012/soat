@@ -37,7 +37,7 @@
 }
 
 .react-calendar__navigation button {
-  min-width: 3rem;
+  min-width: 2rem;
   background: none;
 }
 
@@ -105,6 +105,7 @@
   text-align: center;
   font: inherit;
   font-size: 0.833em;
+  position: relative;
 }
 
 .react-calendar__tile:disabled {
@@ -123,15 +124,6 @@
   background-color: #e6e6e6;
 }
 
-.react-calendar__tile--now {
-  background: var(--today--color);
-}
-
-.react-calendar__tile--now:enabled:hover,
-.react-calendar__tile--now:enabled:focus {
-  background: var(--today--color);
-}
-
 .react-calendar__tile--hasActive {
   background: var(--active--color);
 }
@@ -143,7 +135,6 @@
 
 .react-calendar__tile--active {
   background: var(--active--color);
-  border-radius: 100%;
   color: white;
 }
 
@@ -154,4 +145,17 @@
 
 .react-calendar--selectRange .react-calendar__tile--hover {
   background-color: #e6e6e6;
+}
+
+.events {
+  position: absolute;
+  width: 25%;
+  max-width: 0.5rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background-color: #ddd;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
 }
