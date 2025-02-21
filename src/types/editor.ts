@@ -17,4 +17,6 @@ export interface EditorToolbarProps {
   editor: Editor | null;
   headingButtons: ToolbarButtonsConfig[];
   formattingButtons: ToolbarButtonsConfig[];
+  codeBlockButton: ToolbarButtonsConfig;
+  onClickCodeBlockButton: () => void;
 }
