@@ -22,28 +22,28 @@ export default function BookMain({ showId }: { showId: string }) {
         rowConfigs: {
           A: {
             seats: 10,
-            aisles: [2],
+            aisles: [5],
           },
           B: {
             seats: 10,
-            aisles: [2],
+            aisles: [5],
           },
           C: {
-            seats: 10,
-            aisles: [2],
+            seats: 8,
+            aisles: [0, 5],
           },
           D: {
-            seats: 10,
-            aisles: [2],
+            seats: 8,
+            aisles: [0, 5],
           },
           E: {
-            seats: 10,
-            aisles: [2],
+            seats: 8,
+            aisles: [0, 5],
           },
         },
-        totalSeats: 50,
+        totalSeats: 44,
         performanceName: "SCREEN 1",
-        lastModified: "2025-02-20T11:09:37.088Z",
+        lastModified: "2025-02-21T06:46:30.316Z",
       });
     }
   }, []);
