@@ -1,6 +1,7 @@
 import { TextInput } from "@/components/controls/Inputs";
 import React from "react";
 import { EnrollFormItemsProps } from "../../types/enrollment";
+import { Button } from "../controls/Button";
 
 export default function EnrollFormItemsUI({
   type,
@@ -9,14 +10,27 @@ export default function EnrollFormItemsUI({
   bookingStartDate,
   location,
   onChange,
+  handleOnClickType,
 }: EnrollFormItemsProps) {
   return (
     <>
-      <TextInput
-        label="공연유형"
-        value={type}
-        onChange={(value) => onChange("type", value)}
-      />
+      <div className="flex gap-4">
+        <Button
+          highlight={type === "regular"}
+          type="button"
+          onClick={() => handleOnClickType("regular")}
+        >
+          정기공연
+        </Button>
+        <Button
+          highlight={type === "irregular"}
+          type="button"
+          onClick={() => handleOnClickType("irregular")}
+        >
+          비정기공연
+        </Button>
+      </div>
+
       <TextInput
         label="공연명"
         value={title}

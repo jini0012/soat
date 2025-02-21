@@ -4,7 +4,7 @@ import EnrollFormItemsUI from "./EnrollFormItemsUI";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { useDispatch } from "react-redux";
-import { updateStringFormField } from "@/redux/slices/enrollSlice";
+import { setType, updateStringFormField } from "@/redux/slices/enrollSlice";
 import { EnrollFormData } from "@/types/enrollment";
 
 export default function EnrollFormItems() {
@@ -20,6 +20,14 @@ export default function EnrollFormItems() {
     dispatch(updateStringFormField({ field, value }));
   };
 
+  const handleOnClickType = (newType: string) => {
+    if (type === newType) {
+      // 같은 버튼 클릭시
+      return;
+    }
+    dispatch(setType(newType));
+  };
+
   return (
     <EnrollFormItemsUI
       title={title}
@@ -28,6 +36,7 @@ export default function EnrollFormItems() {
       bookingStartDate={bookingStartDate}
       location={location}
       onChange={handleOnChangeInputs}
+      handleOnClickType={handleOnClickType}
     />
   );
 }
