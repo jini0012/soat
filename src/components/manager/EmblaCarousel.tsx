@@ -34,14 +34,24 @@ export default function EmblaCarousel() {
     };
   }, [emblaApi]);
 
-  const scrollPrev = useCallback(
-    () => emblaApi && emblaApi.scrollPrev(),
-    [emblaApi]
-  );
-  const scrollNext = useCallback(
-    () => emblaApi && emblaApi.scrollNext(),
-    [emblaApi]
-  );
+  useEffect(() => {
+    if (!emblaApi) return;
+
+    const onWheel = (event: WheelEvent) => {
+      if (event.deltaY > 0) {
+        emblaApi.scrollNext();
+      } else {
+        emblaApi.scrollPrev();
+      }
+    };
+
+    const viewport = emblaApi.containerNode();
+    viewport.addEventListener("wheel", onWheel);
+
+    return () => {
+      viewport.removeEventListener("wheel", onWheel);
+    };
+  }, [emblaApi]);
 
   const handleDocumentClick = (event: MouseEvent) => {
     // 클릭된 요소가 carousel 내부에 없으면 clickedSlide를 null로 설정
