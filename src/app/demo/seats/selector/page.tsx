@@ -5,32 +5,36 @@ import TheaterSeatSelector from "@/components/seats/TheaterSeatsSelector";
 import { useState } from "react";
 
 const demoLayout = {
-  rows: 5,
+  rows: 6,
   rowConfigs: {
     A: {
       seats: 10,
-      aisles: [],
+      aisles: [2, 6, 10],
     },
     B: {
       seats: 10,
-      aisles: [],
+      aisles: [2, 6, 10],
     },
     C: {
       seats: 10,
-      aisles: [],
+      aisles: [2, 6, 10],
     },
     D: {
       seats: 10,
-      aisles: [],
+      aisles: [2, 6, 10],
     },
     E: {
       seats: 10,
-      aisles: [],
+      aisles: [2, 6, 10],
+    },
+    F: {
+      seats: 10,
+      aisles: [2, 6, 10],
     },
   },
-  totalSeats: 50,
+  totalSeats: 60,
   performanceName: "SCREEN 1",
-  lastModified: "2025-02-20T06:36:26.398Z",
+  lastModified: "2025-02-21T06:36:16.790Z",
 };
 export default function SeatsGeneratorDemo() {
   const [selectedSeats, setSelectedSeats] = useState(new Set<string>());
