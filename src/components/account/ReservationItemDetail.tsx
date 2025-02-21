@@ -49,7 +49,7 @@ export default function ReservationItemDetail() {
         <p className="text-[10px] text-gray-300 mb-[11px]">
           안전하고 즐거운 공연 관람을 위해 최선을 다하겠습니다 :)
         </p>
-        <ul className="text-[10px] mb-4">
+        <ul className="text-[10px] mb-4 list-disc ml-4">
           <li>공연장 도착은 30분전, 예매한 좌석에 10분 전까지 착석해주세요.</li>
           <li>공연장 내에서 음식물 섭취가 불가능 합니다.</li>
           <li>
