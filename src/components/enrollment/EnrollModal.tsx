@@ -12,7 +12,7 @@ export default function EnrollModal({
   onConfirm,
 }: EnrollModalProps) {
   const [time, setTime] = useState<string>("");
-  const [casting, setCasting] = useState<string[]>([""]);
+  const [casting, setCasting] = useState<string[]>([]);
   const { title } = useSelector((state: RootState) => state.enroll);
 
   const addCasting = () => {
@@ -28,7 +28,7 @@ export default function EnrollModal({
   };
 
   const delCasting = () => {
-    if (casting.length <= 1) {
+    if (casting.length < 1) {
       return;
     }
     setCasting((prev) => prev.slice(0, -1));
@@ -47,14 +47,25 @@ export default function EnrollModal({
     <>
       <h3 className="sr-only">공연 등록하기</h3>
       <TextInput label="공연명" value={title} readOnly />
-      <TextInput label="공연날짜" value={selectedDate} readOnly />
+      <span>공연날짜</span>
+      <div className="flex px-4 py-2 flex-1 w-full focus-visible:outline-none bg-background border-2 rounded-lg overflow-x-scroll">
+        {selectedDate.map((date, idx) => (
+          <p
+            className="bg-flesh-600 py-1 px-2 mr-2 text-background rounded-lg text-md whitespace-nowrap"
+            key={idx}
+          >
+            {date}
+          </p>
+        ))}
+      </div>
       <TextInput label="공연시간" type="time" value={time} onChange={setTime} />
-      <div className="flex mt-4 gap-4 justify-end">
+      <div className="flex mt-4 gap-4 justify-end ">
+        <p className="mr-auto">캐스팅</p>
         <Button
           className=""
           type="button"
           onClick={delCasting}
-          disabled={casting.length <= 1}
+          disabled={casting.length == 0}
         >
           제거
         </Button>
@@ -62,7 +73,6 @@ export default function EnrollModal({
           추가
         </Button>
       </div>
-
       <section className="h-[200px] overflow-y-auto">
         {casting.map((cast, index) => (
           <TextInput
