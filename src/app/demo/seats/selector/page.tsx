@@ -1,6 +1,8 @@
 "use client";
 
+import { Button } from "@/components/controls/Button";
 import TheaterSeatSelector from "@/components/seats/TheaterSeatsSelector";
+import { useState } from "react";
 
 const demoLayout = {
   rows: 5,
@@ -31,5 +33,34 @@ const demoLayout = {
   lastModified: "2025-02-20T06:36:26.398Z",
 };
 export default function SeatsGeneratorDemo() {
-  return <TheaterSeatSelector layoutData={demoLayout} />;
+  const [selectedSeats, setSelectedSeats] = useState(new Set<string>());
+
+  const handleSeatToggle = (seatId: string) => {
+    setSelectedSeats((prev) => {
+      const newSelected = new Set(prev);
+      if (newSelected.has(seatId)) {
+        newSelected.delete(seatId);
+      } else {
+        newSelected.add(seatId);
+      }
+      return newSelected;
+    });
+  };
+
+  return (
+    <>
+      <TheaterSeatSelector
+        layoutData={demoLayout}
+        selectedSeats={selectedSeats}
+        onSeatToggle={handleSeatToggle}
+      />
+      <Button
+        onClick={() => {
+          console.log(selectedSeats);
+        }}
+      >
+        좌석 정보 콘솔에 출력
+      </Button>
+    </>
+  );
 }
