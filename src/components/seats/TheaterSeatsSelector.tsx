@@ -8,18 +8,18 @@ import type { TheaterLayoutData } from "./TheaterLayoutManager";
 interface TheaterSeatSelectorProps {
   layoutData: TheaterLayoutData;
   maxSelectableSeats?: number;
+  selectedSeats: Set<string>; // 외부에서 관리되는 선택된 좌석 상태
   occupiedSeats?: string[];
-  onSeatsSelected?: (seats: string[]) => void;
+  onSeatToggle: (seatId: string) => void; // 좌석 선택/해제 핸들러
 }
 
 function TheaterSeatSelector({
   layoutData,
   maxSelectableSeats = 4,
+  selectedSeats,
   occupiedSeats = [],
-  onSeatsSelected,
+  onSeatToggle,
 }: TheaterSeatSelectorProps): JSX.Element {
-  const [selectedSeats, setSelectedSeats] = useState<Set<string>>(new Set());
-
   // 좌석 번호 생성 (통로 고려)
   const getSeatNumber = useCallback(
     (rowLetter: string, physicalIndex: number): string => {
@@ -34,31 +34,6 @@ function TheaterSeatSelector({
     },
     [layoutData]
   );
-
-  // 좌석 선택 핸들러
-  const handleSeatClick = (seatId: string) => {
-    if (occupiedSeats.includes(seatId)) return;
-
-    setSelectedSeats((prev) => {
-      const newSelected = new Set(prev);
-      if (newSelected.has(seatId)) {
-        newSelected.delete(seatId);
-      } else {
-        if (newSelected.size >= maxSelectableSeats) {
-          alert(`최대 ${maxSelectableSeats}개의 좌석만 선택할 수 있습니다.`);
-          return prev;
-        }
-        newSelected.add(seatId);
-      }
-
-      // 선택된 좌석 정보 콜백
-      if (onSeatsSelected) {
-        onSeatsSelected(Array.from(newSelected));
-      }
-
-      return newSelected;
-    });
-  };
 
   // 좌석 상태에 따른 스타일 결정
   const getSeatStyle = (seatId: string) => {
