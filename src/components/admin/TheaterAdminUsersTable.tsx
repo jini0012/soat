@@ -66,7 +66,7 @@ export default function TheaterAdminUsersTable({
         </tbody>
       </table>
 
-      {/* 모달: 사용자의 정보를 보고 수정할 수 있는 폼 */}
+      {/* 모달: 소극장관리자 회원정보 */}
       {selectedUser && (
         <TheaterAdminUserForm
           user={selectedUser} // user 정보를 전달
