@@ -11,17 +11,18 @@ import Modal from "@/components/Modal";
 
 export default function MaintenanceModePage() {
   const [radio, setRadio] = useState("");
-
-  // Key 값들을 명확하게 지정
-  const pageKeys = ["all", "main", "booking", "admin"] as const;
-  type PageKey = (typeof pageKeys)[number]; // 'all' | 'main' | 'booking' | 'admin'
-
   const [checkedItems, setCheckedItems] = useState<Record<PageKey, boolean>>({
     all: false,
     main: false,
     booking: false,
     admin: false,
   });
+
+  const [isApplyModalOpen, setIsApplyModalOpen] = useState(false); // 저장 확인 모달 상태 관리
+
+  // Key 값들을 명확하게 지정
+  const pageKeys = ["all", "main", "booking", "admin"] as const;
+  type PageKey = (typeof pageKeys)[number]; // 'all' | 'main' | 'booking' | 'admin'
 
   const handleCheckboxChange = (name: PageKey) => {
     setCheckedItems((prev) => ({
@@ -30,7 +31,14 @@ export default function MaintenanceModePage() {
     }));
   };
 
-  const [isApplyModalOpen, setIsApplyModalOpen] = useState(false); //저장 확인 모달 상태 관리
+  // 저장하기 버튼 클릭 시 유효성 검사
+  const handleSaveClick = () => {
+    if (!radio || Object.values(checkedItems).every((value) => !value)) {
+      alert("모든 항목을 선택해주세요."); // 경고창 표시
+    } else {
+      setIsApplyModalOpen(true); // 모든 값이 선택되면 저장 완료 모달 표시
+    }
+  };
 
   return (
     <>
@@ -78,11 +86,7 @@ export default function MaintenanceModePage() {
             </ul>
           </section>
           <div className="mt-8 flex justify-end">
-            <Button
-              onClick={() => setIsApplyModalOpen(true)}
-              highlight
-              size="small"
-            >
+            <Button onClick={handleSaveClick} highlight size="small">
               저장하기
             </Button>
           </div>
