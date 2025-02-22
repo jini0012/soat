@@ -5,20 +5,59 @@ import { Button, CloseButton } from "../controls/Button";
 import Modal from "../Modal";
 
 interface BannerRegisterProps {
-  onClose: () => void; // onClose prop 추가
+  onClose: () => void;
 }
 
 export default function BannerRegister({ onClose }: BannerRegisterProps) {
   const [radio, setRadio] = useState("비활성화");
   const [isModalOpen, setIsModalOpen] = useState(false); //등록 여부 모달 상태 관리
-  const [isApplyModalOpen, setIsApplyModalOpen] = useState(false); //변경사항 저장 확인 모달 상태 관리
+  const [isApplyModalOpen, setIsApplyModalOpen] = useState(false); // 확인 모달 상태 관리
+
+  // 입력 상태 관리
+  const [formData, setFormData] = useState({
+    bannerTitle: "",
+    bannerImage: null as File | null,
+    alternativeText: "",
+    bannerLink: "",
+  });
+
+  // 입력값 변경 핸들러
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, files } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: files ? files[0] : value, // 파일 입력 처리
+    }));
+  };
+
+  // 등록 버튼 클릭 시 입력 값 유효성 검사
+  const handleSubmit = () => {
+    if (!formData.bannerTitle.trim()) {
+      alert("배너 제목을 입력해주세요.");
+      return;
+    }
+    if (!formData.bannerImage) {
+      alert("배너 이미지를 선택해주세요.");
+      return;
+    }
+    if (!formData.alternativeText.trim()) {
+      alert("대체 텍스트를 입력해주세요.");
+      return;
+    }
+    if (!formData.bannerLink.trim()) {
+      alert("배너 링크를 입력해주세요.");
+      return;
+    }
+
+    setIsModalOpen(true);
+  };
 
   return (
     <>
       <div>
         <div className="flex justify-between items-center mb-4">
           <h2 className="font-semibold text-lg flex-1 text-center">
-            배너 등록하기
+            배너 등록
           </h2>
           <CloseButton onClick={onClose} />
         </div>
@@ -37,6 +76,7 @@ export default function BannerRegister({ onClose }: BannerRegisterProps) {
               name="bannerTitle"
               required
               className="w-full h-[25px] border border-gray-500 text-xs rounded-sm p-2 mt-1 focus-visible:outline-none"
+              onChange={handleChange}
             />
           </div>
 
@@ -57,11 +97,7 @@ export default function BannerRegister({ onClose }: BannerRegisterProps) {
                 name="bannerImage"
                 required
                 className="hidden"
-                onChange={(e) => {
-                  // 파일 선택시 파일명을 보여줄 수 있도록 할 수 있음
-                  const fileName = e.target.files ? e.target.files[0].name : "";
-                  alert(`선택한 파일: ${fileName}`);
-                }}
+                onChange={handleChange}
               />
             </div>
           </div>
@@ -78,6 +114,7 @@ export default function BannerRegister({ onClose }: BannerRegisterProps) {
               id="alternativeText"
               name="alternativeText"
               className="w-full h-[25px] border border-gray-500 text-xs rounded-sm p-2 mt-1 focus-visible:outline-none"
+              onChange={handleChange}
             />
           </div>
 
@@ -90,6 +127,7 @@ export default function BannerRegister({ onClose }: BannerRegisterProps) {
               id="bannerLink"
               name="bannerLink"
               className="w-full h-[25px] border border-gray-500 text-xs rounded-sm p-2 mt-1 focus-visible:outline-none"
+              onChange={handleChange}
             />
           </div>
 
@@ -110,11 +148,12 @@ export default function BannerRegister({ onClose }: BannerRegisterProps) {
         </form>
 
         <div className="flex justify-end mt-4">
-          <Button onClick={() => setIsModalOpen(true)} highlight size="small">
+          <Button onClick={handleSubmit} highlight size="small">
             등록하기
           </Button>
         </div>
       </div>
+
       {/* 등록 여부 모달 */}
       {isModalOpen && (
         <Modal
@@ -147,6 +186,7 @@ export default function BannerRegister({ onClose }: BannerRegisterProps) {
           </div>
         </Modal>
       )}
+
       {/* 등록 완료 모달 */}
       {isApplyModalOpen && (
         <Modal
