@@ -7,6 +7,7 @@ import ListTitle from "@/components/admin/ListTitle";
 import SubTabDescription from "@/components/admin/SubTabDescription";
 import { Checkbox, Radio } from "@/components/controls/Inputs";
 import { Button } from "@/components/controls/Button";
+import Modal from "@/components/Modal";
 
 export default function MaintenanceModePage() {
   const [radio, setRadio] = useState("");
@@ -28,6 +29,8 @@ export default function MaintenanceModePage() {
       [name]: !prev[name], // 현재 상태의 반대값으로 변경
     }));
   };
+
+  const [isApplyModalOpen, setIsApplyModalOpen] = useState(false); //저장 확인 모달 상태 관리
 
   return (
     <>
@@ -75,12 +78,36 @@ export default function MaintenanceModePage() {
             </ul>
           </section>
           <div className="mt-8 flex justify-end">
-            <Button highlight size="small" className="">
+            <Button
+              onClick={() => setIsApplyModalOpen(true)}
+              highlight
+              size="small"
+            >
               저장하기
             </Button>
           </div>
         </div>
       </AdminMain>
+      {/* 저장 완료 모달 */}
+      {isApplyModalOpen && (
+        <Modal
+          isOpen={isApplyModalOpen}
+          onClose={() => setIsApplyModalOpen(false)}
+          className="flex flex-col justify-center items-center"
+        >
+          <div className="z-[1000] flex flex-col items-center">
+            <p className="text-xs">성공적으로 저장되었습니다.</p>
+            <Button
+              highlight
+              size="small"
+              onClick={() => setIsApplyModalOpen(false)}
+              className="mt-2 w-[60px]"
+            >
+              닫기
+            </Button>
+          </div>
+        </Modal>
+      )}
     </>
   );
 }
