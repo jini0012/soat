@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ReactElement } from "react";
+import { useState, useEffect } from "react";
 import { focusRings } from "@/styles/constants";
 import {
   CheckboxProps,
@@ -94,12 +94,12 @@ export function JoinInput({
   placeholder,
   className,
   children,
-  invalid,
   value,
   onChange,
   type,
   disabled,
   validation,
+  message,
 }: JoinInputProps) {
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (onChange) {
@@ -107,7 +107,28 @@ export function JoinInput({
     }
   };
 
-  if (invalid) {
+  const [error, setError] = useState<string | null>(null);
+  const [verifyMessage, setVerifyMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (message) {
+      setError(null);
+      setVerifyMessage(message);
+    }
+  }, [message]);
+
+  const handleOnBlur = () => {
+    if (validation) {
+      const { success, error } = validation.safeParse(value);
+      if (!success) {
+        setError(error.errors[0].message);
+      } else {
+        setError(null);
+      }
+    }
+  };
+
+  if (error) {
     className = "border-flesh-500";
   } else if (!!value) {
     className = "border-black";
@@ -128,6 +149,7 @@ export function JoinInput({
             type={type}
             placeholder={placeholder}
             onChange={handleOnChange}
+            onBlur={handleOnBlur}
             className={`focus:outline-none w-full placeholder:text-sm sm:placeholder:text-base ${
               disabled && "bg-white"
             }`}
@@ -136,13 +158,24 @@ export function JoinInput({
           />
           {children}
         </label>
-        <span
-          className={`text-flesh-400 ${
-            validation?.includes("이메일") ? "text-[10px]" : "text-xs"
-          } sm:text-base`}
-        >
-          {validation ? validation : "\u00A0"}
-        </span>
+        {error && (
+          <span
+            className={`text-flesh-400 ${
+              error?.includes("이메일") ? "text-[10px]" : "text-xs"
+            } sm:text-base`}
+          >
+            {error}
+          </span>
+        )}
+        {verifyMessage && (
+          <span
+            className={`text-flesh-400 ${
+              error?.includes("이메일") ? "text-[10px]" : "text-xs"
+            } sm:text-base`}
+          >
+            {verifyMessage}
+          </span>
+        )}
       </fieldset>
     </>
   );
