@@ -5,6 +5,7 @@ import { JoinInput } from "@/components/controls/Inputs";
 import { Checkbox } from "@/components/controls/Inputs";
 import Modal from "../Modal";
 import { CloseButton } from "@/components/controls/Button";
+import { validations } from "@/utils/validations";
 
 export default function UserInfoUpdate() {
   const [isUpdateType, setIsUpdateType] = useState<string>("password");
@@ -14,6 +15,10 @@ export default function UserInfoUpdate() {
   const [isAccountDeleteAgree, setIsAccountDeleteAgree] =
     useState<boolean>(false);
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
+
+  const isNewPasswordValid =
+    validations.password.safeParse(newPassword).success;
+
   return (
     <>
       <h2 className="text-xl font-bold mb-3 sm:text-3xl sm:mb-6">
@@ -62,17 +67,23 @@ export default function UserInfoUpdate() {
               value={newPassword}
               onChange={setNewPassword}
               placeholder="8~24자의 영문, 숫자, 특수문자"
+              validation={validations.password}
             />
             <JoinInput
               label="비밀번호 확인"
               value={newPasswordConfirm}
               onChange={setNewPasswordConfirm}
+              validation={validations.passwordConfirm(newPassword)}
             />
             <Button
               type="submit"
               highlight
               className="absolute bottom-[-50px] right-0 px-[14px] py-[7.5px] text-xs sm:text-base sm:max-w-40 sm:max-h-12 sm:bottom-[-60px]"
-              disabled={!password || !newPassword || !newPasswordConfirm}
+              disabled={
+                !password ||
+                !isNewPasswordValid ||
+                newPassword !== newPasswordConfirm
+              }
             >
               비밀번호 변경하기
             </Button>
