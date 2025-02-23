@@ -64,21 +64,21 @@ const enrollSlice = createSlice({
     addPerformance: (
       state,
       action: PayloadAction<{
-        date: string;
+        dates: string[];
         time: string;
         casting: string[];
       }>
     ) => {
-      const { date, time, casting } = action.payload;
-      const formattedDate = format(new Date(date), "yyyy-MM-dd");
+      const { dates, time, casting } = action.payload;
 
-      if (!state.performances[formattedDate]) {
-        state.performances[formattedDate] = [];
-      }
-
-      state.performances[formattedDate].push({
-        time,
-        casting,
+      dates.map((date) => {
+        if (!state.performances[date]) {
+          state.performances[date] = [];
+        }
+        state.performances[date].push({
+          time,
+          casting,
+        });
       });
     },
 

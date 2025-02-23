@@ -26,12 +26,13 @@ export interface EnrollPosterProps {
 
 export interface EnrollFormItemsProps extends EnrollFormFields {
   onChange: (field: keyof EnrollFormFields, value: string) => void;
+  handleOnClickType: (type: string) => void;
 }
 
 export interface EnrollModalProps {
   onClose: () => void;
-  onConfirm: (time: string, casting: string[]) => void;
-  selectedDate: string;
+  onConfirm: (dates: string[], time: string, casting: string[]) => void;
+  selectedDates: CalendarValue;
 }
 
 export type CalendarValuePiece = Date | null;
