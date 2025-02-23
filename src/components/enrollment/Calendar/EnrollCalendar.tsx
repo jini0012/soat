@@ -103,7 +103,9 @@ export default function EnrollCalendar() {
           추가
         </Button>
       </div>
-      {selectedEvent && <PerformanceInfo performances={selectedEvent} />}
+      {selectedEvent && (
+        <PerformanceInfo date={value as Date} performances={selectedEvent} />
+      )}
       <Modal isOpen={isOpenEnrollModal} onClose={handleCloseEnrollModal}>
         <EnrollModal
           onClose={handleCloseEnrollModal}
