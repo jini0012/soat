@@ -35,6 +35,10 @@ export interface EnrollModalProps {
   selectedDates: CalendarValue;
 }
 
+export interface PerformanceInfoProps {
+  date: Date;
+  performances: Performance[];
+}
 export type CalendarValuePiece = Date | null;
 export type CalendarValue =
   | CalendarValuePiece
