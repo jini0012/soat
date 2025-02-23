@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import Calendar from "react-calendar";
 import { Button } from "../../controls/Button";
 import { CalendarValue } from "@/types/enrollment";
@@ -12,12 +12,23 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { useDispatch } from "react-redux";
 import { addPerformance } from "@/redux/slices/enrollSlice";
+import PerformanceInfo from "../PerformanceInfo";
 
 export default function EnrollCalendar() {
   const [value, setValue] = useState<CalendarValue>(null);
   const [isOpenEnrollModal, setIsOpenEnrollModal] = useState<boolean>(false);
   const [isRange, setIsRange] = useState<boolean>(false);
   const { performances } = useSelector((state: RootState) => state.enroll);
+  const selectedEvent = useMemo(() => {
+    if (Array.isArray(value) || !value) {
+      //범위 선택이거나 등록된 공연이 없으면
+      return null;
+    }
+
+    const formattedDate = format(new Date(value), "yyyy-MM-dd");
+    return performances[formattedDate] || null;
+  }, [value, performances]);
+
   const dispatch = useDispatch();
 
   const handleCloseEnrollModal = () => {
@@ -47,19 +58,7 @@ export default function EnrollCalendar() {
     updateValue(value);
   };
 
-  const handleDayClick = (
-    //이벤트가 등록된 타일을 클릭하면
-    value: Date,
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
-    const formattedDate = format(new Date(value), "yyyy-MM-dd");
-    if (!performances[formattedDate]) {
-      return;
-    }
-  };
-
   const handleToggleRangeButton = () => {
-    //범위 선택 여부
     setIsRange((prev) => !prev);
   };
 
@@ -67,7 +66,6 @@ export default function EnrollCalendar() {
     <>
       <Calendar
         locale="ko-KR"
-        onClickDay={handleDayClick}
         formatDay={(locale, date) => `${date.getDate()}`}
         value={value}
         onChange={handleDateChange}
@@ -105,6 +103,7 @@ export default function EnrollCalendar() {
           추가
         </Button>
       </div>
+      {selectedEvent && <PerformanceInfo performances={selectedEvent} />}
       <Modal isOpen={isOpenEnrollModal} onClose={handleCloseEnrollModal}>
         <EnrollModal
           onClose={handleCloseEnrollModal}
