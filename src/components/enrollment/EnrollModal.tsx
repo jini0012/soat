@@ -15,6 +15,7 @@ export default function EnrollModal({
   const [time, setTime] = useState<string>("");
   const [casting, setCasting] = useState<string[]>([]);
   const { title } = useSelector((state: RootState) => state.enroll);
+
   const rangeDates = useMemo(() => {
     if (!selectedDates) return [];
     if (!Array.isArray(selectedDates))
@@ -51,10 +52,16 @@ export default function EnrollModal({
   };
 
   const handleConfirm = () => {
+    if (time.trim() === "") {
+      alert("시간을 입력해주세요.");
+      return;
+    }
+
     if (casting.some((cast) => cast.trim() === "")) {
       alert("캐스팅을 모두 작성해주세요.");
       return;
     }
+
     onConfirm(rangeDates, time, casting);
     onClose();
   };
