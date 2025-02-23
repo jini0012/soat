@@ -56,8 +56,8 @@ export default function CurrentShowSection() {
               ))}
             </ul>
           </div>
-          <div className="flex items-center ml-4 pl-2 bg-white">
-            <p className="flex items-center gap-2 cursor-pointer shrink-0">
+          <div className="flex items-center ml-4 pl-2 bg-inherit">
+            <p className="flex items-center gap-2 cursor-pointer shrink-0 ">
               더보기 <img src="images/icons/next-icon.svg" alt="더보기" />
             </p>
           </div>
