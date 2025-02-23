@@ -2,7 +2,8 @@ import { TextInput } from "@/components/controls/Inputs";
 import React from "react";
 import { EnrollFormItemsProps } from "../../types/enrollment";
 import { Button } from "../controls/Button";
-
+import { focusRings } from "@/styles/constants";
+import KakaoAddressSearch from "../controls/KakaoAddressSearch";
 export default function EnrollFormItemsUI({
   type,
   title,
@@ -47,10 +48,31 @@ export default function EnrollFormItemsUI({
         value={bookingStartDate}
         onChange={(value) => onChange("bookingStartDate", value)}
       />
+      <label className="block" htmlFor="detailLocation">
+        위치
+      </label>
       <TextInput
-        label="위치"
-        value={location}
-        onChange={(value) => onChange("location", value)}
+        className="w-[7rem] mr-4 mb-2"
+        placeholder="우편번호"
+        readOnly
+      />
+      <KakaoAddressSearch
+        onComplete={() => {
+          console.log("완료");
+        }}
+      />
+      <TextInput
+        className="mb-2"
+        type="text"
+        placeholder="주소"
+        value={""}
+        readOnly
+      />
+      <input
+        className={`border-2 rounded-lg px-4 py-2 flex-1 w-full focus-visible:outline-none bg-background ${focusRings.default}`}
+        type="text"
+        id="detailLocation"
+        placeholder="상세 주소"
       />
     </>
   );
