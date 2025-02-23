@@ -1,7 +1,28 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
+import Modal from "./../Modal";
 import { Button } from "../controls/Button";
 
 export default function ShowInfoSection() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+
+  const handleCopyUrl = () => {
+    if (typeof window !== "undefined") {
+      const currentUrl = window.location.href;
+      navigator.clipboard
+        .writeText(currentUrl)
+        .then(() => {
+          setModalMessage("공연정보가 클립보드에 복사되었습니다!");
+          setIsModalOpen(true);
+        })
+        .catch((error) => {
+          setModalMessage(error + "클립보드 복사에 실패했습니다.");
+          setIsModalOpen(true);
+        });
+    }
+  };
+
   return (
     <section className="flex py-16 gap-12">
       <div className="w-80">
@@ -24,7 +45,7 @@ export default function ShowInfoSection() {
                   2025. 01. 21. - 2025. 01. 25
                 </p>
               </div>
-              <button>
+              <button onClick={handleCopyUrl}>
                 <img
                   src="images/icons/share-icon.svg"
                   alt="공유하기"
@@ -71,6 +92,22 @@ export default function ShowInfoSection() {
           예매하기
         </Button>
       </div>
+
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        className="max-w-sm text-center py-8 flex flex-col items-center"
+      >
+        <>
+          <p className="text-lg">{modalMessage}</p>
+          <Button
+            className="mt-4 px-6 py-2"
+            onClick={() => setIsModalOpen(false)}
+          >
+            확인
+          </Button>
+        </>
+      </Modal>
     </section>
   );
 }
