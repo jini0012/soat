@@ -11,7 +11,7 @@ export default function main() {
     <>
       <Header />
       <SlideBanner />
-      <main className="px-[80px]">
+      <main className="px-[40px] md:px-[80px]">
         <CurrentShowSection />
         <UpcomingShowsSection />
       </main>
