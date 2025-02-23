@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { SearchInput } from "../controls/Inputs";
 import Link from "next/link";
-import { Menu, X } from 'lucide-react';
+import { Menu, X } from "lucide-react";
 
 export default function Header() {
   const [searchValue, setSearchValue] = useState("");
@@ -32,7 +32,7 @@ export default function Header() {
               />
             </Link>
           </h1>
-          
+
           {/* 데스크톱 검색 영역 */}
           <div className="hidden md:block">
             <SearchInput
@@ -41,7 +41,7 @@ export default function Header() {
               value={searchValue}
               onChange={setSearchValue}
               onSearch={handleSearch}
-              className="w-[300px]"
+              className="w-[300px] bg-background"
               inputClassName="h-[43.47px] px-[20px]"
             />
             <img
@@ -70,10 +70,7 @@ export default function Header() {
         </ul>
 
         {/* 모바일 메뉴 버튼 */}
-        <button 
-          onClick={toggleMenu}
-          className="md:hidden p-2"
-        >
+        <button onClick={toggleMenu} className="md:hidden p-2">
           {isMenuOpen ? (
             <X className="w-6 h-6" />
           ) : (
@@ -84,7 +81,7 @@ export default function Header() {
 
       {/* 모바일 메뉴 */}
       {isMenuOpen && (
-        <div className="md:hidden fixed top-[72px] left-0 w-full bg-white shadow-lg z-50">
+        <div className="md:hidden fixed top-[72px] left-0 w-full bg-background shadow-lg z-50">
           <div className="p-4">
             {/* 모바일 검색 */}
             <div className="relative mb-4">
@@ -95,7 +92,7 @@ export default function Header() {
                 onChange={setSearchValue}
                 onSearch={handleSearch}
                 className="w-full"
-                inputClassName="h-[43.47px] px-[20px]"
+                inputClassName="h-[43.47px] px-[20px] bg-background"
               />
               <img
                 src="images/icons/search-icon.svg"
@@ -108,8 +105,8 @@ export default function Header() {
             {/* 모바일 메뉴 항목들 */}
             <ul className="space-y-4">
               <li className="cursor-pointer">
-                <Link 
-                  href="./login" 
+                <Link
+                  href="./login"
                   className="text-black flex gap-[5px] items-center p-2 hover:bg-gray-100 rounded"
                   onClick={toggleMenu}
                 >
@@ -118,8 +115,8 @@ export default function Header() {
                 </Link>
               </li>
               <li className="cursor-pointer">
-                <Link 
-                  href="./join" 
+                <Link
+                  href="./join"
                   className="text-black flex gap-[5px] items-center p-2 hover:bg-gray-100 rounded"
                   onClick={toggleMenu}
                 >
