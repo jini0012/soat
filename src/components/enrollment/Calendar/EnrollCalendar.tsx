@@ -16,7 +16,7 @@ import { addPerformance } from "@/redux/slices/enrollSlice";
 export default function EnrollCalendar() {
   const [value, setValue] = useState<CalendarValue>(null);
   const [isOpenEnrollModal, setIsOpenEnrollModal] = useState<boolean>(false);
-  const [selectedDate, setSelectedDate] = useState<string>("");
+  const [isRange, setIsRange] = useState<boolean>(false);
   const { performances } = useSelector((state: RootState) => state.enroll);
   const dispatch = useDispatch();
 
@@ -28,28 +28,27 @@ export default function EnrollCalendar() {
     setIsOpenEnrollModal(true);
   };
 
-  const handleConfirm = (time: string, casting: string[]) => {
-    dispatch(addPerformance({ date: selectedDate, time, casting }));
+  const handleConfirm = (
+    selectedDates: string[],
+    time: string,
+    casting: string[]
+  ) => {
+    dispatch(addPerformance({ dates: selectedDates, time, casting }));
   };
-  const updateValue = (date: Date) => {
+
+  const updateValue = (date: Value) => {
     setValue(date);
   };
 
-  const handleSelectedDate = (date: Date) => {
-    const correction = date.getTimezoneOffset() * 60000; // 분 단위를 밀리초로 변경
-    const formattedDate = new Date(date.getTime() - correction)
-      .toISOString()
-      .split("T")[0];
-    setSelectedDate(formattedDate);
-  };
-
   const handleDateChange = (value: Value) => {
-    if (!value || Array.isArray(value)) return; // 다중 선택 방지
+    if (!value) {
+      return;
+    }
     updateValue(value);
-    handleSelectedDate(value);
   };
 
   const handleDayClick = (
+    //이벤트가 등록된 타일을 클릭하면
     value: Date,
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
@@ -57,16 +56,23 @@ export default function EnrollCalendar() {
     if (!performances[formattedDate]) {
       return;
     }
-    console.log(performances[formattedDate]);
   };
+
+  const handleToggleRangeButton = () => {
+    //범위 선택 여부
+    setIsRange((prev) => !prev);
+  };
+
   return (
     <>
       <Calendar
-        locale="ko"
+        locale="ko-KR"
         onClickDay={handleDayClick}
         formatDay={(locale, date) => `${date.getDate()}`}
         value={value}
         onChange={handleDateChange}
+        selectRange={isRange}
+        returnValue={isRange ? "range" : "start"}
         tileContent={({ date, view }) => {
           const formattedDate = format(new Date(date), "yyyy-MM-dd");
           return view === "month" && performances[formattedDate] ? (
@@ -75,15 +81,35 @@ export default function EnrollCalendar() {
         }}
         tileClassName={({ date }) => (date.getDay() === 6 ? "saturday" : null)}
       />
-      <Button className="ml-auto" type="button" onClick={handleOpenEnrollModal}>
-        추가
-      </Button>
-
+      <div className="flex">
+        <ul className="flex gap-4 items-end text-xs">
+          <li className="relative after:content-[''] after:bg-flesh-200 after:w-4 after:block after:absolute after:aspect-[1/1] after:top-[-20px] after:left-[50%] after:-translate-x-1/2">
+            시작 날짜
+          </li>
+          <li className="relative after:content-[''] after:bg-flesh-500 after:w-4 after:block after:absolute after:aspect-[1/1] after:top-[-20px] after:left-[50%] after:-translate-x-1/2">
+            종료 날짜
+          </li>
+        </ul>
+        <Button
+          type="button"
+          className="ml-auto text-xs"
+          onClick={handleToggleRangeButton}
+        >
+          범위 선택
+        </Button>
+        <Button
+          className="ml-auto"
+          type="button"
+          onClick={handleOpenEnrollModal}
+        >
+          추가
+        </Button>
+      </div>
       <Modal isOpen={isOpenEnrollModal} onClose={handleCloseEnrollModal}>
         <EnrollModal
           onClose={handleCloseEnrollModal}
           onConfirm={handleConfirm}
-          selectedDate={selectedDate}
+          selectedDates={value}
         />
       </Modal>
     </>
