@@ -103,6 +103,7 @@ export default function ShowInfoSection() {
         <div className="flex flex-col items-center">
           <p className="text-lg">{modalMessage}</p>
           <Button
+            highlight
             className="mt-4 px-6 py-2"
             onClick={() => setIsModalOpen(false)}
           >
