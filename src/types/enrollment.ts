@@ -1,3 +1,5 @@
+import { KakaoAddressData } from "./kakao";
+
 export interface Performance {
   time: string;
   casting: string[];
@@ -12,7 +14,9 @@ export interface EnrollFormFields {
   title: string;
   category: string;
   bookingStartDate: string;
-  location: string;
+  address: string;
+  detailAddress: string;
+  postCode: string;
 }
 
 export interface EnrollFormData extends EnrollFormFields {
@@ -27,6 +31,7 @@ export interface EnrollPosterProps {
 export interface EnrollFormItemsProps extends EnrollFormFields {
   onChange: (field: keyof EnrollFormFields, value: string) => void;
   handleOnClickType: (type: string) => void;
+  handleSearchAddress: (data: KakaoAddressData) => void;
 }
 
 export interface EnrollModalProps {
