@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { setPoster } from "@/redux/slices/enrollSlice";
 import { Plus } from "lucide-react";
+
 export default function EnrollPoster() {
   const [fileName, setFileName] = useState<string>("");
   const [previewPoster, setPreviewPoster] = useState<string | null>(null);
@@ -12,15 +13,10 @@ export default function EnrollPoster() {
     const file = e.target.files ? e.target.files[0] : null;
 
     if (file) {
-      const reader = new FileReader();
-
-      reader.onloadend = () => {
-        setPreviewPoster(reader.result as string);
-        setFileName(file.name);
-        dispatch(setPoster(file));
-      };
-
-      reader.readAsDataURL(file);
+      const fileURL = URL.createObjectURL(file); // Blob URL 생성
+      setPreviewPoster(fileURL); // Blob URL을 미리보기로 설정
+      setFileName(file.name);
+      dispatch(setPoster(file)); // 파일을 Redux에 저장
     }
   };
 
