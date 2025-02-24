@@ -1,6 +1,7 @@
 "use client";
 import { useCallback, useState } from "react";
 import Script from "next/script";
+import { KakaoAddressData, KakaoAddressProps } from "@/types/kakao";
 
 const KakaoAddressSearch = ({
   onComplete,
@@ -11,7 +12,7 @@ const KakaoAddressSearch = ({
   //로딩 처리 필요
   const [isScriptLoaded, setIsScriptLoaded] = useState<boolean>(false);
   const handleComplete = useCallback(
-    (data: any) => {
+    (data: KakaoAddressData) => {
       onComplete({
         address: data.address,
         zonecode: data.zonecode,
