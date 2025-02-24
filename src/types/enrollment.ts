@@ -33,16 +33,21 @@ export interface EnrollFormItemsProps extends EnrollFormFields {
   handleOnClickType: (type: string) => void;
   handleSearchAddress: (data: KakaoAddressData) => void;
 }
+export type EnrollModalMode = "add" | "edit";
 
 export interface EnrollModalProps {
   onClose: () => void;
   onConfirm: (dates: string[], time: string, casting: string[]) => void;
   selectedDates: CalendarValue;
+  initTime?: string;
+  initCasting?: string[];
+  mode: EnrollModalMode;
 }
 
 export interface PerformanceInfoProps {
   date: Date;
   performances: Performance[];
+  onEdit: (time: string, casting: string[], index: number) => void;
 }
 export type CalendarValuePiece = Date | null;
 export type CalendarValue =
