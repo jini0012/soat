@@ -4,14 +4,18 @@ import { EnrollFormItemsProps } from "../../types/enrollment";
 import { Button } from "../controls/Button";
 import { focusRings } from "@/styles/constants";
 import KakaoAddressSearch from "../controls/KakaoAddressSearch";
+import { KakaoAddressData } from "@/types/kakao";
 export default function EnrollFormItemsUI({
   type,
   title,
   category,
   bookingStartDate,
-  location,
+  address,
+  detailAddress,
+  postCode,
   onChange,
   handleOnClickType,
+  handleSearchAddress,
 }: EnrollFormItemsProps) {
   return (
     <>
@@ -52,20 +56,19 @@ export default function EnrollFormItemsUI({
         위치
       </label>
       <TextInput
-        className="w-[7rem] mr-4 mb-2"
+        className="w-[10em] mr-4 mb-2"
         placeholder="우편번호"
+        value={postCode}
         readOnly
       />
       <KakaoAddressSearch
-        onComplete={() => {
-          console.log("완료");
-        }}
+        onComplete={(data: KakaoAddressData) => handleSearchAddress(data)}
       />
       <TextInput
         className="mb-2"
         type="text"
         placeholder="주소"
-        value={""}
+        value={address}
         readOnly
       />
       <input
@@ -73,6 +76,8 @@ export default function EnrollFormItemsUI({
         type="text"
         id="detailLocation"
         placeholder="상세 주소"
+        value={detailAddress}
+        onChange={(e) => onChange("detailAddress", e.target.value)}
       />
     </>
   );
