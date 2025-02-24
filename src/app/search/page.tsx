@@ -1,12 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import SearchResultHeader from "@/components/searchResult/SearchResultHeader";
-import SearchResultItem from "@/components/searchResult/SearchResultItem";
-import SearchOptionFilter from "@/components/searchResult/SearchOptionFilter";
-import SortFilter from "@/components/searchResult/SortFilter";
-import SearchOptionSection from "@/components/searchResult/SearchOptionSection";
-// import EmptySearchResult from "@/components/searchResult/EmptySearchResults";
+import SearchResultItem from "@/components/search/SearchResultItem";
+import SearchOptionFilter from "@/components/search/SearchOptionFilter";
+import SortFilter from "@/components/search/SortFilter";
+import SearchOptionSection from "@/components/search/SearchOptionSection";
+import DesktopSearchOptionSection from "@/components/search/DesktopSearchOptionSection";
+import Header from "@/components/home/Header";
+import Footer from "@/components/home/Footer";
 
 const mockData = [
   {
@@ -16,6 +17,7 @@ const mockData = [
     venue: "공연장소 1",
     date: "2025.03.20",
     commentCount: 10,
+    price: 13000,
   },
   {
     id: 2,
@@ -24,6 +26,7 @@ const mockData = [
     venue: "공연장소 2",
     date: "2025.03.21",
     commentCount: 5,
+    price: 15000,
   },
   {
     id: 3,
@@ -32,6 +35,7 @@ const mockData = [
     venue: "공연장소 3",
     date: "2025.03.22",
     commentCount: 3,
+    price: 82000,
   },
   {
     id: 4,
@@ -40,6 +44,7 @@ const mockData = [
     venue: "공연장소 4",
     date: "2025.03.23",
     commentCount: 15,
+    price: 21000,
   },
   {
     id: 5,
@@ -48,6 +53,7 @@ const mockData = [
     venue: "공연장소 5",
     date: "2025.03.24",
     commentCount: 8,
+    price: 37000,
   },
   {
     id: 6,
@@ -56,6 +62,7 @@ const mockData = [
     venue: "공연장소 6",
     date: "2025.03.25",
     commentCount: 12,
+    price: 42000,
   },
   {
     id: 7,
@@ -64,6 +71,7 @@ const mockData = [
     venue: "공연장소 7",
     date: "2025.03.26",
     commentCount: 19,
+    price: 74000,
   },
   {
     id: 8,
@@ -72,21 +80,21 @@ const mockData = [
     venue: "공연장소 8",
     date: "2025.03.27",
     commentCount: 7,
+    price: 15000,
   },
 ];
 
-export default function SearchResult() {
+export default function SearchPage() {
   const [visibleItems, setVisibleItems] = useState(5); // 처음 5개 항목 결과리스트를 보여줌
 
-  // 검색 결과를 더 보이게 하는 함수
+  // 검색 결과를 더 보이게 하는 함수 (모바일에서 더보기 클릭시)
   function loadMoreItems() {
-    setVisibleItems(visibleItems + 5); // 5개씩 더 보이게 함
+    setVisibleItems((prev) => prev + 5); // 5개씩 더 보이게 함
   }
 
   const [isOpenSearchOption, setIsOpenSearchOption] = useState(false); // 검색조건 필터에 대한 section
   const [filterType, setFilterType] = useState<
-    //현재 활성화된 필터 타입에 대한 상태관리
-    "category" | "saleStatus" | null //null은 필터가 선택되지 않은 기본 값
+    "category" | "saleStatus" | null
   >(null);
 
   // 검색 옵션 클릭 시 해당 카테고리 필터 열기
@@ -95,15 +103,26 @@ export default function SearchResult() {
     setIsOpenSearchOption(true);
   }
 
+  // 페이지네이션 관련 상태
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5; // 한 페이지당 보여줄 아이템 개수
+  const totalPages = Math.ceil(mockData.length / itemsPerPage);
+
+  // 현재 페이지의 데이터 슬라이싱
+  const startIdx = (currentPage - 1) * itemsPerPage;
+  const paginatedData = mockData.slice(startIdx, startIdx + itemsPerPage);
+
   return (
     <>
-      <SearchResultHeader />
-      <main className="px-[8%] relative">
+      <Header />
+      <main className="px-[10%] relative">
         <p className="font-medium">
           <span className="text-flesh-500">&quot;쏘앳&quot;</span> 검색
           결과입니다.
         </p>
-        <section className="flex item-center gap-[9px]">
+
+        {/* 모바일 검색 필터 */}
+        <section className="flex items-center gap-[9px]">
           <h2 className="sr-only">검색 옵션</h2>
           <SearchOptionFilter onClick={() => handleSearchOption("category")}>
             카테고리
@@ -112,6 +131,11 @@ export default function SearchResult() {
             판매상태
           </SearchOptionFilter>
         </section>
+
+        {/* 데스크탑 검색 필터*/}
+        <DesktopSearchOptionSection />
+
+        {/* 검색 정보 */}
         <section className="border-b border-b-gray-300 py-1 flex items-center justify-between">
           <h2 className="sr-only">검색 정보</h2>
           <p className="font-medium">
@@ -122,24 +146,22 @@ export default function SearchResult() {
           </p>
           <SortFilter />
         </section>
+
+        {/* 검색 결과 목록 */}
         <section>
           <h2 className="sr-only">검색 결과</h2>
           <ul>
-            {mockData.slice(0, visibleItems).map((item) => (
-              <SearchResultItem
-                key={item.id}
-                imgUrl={item.imgUrl}
-                title={item.title}
-                venue={item.venue}
-                date={item.date}
-                commentCount={item.commentCount}
-              />
-            ))}
+            {(visibleItems < mockData.length ? paginatedData : mockData).map(
+              (item) => (
+                <SearchResultItem key={item.id} {...item} />
+              )
+            )}
           </ul>
         </section>
-        {/* 5개 이상의 항목이 있을 때만 "검색 결과 더보기" 버튼을 렌더링 */}
+
+        {/* 모바일에서만 "더보기" 버튼 표시 */}
         {visibleItems < mockData.length && (
-          <section>
+          <section className="md:hidden">
             <h2 className="sr-only">더보기</h2>
             <button
               onClick={loadMoreItems}
@@ -149,19 +171,35 @@ export default function SearchResult() {
             </button>
           </section>
         )}
-        {/* <EmptySearchResult /> */}
+
+        {/* 데스크탑에서만 페이지네이션 표시 */}
+        {mockData.length > itemsPerPage && (
+          <div className="hidden md:flex justify-center gap-2 px-4 py-6 mb-5 text-[18px]">
+            {Array.from({ length: totalPages }, (_, i) => (
+              <p
+                key={i + 1}
+                onClick={() => setCurrentPage(i + 1)}
+                className={`px-3 py-1 cursor-pointer ${
+                  currentPage === i + 1
+                    ? "text-flesh-600 font-semibold underline"
+                    : "text-gray-700"
+                } hover:text-flesh-600 hover:font-semibold active:text-flesh-600 active:font-semibold`}
+              >
+                {i + 1}
+              </p>
+            ))}
+          </div>
+        )}
       </main>
-      <footer className="h-[100px] text-center py-10 bg-gray-500 mt-10 text-white">
-        footer
-      </footer>
+      <Footer />
+
+      {/* 검색 옵션 필터 모달 */}
       {isOpenSearchOption && (
         <>
-          {/* 딤드 배경을 fixed로 설정하고, 높이를 100%로 설정 */}
-          <div className="fixed inset-0 bg-black opacity-50 z-10"></div>{" "}
-          {/* 딤드 처리 */}
+          <div className="fixed inset-0 bg-black opacity-50 z-10"></div>
           <div className="relative z-20">
             <SearchOptionSection
-              onClose={() => setIsOpenSearchOption(false)} // onClose 핸들러 전달
+              onClose={() => setIsOpenSearchOption(false)}
               filterType={filterType}
             />
           </div>

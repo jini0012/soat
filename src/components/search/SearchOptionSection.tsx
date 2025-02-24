@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button, CloseButton } from "@/components/controls/Button";
 
-const categoryType = ["코미디", "드라마", "로맨스"];
+const categoryType = ["코미디", "드라마", "로맨스", "액션", "공포", "성인"];
 const saleStatus = ["판매중", "판매예정", "판매종료"];
 
 interface SearchOptionSectionProps {
