@@ -130,12 +130,16 @@ export default function JoinForm({
           onChange={setPassword}
           placeholder="8~24자의 영문, 숫자, 특수문자"
           validation={validations.password}
+          type="password"
+          max={24}
         />
         <JoinInput
           label="비밀번호 확인"
           value={passwordConfirm}
           onChange={setPasswordConfirm}
           validation={validations.passwordConfirm(passwordConfirm)}
+          type="password"
+          max={24}
         />
         {userType === "buyer" ? (
           <JoinInput
@@ -144,6 +148,7 @@ export default function JoinForm({
             onChange={setUserName}
             placeholder="10자 이내의 국문 또는 영문"
             validation={validations.name}
+            max={10}
           />
         ) : (
           <>
@@ -153,6 +158,7 @@ export default function JoinForm({
               onChange={setTeamName}
               placeholder="10자 이내의 국문 또는 영문"
               validation={validations.teamName}
+              max={10}
             />
             <JoinInput
               label="관리자명"
@@ -160,6 +166,7 @@ export default function JoinForm({
               onChange={setManagerName}
               placeholder="10자 이내의 국문 또는 영문"
               validation={validations.managerName}
+              max={10}
             />
           </>
         )}
@@ -169,6 +176,7 @@ export default function JoinForm({
           onChange={setUserPhone}
           placeholder="11자 숫자 (‘-’ 문자 제외)"
           validation={validations.phone}
+          max={11}
         />
         {userType === "seller" && (
           <>
@@ -209,6 +217,7 @@ export default function JoinForm({
                       ? "사업자 번호 인증이 완료되었습니다."
                       : ""
                   }
+                  max={10}
                 />
                 <Button
                   highlight={true}
