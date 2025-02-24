@@ -91,7 +91,7 @@ const enrollSlice = createSlice({
       });
     },
 
-    updatePerformance: (
+    editPerformance: (
       state,
       action: PayloadAction<{
         date: string;
@@ -142,7 +142,7 @@ export const {
   setPoster,
   setContent,
   addPerformance,
-  updatePerformance,
+  editPerformance,
   removePerformance,
   updateStringFormField,
 } = enrollSlice.actions;
