@@ -4,13 +4,25 @@ import EnrollFormItemsUI from "./EnrollFormItemsUI";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { useDispatch } from "react-redux";
-import { setType, updateStringFormField } from "@/redux/slices/enrollSlice";
+import {
+  setAddress,
+  setPostCode,
+  setType,
+  updateStringFormField,
+} from "@/redux/slices/enrollSlice";
 import { EnrollFormData } from "@/types/enrollment";
+import { KakaoAddressData } from "@/types/kakao";
 
 export default function EnrollFormItems() {
-  const { title, type, category, bookingStartDate, location } = useSelector(
-    (state: RootState) => state.enroll
-  );
+  const {
+    title,
+    type,
+    category,
+    bookingStartDate,
+    address,
+    detailAddress,
+    postCode,
+  } = useSelector((state: RootState) => state.enroll);
   const dispatch = useDispatch();
 
   const handleOnChangeInputs = (
@@ -28,15 +40,24 @@ export default function EnrollFormItems() {
     dispatch(setType(newType));
   };
 
+  const onComplete = (data: KakaoAddressData) => {
+    const address = data.roadAddress + data.buildingName;
+    dispatch(setAddress(address));
+    dispatch(setPostCode(data.zonecode));
+  };
+
   return (
     <EnrollFormItemsUI
       title={title}
       type={type}
       category={category}
       bookingStartDate={bookingStartDate}
-      location={location}
+      address={address}
+      detailAddress={detailAddress}
+      postCode={postCode}
       onChange={handleOnChangeInputs}
       handleOnClickType={handleOnClickType}
+      handleSearchAddress={onComplete}
     />
   );
 }
