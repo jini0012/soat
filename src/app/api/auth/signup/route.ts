@@ -1,4 +1,3 @@
-// /src/app/api/auth/signup/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { adminDb } from "../../firebaseAdmin";
 import { hash } from "bcryptjs";
@@ -35,9 +34,12 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // 이메일 중복 확인
+    // 회원 유형에 따른 컬렉션 결정
+    const collectionName = userType === "seller" ? "sellerUsers" : "buyerUsers";
+
+    // 해당 컬렉션 내에서만 이메일 중복 확인
     const userSnapshot = await adminDb
-      .collection("users")
+      .collection(collectionName)
       .where("email", "==", email)
       .get();
 
@@ -59,7 +61,7 @@ export async function POST(request: NextRequest) {
       updatedAt: new Date().toISOString(),
     };
 
-    const userRef = await adminDb.collection("users").add(userData);
+    const userRef = await adminDb.collection(collectionName).add(userData);
 
     // 응답에서 비밀번호 제외
     const { password: _, ...userDataWithoutPassword } = userData;
