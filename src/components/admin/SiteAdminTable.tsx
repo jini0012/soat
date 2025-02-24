@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { SiteAdmin } from "@/types/admin";
 import TableRow from "./TableRow";
 import TableHeader from "./TableHeader";
-import SiteAdminModify from "./SiteAdminModify"; // SiteAdminModify import
+import SiteAdminModify from "./SiteAdminModify";
 
 export default function SiteAdminTable({
   data,
@@ -11,7 +11,7 @@ export default function SiteAdminTable({
   data: SiteAdmin[]; // data prop 정의
 }) {
   const [selectedUser, setSelectedUser] = useState<SiteAdmin | null>(null); // 선택된 관리자 상태
-  const [isModalOpen, setIsModalOpen] = useState(false); // 모달 열기/닫기 상태
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const headers = ["이메일", "관리자명", "권한"]; // 테이블 헤더명 선언
 
