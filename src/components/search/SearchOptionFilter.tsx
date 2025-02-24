@@ -10,7 +10,7 @@ export default function SearchOptionFilter({
   return (
     <button
       onClick={onClick} // 부모로부터 받은 onClick 이벤트 props 적용
-      className="flex justify-center items-center mt-[10px] mb-[23px] border border-gray-300 rounded-2xl pl-2 w-[68px] h-[30px] text-xs text-gray-500"
+      className="flex justify-center items-center mt-[10px] mb-[23px] border border-gray-300 rounded-2xl pl-2 w-[68px] h-[30px] text-xs text-gray-500 md:hidden"
     >
       {children}
       <svg
