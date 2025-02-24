@@ -3,6 +3,7 @@ import { Button } from "@/components/controls/Button";
 import { TextInput, Checkbox } from "@/components/controls/Inputs";
 import React, { useState } from "react";
 import Link from "next/link";
+import { signIn } from "next-auth/react";
 
 enum UserType {
   TICKETUSER = "TICKETUSER",
@@ -22,6 +23,7 @@ export default function LoginContent() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [rememberMe, setRememberMe] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
   const isFormValid = email !== "" && password !== "";
 
@@ -32,6 +34,23 @@ export default function LoginContent() {
     height: "1px",
     top: "65px",
   };
+
+  async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setError(null);
+    const result = await signIn("credentials", {
+      email,
+      password,
+      userType: userType === UserType.TICKETUSER ? "buyer" : "seller",
+      redirect: false,
+    });
+
+    if (result?.error) {
+      setError(result.error);
+    } else {
+      window.location.href = "/";
+    }
+  }
 
   return (
     <div className="w-full h-screen flex justify-center items-start pt-8">
@@ -66,7 +85,7 @@ export default function LoginContent() {
         <div className="absolute bg-background z-20" style={lineStyles}></div>
 
         <div className="bg-white p-8 rounded-b-xl border border-gray-300">
-          <form className="space-y-4">
+          <form className="space-y-4" onSubmit={handleLogin}>
             <div className="[&_input]:pl-9 [&_input]:py-4  relative">
               <img
                 src="images/icons/mail-icon.svg"
@@ -102,9 +121,11 @@ export default function LoginContent() {
                 </Checkbox>
               </label>
             </div>
+
             <Button highlight size="full" type="submit" disabled={!isFormValid}>
               로그인
             </Button>
+            {error && <p className="text-flesh-400 text-sm">{error}</p>}
           </form>
 
           <div className="mt-6 flex justify-center space-x-4 text-sm">

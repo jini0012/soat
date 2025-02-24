@@ -5,6 +5,7 @@ import { JoinInput } from "@/components/controls/Inputs";
 import { Checkbox } from "@/components/controls/Inputs";
 import Link from "next/link";
 import { validations } from "@/utils/validations";
+import axios from "axios";
 
 interface JoinFormProps {
   setUserType: (userType: "buyer" | "seller") => void;
@@ -48,6 +49,39 @@ export default function JoinForm({
     };
   }, [isSendEmail, isEmailValid]);
 
+  const formData =
+    userType === "seller"
+      ? {
+          userType,
+          email,
+          password,
+          teamName,
+          managerName,
+          phoneNumber: userPhone,
+          businessNum,
+        }
+      : {
+          userType,
+          email,
+          password,
+          username: userName,
+          phoneNumber: userPhone,
+        };
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    console.log(formData);
+    try {
+      const response = await axios.post("/api/auth/signup", formData);
+
+      if (response.status === 201) {
+        setIsJoin(true);
+      }
+    } catch (error) {
+      console.error("회원가입 오류:", error);
+    }
+  }
+
   return (
     <>
       <h2 className="text-xl font-bold mb-3 sm:text-3xl sm:mb-6">회원가입</h2>
@@ -75,7 +109,10 @@ export default function JoinForm({
           </Button>
         </li>
       </ul>
-      <form className="w-full sm:max-w-[525px] flex flex-col border-2 rounded-lg border-flesh-200 px-5 py-4 gap-[10px] relative sm:gap-[20px]">
+      <form
+        onSubmit={handleSubmit}
+        className="w-full sm:max-w-[525px] flex flex-col border-2 rounded-lg border-flesh-200 px-5 py-4 gap-[10px] relative sm:gap-[20px]"
+      >
         <JoinInput
           label="이메일"
           type="email"
@@ -253,7 +290,6 @@ export default function JoinForm({
           size="full"
           disabled={(userType === "buyer" && !checkAge) || !checkAgree}
           className="absolute bottom-[-54px] right-0 max-w-24 max-h-[30px] text-sm py-[19.5px] px-[7.5px] sm:text-base sm:max-w-40 sm:max-h-12 sm:bottom-[-60px]"
-          onClick={() => setIsJoin(true)}
           highlight={true}
         >
           가입 완료
