@@ -54,8 +54,10 @@ export async function POST(request: NextRequest) {
     const hashedPassword = await hash(password, 12);
 
     // 기본 사용자 데이터
+    const { userType: _userType, ...restFormData } = formData;
+
     const userData = {
-      ...formData,
+      ...restFormData,
       password: hashedPassword,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
