@@ -3,15 +3,19 @@ import React from "react";
 import { CloseButton } from "../controls/Button";
 import { useDispatch } from "react-redux";
 import { removePerformance } from "@/redux/slices/enrollSlice";
+import { Edit } from "lucide-react";
 export default function PerformanceInfo({
   date,
   performances,
+  onEdit,
 }: PerformanceInfoProps) {
   const dispatch = useDispatch();
+
   const handleDel = (index: number) => {
     const removedate = date.toString();
     dispatch(removePerformance({ date: removedate, index }));
   };
+
   return (
     <section className="flex flex-col gap-2 max-h-[200px] overflow-auto p-2">
       <h4 className="text-sm">공연 상세 정보</h4>
@@ -28,8 +32,13 @@ export default function PerformanceInfo({
               </span>
             )}
           </p>
-          <button className="ml-auto" type="button">
-            수정
+
+          <button
+            className="ml-auto"
+            type="button"
+            onClick={() => onEdit(performance.time, performance.casting, idx)}
+          >
+            <Edit aria-label="수정" />
           </button>
           <CloseButton
             type="button"
