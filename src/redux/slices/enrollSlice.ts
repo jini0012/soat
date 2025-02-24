@@ -12,7 +12,9 @@ export interface EnrollState {
   title: string;
   category: string;
   bookingStartDate: string;
-  location: string;
+  postCode: string;
+  address: string;
+  detailAddress: string;
   poster: File | null;
   performances: DailyPerformances;
   content: JSONContent;
@@ -23,7 +25,9 @@ const initialState: EnrollState = {
   title: "",
   category: "",
   bookingStartDate: "",
-  location: "",
+  postCode: "",
+  address: "",
+  detailAddress: "",
   poster: null,
   performances: {},
   content: {},
@@ -45,8 +49,14 @@ const enrollSlice = createSlice({
     setBookingStartDate: (state, action: PayloadAction<string>) => {
       state.bookingStartDate = action.payload;
     },
-    setLocation: (state, action: PayloadAction<string>) => {
-      state.location = action.payload;
+    setAddress: (state, action: PayloadAction<string>) => {
+      state.address = action.payload;
+    },
+    setDetailAddress: (state, action: PayloadAction<string>) => {
+      state.detailAddress = action.payload;
+    },
+    setPostCode: (state, action: PayloadAction<string>) => {
+      state.postCode = action.payload;
     },
     setPoster: (state, action: PayloadAction<File | null>) => {
       state.poster = action.payload;
@@ -70,7 +80,6 @@ const enrollSlice = createSlice({
       }>
     ) => {
       const { dates, time, casting } = action.payload;
-
       dates.map((date) => {
         if (!state.performances[date]) {
           state.performances[date] = [];
@@ -127,7 +136,9 @@ export const {
   setTitle,
   setCategory,
   setBookingStartDate,
-  setLocation,
+  setAddress,
+  setDetailAddress,
+  setPostCode,
   setPoster,
   setContent,
   addPerformance,
