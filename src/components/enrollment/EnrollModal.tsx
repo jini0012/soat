@@ -11,11 +11,15 @@ export default function EnrollModal({
   selectedDates,
   onClose,
   onConfirm,
+  initTime = "",
+  initCasting = [],
+  mode = "add",
 }: EnrollModalProps) {
-  const [time, setTime] = useState<string>("");
-  const [casting, setCasting] = useState<string[]>([]);
+  const [time, setTime] = useState<string>(initTime);
+  const [casting, setCasting] = useState<string[]>(initCasting);
   const { title } = useSelector((state: RootState) => state.enroll);
-
+  const modalTitle = mode === "add" ? "공연 등록하기" : "공연 수정하기";
+  const confirmButtonText = mode === "add" ? "등록" : "수정";
   const rangeDates = useMemo(() => {
     if (!selectedDates) return [];
     if (!Array.isArray(selectedDates))
@@ -68,14 +72,14 @@ export default function EnrollModal({
 
   return (
     <>
-      <h3 className="sr-only">공연 등록하기</h3>
+      <h3 className="sr-only">{modalTitle}</h3>
       <TextInput label="공연명" value={title} readOnly />
       <span>공연날짜</span>
       <div className="flex px-4 py-2 flex-1 w-full focus-visible:outline-none bg-background border-2 rounded-lg overflow-x-scroll">
-        {rangeDates.map((date, idx) => (
+        {rangeDates.map((date) => (
           <p
             className="bg-flesh-600 py-1 px-2 mr-2 text-background rounded-lg text-md whitespace-nowrap"
-            key={idx}
+            key={date}
           >
             {date}
           </p>
@@ -88,7 +92,7 @@ export default function EnrollModal({
           className=""
           type="button"
           onClick={delCasting}
-          disabled={casting.length == 0}
+          disabled={casting.length === 0}
         >
           제거
         </Button>
@@ -112,7 +116,7 @@ export default function EnrollModal({
           취소
         </Button>
         <Button highlight type="button" onClick={handleConfirm}>
-          등록
+          {confirmButtonText}
         </Button>
       </footer>
     </>
