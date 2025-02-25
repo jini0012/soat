@@ -1,4 +1,5 @@
 interface SearchResultItemProps {
+  // id: number;
   imgUrl: string;
   title: string;
   venue: string;
@@ -8,6 +9,7 @@ interface SearchResultItemProps {
 }
 
 export default function SearchResultItem({
+  // id,
   imgUrl,
   title,
   venue,
@@ -19,7 +21,11 @@ export default function SearchResultItem({
     <li>
       <article className="py-[20px] flex items-center border-b border-b-gray-300 md:gap-4">
         {/* 공연 포스터 */}
-        <img src={imgUrl} alt="공연포스터" className="w-[113px] h-[143px]" />
+        <img
+          src={imgUrl}
+          alt="공연포스터"
+          className="w-[113px] h-[143px] cursor-pointer"
+        />
 
         {/* 공연 정보 */}
         <div className="ml-4 flex-1">
@@ -34,7 +40,9 @@ export default function SearchResultItem({
           </div>
 
           {/* 공연 제목 */}
-          <h3 className="font-semibold text-base mt-1 mb-[0.8px]">{title}</h3>
+          <h3 className="font-semibold text-base mt-1 mb-[0.8px] cursor-pointer">
+            {title}
+          </h3>
           {/* 소극장 이름 */}
           <p className="text-xs font-light mb-[0.8px] md:mb-[0.5px]">{venue}</p>
 
