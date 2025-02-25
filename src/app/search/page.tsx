@@ -115,7 +115,7 @@ export default function SearchPage() {
   return (
     <>
       <Header />
-      <main className="px-[10%] relative">
+      <main className="px-4  md:px-[140px]  relative">
         <p className="font-medium">
           <span className="text-flesh-500">&quot;쏘앳&quot;</span> 검색
           결과입니다.
