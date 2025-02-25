@@ -1,5 +1,5 @@
 export interface ImageFile {
-  fileKey: number;
+  fileKey?: number;
   fileName: string;
   fileSize: number;
   fileType: string;

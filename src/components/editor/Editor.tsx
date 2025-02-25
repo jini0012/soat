@@ -114,7 +114,9 @@ export default function Editor() {
     if (deletedImages.length === 0) {
       return;
     }
-    deletedImages.forEach((image) => dispatch(deleteFile(image.fileKey)));
+    deletedImages.forEach((image) =>
+      dispatch(deleteFile(image.fileKey as number))
+    );
   };
 
   return (
