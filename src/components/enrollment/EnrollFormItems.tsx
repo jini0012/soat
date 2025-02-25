@@ -49,7 +49,6 @@ export default function EnrollFormItems() {
   return (
     <EnrollFormItemsUI
       title={title}
-      type={type}
       category={category}
       bookingStartDate={bookingStartDate}
       address={address}
