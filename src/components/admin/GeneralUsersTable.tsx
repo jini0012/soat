@@ -15,22 +15,29 @@ export default function GeneralUsersTable({ data }: { data: GeneralUser[] }) {
   };
 
   const [selectedUser, setSelectedUser] = useState<GeneralUser | null>(null);
-  const [radioState, setRadioState] = useState("활성화");
+  const [userRadioState, setUserRadioState] = useState("활성화");
 
-  const radioOptions = [
+  const userRadioOptions = [
     { value: "활성화", label: "활성화" },
     { value: "정지", label: "정지" },
     { value: "휴면", label: "휴면" },
     { value: "탈퇴", label: "탈퇴" },
   ];
 
+  const handleUserClick = (generalUser: GeneralUser) => {
+    setSelectedUser(generalUser);
+  };
+
+  const handleClose = () => {
+    setSelectedUser(null); //선택했던 사용자를 모달이 닫힌 후에는 다시 초기화. 다른 사용자를 다시 선택할 수 있도록 함
+  };
+
   const handleRadioChange = (value: string) => {
-    setRadioState(value);
+    setUserRadioState(value);
   };
 
   const handleApply = () => {
-    // 상태 변경 적용 로직 추가
-    console.log(`상태 변경: ${radioState}`);
+    console.log(`상태 변경: ${userRadioState}`);
   };
 
   return (
@@ -45,7 +52,7 @@ export default function GeneralUsersTable({ data }: { data: GeneralUser[] }) {
                 rowData={generalUser}
                 headers={headers}
                 fieldMapping={fieldMapping}
-                onClick={() => setSelectedUser(generalUser)}
+                onClick={() => handleUserClick(generalUser)} // 핸들러 적용
               />
             ))
           ) : (
@@ -58,14 +65,13 @@ export default function GeneralUsersTable({ data }: { data: GeneralUser[] }) {
         </tbody>
       </table>
 
-      {/* 모달 컴포넌트 (선택한 회원이 있을 때만 렌더링) */}
       {selectedUser && (
         <GeneralUserForm
-          user={selectedUser} // user 정보를 전달
-          radioOptions={radioOptions}
-          radioState={radioState}
+          user={selectedUser}
+          userRadioOptions={userRadioOptions}
+          userRadioState={userRadioState}
           onRadioChange={handleRadioChange}
-          onClose={() => setSelectedUser(null)}
+          onClose={handleClose}
           onApply={handleApply}
         />
       )}

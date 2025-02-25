@@ -24,6 +24,10 @@ export default function ReviewTable({ data }: { data: Review[] }) {
     setSelectedReview(review);
   };
 
+  const handleClose = () => {
+    setSelectedReview(null); //선택했던 리뷰를 모달이 닫힌 후에는 다시 초기화. 다른 리뷰를 다시 선택할 수 있도록 함
+  };
+
   const handleReviewRadioChange = (value: string) => {
     setReviewRadioState(value);
   };
@@ -68,7 +72,7 @@ export default function ReviewTable({ data }: { data: Review[] }) {
           ]}
           reviewRadioState={reviewRadioState}
           onReviewRadioChange={handleReviewRadioChange}
-          onClose={() => setSelectedReview(null)}
+          onClose={handleClose}
           onApply={handleApply}
         />
       )}

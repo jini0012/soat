@@ -38,7 +38,10 @@ export default function ReviewForm({
             <div className="relative flex justify-center w-full">
               <h2 className="font-semibold text-center">한줄평 정보</h2>
               <CloseButton
-                onClick={() => setIsOpen(false)}
+                onClick={() => {
+                  setIsOpen(false);
+                  onClose();
+                }}
                 className="absolute right-0 top-0"
               />
             </div>
@@ -58,7 +61,7 @@ export default function ReviewForm({
                       <div className="flex items-center gap-x-2">
                         <span>신고됨</span>
                         <Button
-                          className="h-[20px] text-[9px] flex items-center"
+                          className="h-[20px] text-xs flex items-center"
                           size="small"
                           onClick={() => alert("상세보기 클릭")}
                         >
@@ -97,7 +100,7 @@ export default function ReviewForm({
                 onChange={onReviewRadioChange}
                 items={reviewRadioOptions}
               />
-              <p className="text-[10px] text-gray-500 font-light mt-2 mb-4">
+              <p className="text-xs text-gray-500 font-light mt-2 mb-4">
                 (현재 상태 : <span>{reviewRadioState}</span>)
               </p>
               <Button

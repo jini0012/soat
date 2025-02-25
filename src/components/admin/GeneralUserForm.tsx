@@ -7,14 +7,15 @@ import Modal from "../Modal";
 
 export default function GeneralUserForm({
   user,
-  radioOptions,
-  radioState,
+  userRadioOptions,
+  userRadioState,
   onRadioChange,
+  onClose,
   onApply,
 }: {
   user: GeneralUser;
-  radioOptions: { value: string; label: string }[];
-  radioState: string;
+  userRadioOptions: { value: string; label: string }[];
+  userRadioState: string; // 여기도 수정
   onRadioChange: (value: string) => void;
   onClose: () => void;
   onApply: () => void;
@@ -35,7 +36,10 @@ export default function GeneralUserForm({
                 <span>{user.name}</span>님의 회원정보
               </h2>
               <CloseButton
-                onClick={() => setIsFormOpen(false)}
+                onClick={() => {
+                  setIsFormOpen(false);
+                  onClose();
+                }}
                 className="absolute right-0"
               />
             </div>
@@ -62,9 +66,7 @@ export default function GeneralUserForm({
                 예매 내역
               </h3>
               <div className="h-[70px] flex justify-center items-center">
-                <p className="text-[10px] text-gray-500">
-                  예매 내역이 없습니다.
-                </p>
+                <p className="text-xs text-gray-500">예매 내역이 없습니다.</p>
               </div>
             </section>
 
@@ -74,12 +76,12 @@ export default function GeneralUserForm({
               </h3>
               <Radio
                 className="text-xs mt-1"
-                checked={radioState}
+                checked={userRadioState}
                 onChange={onRadioChange}
-                items={radioOptions}
+                items={userRadioOptions}
               />
-              <p className="text-[10px] text-gray-500 font-light mt-2 mb-4">
-                (현재 상태 : <span>{radioState}</span>)
+              <p className="text-xs text-gray-500 font-light mt-2 mb-4">
+                (현재 상태 : <span>{userRadioState}</span>)
               </p>
               <Button
                 highlight
