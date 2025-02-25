@@ -89,16 +89,16 @@ export default function SearchPage() {
   const [filterType, setFilterType] = useState<
     "category" | "saleStatus" | null
   >(null);
-  const [visibleItems, setVisibleItems] = useState(5); // 모바일용 더보기
-  const [currentPage, setCurrentPage] = useState(1); // 데스크탑용 페이지네이션
-  const [selectedSortOption, setSelectedSortOption] = useState("최근날짜순");
+  const [visibleItems, setVisibleItems] = useState(5); // 모바일용 더보기 클릭 시 보여지는 아이템 수
+  const [currentPage, setCurrentPage] = useState(1); // 데스크탑용 페이지네이션 번호
+  const [selectedSortOption, setSelectedSortOption] = useState("최근날짜순"); // 검색 결과 정렬 옵션
 
   const itemsPerPage = 5;
   const totalPages = Math.ceil(mockData.length / itemsPerPage);
 
   // 선택된 정렬 옵션에 따른 정렬 처리
   const sortedData = useMemo(() => {
-    const sorted = mockData.slice(); // let을 const로 변경
+    const sorted = mockData.slice();
     if (selectedSortOption === "최근날짜순") {
       sorted.sort((a, b) => (a.date > b.date ? -1 : 1));
     } else if (selectedSortOption === "한줄평순") {
@@ -109,22 +109,23 @@ export default function SearchPage() {
     return sorted;
   }, [selectedSortOption]);
 
-  // 데스크탑에서 사용하는 페이지네이션 적용
+  // 데스크탑에서 사용하는 페이지네이션 적용에 따른 데이터 반환
   const displayedDataForDesktop = useMemo(() => {
     const startIdx = (currentPage - 1) * itemsPerPage;
     return sortedData.slice(startIdx, startIdx + itemsPerPage);
   }, [sortedData, currentPage]);
 
-  // 모바일에서 사용하는 더보기 적용
+  // 모바일에서 사용하는 더보기 적용에 따른 데이터 반환
   const displayedDataForMobile = useMemo(() => {
     return sortedData.slice(0, visibleItems);
   }, [sortedData, visibleItems]);
 
   function loadMoreItems() {
-    setVisibleItems((prev) => prev + 5); // 모바일에서 더보기 버튼 클릭 시 항목 추가
+    setVisibleItems((prev) => prev + 5); // 모바일에서 더보기 버튼 클릭 시 데이터 추가 반환
   }
 
   function handleSearchOption(option: "category" | "saleStatus") {
+    // 검색조건 선택 상태 추적
     setFilterType(option);
     setIsOpenSearchOption(true);
   }
@@ -132,7 +133,7 @@ export default function SearchPage() {
   return (
     <>
       <Header />
-      <main className="px-4 md:px-[140px] relative">
+      <main className="px-4 md:px-[140px] relative min-h-[100vh]">
         <p className="font-medium">
           <span className="text-flesh-500">&quot;쏘앳&quot;</span> 검색
           결과입니다.
