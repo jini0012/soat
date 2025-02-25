@@ -158,6 +158,9 @@
   transform: translate(-50%, -50%);
   pointer-events: none;
 }
+.react-calendar__tile--active {
+  background-color: #fff4ed;
+}
 
 .selectedDate {
   background-color: var(--selected--color);
@@ -165,12 +168,17 @@
 
 .react-calendar__tile--rangeStart {
   background-color: var(--start--color);
+  border-top-left-radius: 50%;
+  border-bottom-left-radius: 50%;
 }
 
 .react-calendar__tile--rangeEnd {
   background-color: var(--end--color);
+  border-top-right-radius: 50%;
+  border-bottom-right-radius: 50%;
 }
 
 .react-calendar__tile--rangeBothEnds {
   background-color: var(--start--color);
+  border-radius: 0;
 }
