@@ -1,3 +1,4 @@
+import { ImageFile } from "@/types/file";
 import {
   DailyPerformances,
   EnrollFormFields,
@@ -15,9 +16,10 @@ export interface EnrollState {
   postCode: string;
   address: string;
   detailAddress: string;
-  poster: File | null;
+  poster: ImageFile | null;
   performances: DailyPerformances;
   content: JSONContent;
+  files: ImageFile[];
 }
 
 const initialState: EnrollState = {
@@ -31,6 +33,7 @@ const initialState: EnrollState = {
   poster: null,
   performances: {},
   content: {},
+  files: [],
 };
 
 const enrollSlice = createSlice({
@@ -58,7 +61,7 @@ const enrollSlice = createSlice({
     setPostCode: (state, action: PayloadAction<string>) => {
       state.postCode = action.payload;
     },
-    setPoster: (state, action: PayloadAction<File | null>) => {
+    setPoster: (state, action: PayloadAction<ImageFile>) => {
       state.poster = action.payload;
     },
     setContent: (state, action: PayloadAction<JSONContent>) => {
@@ -128,6 +131,14 @@ const enrollSlice = createSlice({
         }
       }
     },
+    addFile: (state, action: PayloadAction<ImageFile>) => {
+      state.files.push(action.payload);
+    },
+    deleteFile: (state, action: PayloadAction<number>) => {
+      state.files = state.files.filter(
+        (file) => file.fileKey !== action.payload
+      );
+    },
   },
 });
 
@@ -145,5 +156,7 @@ export const {
   editPerformance,
   removePerformance,
   updateStringFormField,
+  addFile,
+  deleteFile,
 } = enrollSlice.actions;
 export default enrollSlice.reducer;
