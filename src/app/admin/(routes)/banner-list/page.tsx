@@ -68,7 +68,7 @@ export default function BannerListPage() {
               width={12}
               height={12}
             />
-            <p className="text-[11px] font-medium">배너 등록하기</p>
+            <p className="text-xs font-medium">배너 등록하기</p>
           </button>
         </div>
         <BannerListTable

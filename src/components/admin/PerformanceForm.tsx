@@ -62,7 +62,7 @@ export default function PerformanceForm({
           {/* 공연 정보 내용 */}
           <section className="mt-4 text-xs">
             <h3 className="sr-only">공연정보</h3>
-            <dl className="flex flex-wrap gap-x-1 gap-y-1">
+            <dl className="flex flex-wrap gap-x-1 gap-y-1 ">
               {[
                 { label: "공연명", value: performance.title },
                 { label: "카테고리", value: performance.category },
@@ -75,7 +75,7 @@ export default function PerformanceForm({
                     <div className="flex items-center gap-x-2">
                       <span>신고됨</span>
                       <Button
-                        className="h-[20px] text-[9px] flex items-center"
+                        className="h-[20px] text-xs flex items-center"
                         size="small"
                         onClick={() => alert("상세보기 클릭")}
                       >
@@ -105,7 +105,7 @@ export default function PerformanceForm({
               onChange={onSaleRadioChange}
               items={saleRadioOptions}
             />
-            <p className="text-[10px] text-gray-500 font-light mt-2 mb-4">
+            <p className="text-xs text-gray-500 font-light mt-2 mb-4">
               (현재 상태 : <span>{saleRadioState}</span>)
             </p>
             <Button
@@ -127,7 +127,7 @@ export default function PerformanceForm({
               onChange={onPerformanceRadioChange}
               items={performanceRadioOptions}
             />
-            <p className="text-[10px] text-gray-500 font-light mt-2 mb-4">
+            <p className="text-xs text-gray-500 font-light mt-2 mb-4">
               (현재 상태 : <span>{performanceRadioState}</span>)
             </p>
             <Button

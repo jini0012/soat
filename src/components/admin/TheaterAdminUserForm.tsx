@@ -66,7 +66,7 @@ export default function TheaterAdminUserForm({
                     {value}
                     {label === "가입유형" && (
                       <Button
-                        className="ml-2 h-[20px] text-[9px] flex items-center"
+                        className="ml-2 h-[20px] text-xs flex items-center"
                         size="small"
                         onClick={handleButtonClick}
                       >
@@ -85,7 +85,7 @@ export default function TheaterAdminUserForm({
               보유 공연 목록
             </h3>
             <div className="h-[70px] flex justify-center items-center">
-              <p className="text-[10px] text-gray-500">
+              <p className="text-xs text-gray-500">
                 보유 공연 목록이 없습니다.
               </p>
             </div>
@@ -101,7 +101,7 @@ export default function TheaterAdminUserForm({
               onChange={onRadioChange}
               items={radioOptions}
             />
-            <p className="text-[10px] text-gray-500 font-light mt-2 mb-4">
+            <p className="text-xs text-gray-500 font-light mt-2 mb-4">
               (현재 상태 : <span>{radioState}</span>)
             </p>
             <Button

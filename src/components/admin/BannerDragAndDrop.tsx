@@ -41,7 +41,7 @@ export default function BannerDragAndDrop() {
             handleDragOver(index);
           }}
           onDragEnd={handleDragEnd}
-          className={`m-[0.5px] p-1 text-[10px] font-semibold pl-7 w-full h-[25px] bg-white bg-drag-and-drop bg-no-repeat bg-[left_5px_center] border border-gray-400 cursor-move ${
+          className={`m-[0.5px] p-1 text-xs text-zinc-700 font-semibold pl-7 w-full h-[25px] bg-white bg-drag-and-drop bg-no-repeat bg-[left_5px_center] border border-gray-400 cursor-move ${
             draggingIndex === index ? "opacity-80" : "opacity-100"
           }`}
         >
