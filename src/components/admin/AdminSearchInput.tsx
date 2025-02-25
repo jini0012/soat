@@ -18,7 +18,7 @@ export default function AdminSearchInput({
         type="text"
         id={id}
         name={name}
-        className="w-[130px] h-[22px] border border-gray-500 text-xs focus-visible:outline-none rounded-sm p-1 mr-1"
+        className="w-[130px] h-[22px] border border-gray-500 text-xs focus-visible:outline-none hover:border-flesh-400 focus:border-flesh-500 rounded-sm p-1 mr-1"
       />
     </>
   );
