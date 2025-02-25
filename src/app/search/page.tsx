@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import SearchResultItem from "@/components/search/SearchResultItem";
 import SearchOptionFilter from "@/components/search/SearchOptionFilter";
 import SortFilter from "@/components/search/SortFilter";
@@ -85,37 +85,54 @@ const mockData = [
 ];
 
 export default function SearchPage() {
-  const [visibleItems, setVisibleItems] = useState(5); // 처음 5개 항목 결과리스트를 보여줌
-
-  // 검색 결과를 더 보이게 하는 함수 (모바일에서 더보기 클릭시)
-  function loadMoreItems() {
-    setVisibleItems((prev) => prev + 5); // 5개씩 더 보이게 함
-  }
-
-  const [isOpenSearchOption, setIsOpenSearchOption] = useState(false); // 검색조건 필터에 대한 section
+  const [isOpenSearchOption, setIsOpenSearchOption] = useState(false);
   const [filterType, setFilterType] = useState<
     "category" | "saleStatus" | null
   >(null);
+  const [visibleItems, setVisibleItems] = useState(5); // 모바일용 더보기
+  const [currentPage, setCurrentPage] = useState(1); // 데스크탑용 페이지네이션
+  const [selectedSortOption, setSelectedSortOption] = useState("최근날짜순");
 
-  // 검색 옵션 클릭 시 해당 카테고리 필터 열기
+  const itemsPerPage = 5;
+  const totalPages = Math.ceil(mockData.length / itemsPerPage);
+
+  // 선택된 정렬 옵션에 따른 정렬 처리
+  const sortedData = useMemo(() => {
+    const sorted = mockData.slice(); // let을 const로 변경
+    if (selectedSortOption === "최근날짜순") {
+      sorted.sort((a, b) => (a.date > b.date ? -1 : 1));
+    } else if (selectedSortOption === "한줄평순") {
+      sorted.sort((a, b) => b.commentCount - a.commentCount);
+    } else if (selectedSortOption === "낮은가격순") {
+      sorted.sort((a, b) => a.price - b.price);
+    }
+    return sorted;
+  }, [selectedSortOption]);
+
+  // 데스크탑에서 사용하는 페이지네이션 적용
+  const displayedDataForDesktop = useMemo(() => {
+    const startIdx = (currentPage - 1) * itemsPerPage;
+    return sortedData.slice(startIdx, startIdx + itemsPerPage);
+  }, [sortedData, currentPage]);
+
+  // 모바일에서 사용하는 더보기 적용
+  const displayedDataForMobile = useMemo(() => {
+    return sortedData.slice(0, visibleItems);
+  }, [sortedData, visibleItems]);
+
+  function loadMoreItems() {
+    setVisibleItems((prev) => prev + 5); // 모바일에서 더보기 버튼 클릭 시 항목 추가
+  }
+
   function handleSearchOption(option: "category" | "saleStatus") {
     setFilterType(option);
     setIsOpenSearchOption(true);
   }
 
-  // 페이지네이션 관련 상태
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5; // 한 페이지당 보여줄 아이템 개수
-  const totalPages = Math.ceil(mockData.length / itemsPerPage);
-
-  // 현재 페이지의 데이터 슬라이싱
-  const startIdx = (currentPage - 1) * itemsPerPage;
-  const paginatedData = mockData.slice(startIdx, startIdx + itemsPerPage);
-
   return (
     <>
       <Header />
-      <main className="px-4  md:px-[140px]  relative">
+      <main className="px-4 md:px-[140px] relative">
         <p className="font-medium">
           <span className="text-flesh-500">&quot;쏘앳&quot;</span> 검색
           결과입니다.
@@ -144,18 +161,22 @@ export default function SearchPage() {
               ({mockData.length}건)
             </span>
           </p>
-          <SortFilter />
+          <SortFilter
+            selectedOption={selectedSortOption}
+            setSelectedOption={setSelectedSortOption}
+          />
         </section>
 
         {/* 검색 결과 목록 */}
         <section>
           <h2 className="sr-only">검색 결과</h2>
           <ul>
-            {(visibleItems < mockData.length ? paginatedData : mockData).map(
-              (item) => (
-                <SearchResultItem key={item.id} {...item} />
-              )
-            )}
+            {(window.innerWidth <= 768
+              ? displayedDataForMobile
+              : displayedDataForDesktop
+            ).map((item) => (
+              <SearchResultItem key={item.id} {...item} />
+            ))}
           </ul>
         </section>
 
@@ -173,7 +194,7 @@ export default function SearchPage() {
         )}
 
         {/* 데스크탑에서만 페이지네이션 표시 */}
-        {mockData.length > itemsPerPage && (
+        {mockData.length > itemsPerPage && window.innerWidth > 768 && (
           <div className="hidden md:flex justify-center gap-2 px-4 py-6 mb-5 text-[18px]">
             {Array.from({ length: totalPages }, (_, i) => (
               <p
