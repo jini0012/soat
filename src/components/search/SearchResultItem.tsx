@@ -34,7 +34,7 @@ export default function SearchResultItem({
           </div>
 
           {/* 공연 제목 */}
-          <h3 className="font-semibold text-[15px] mt-1 mb-[0.8px]">{title}</h3>
+          <h3 className="font-semibold text-base mt-1 mb-[0.8px]">{title}</h3>
           {/* 소극장 이름 */}
           <p className="text-xs font-light mb-[0.8px] md:mb-[0.5px]">{venue}</p>
 

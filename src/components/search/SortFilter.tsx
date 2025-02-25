@@ -53,7 +53,7 @@ export default function SortFilter() {
       {isOpenSortFilter && (
         <div
           ref={dropdownRef}
-          className="absolute right-[0.5px] w-[93px] rounded-md bg-white text-[13px] p-3 border border-gray-300 flex flex-col gap-2 shadow-lg md:hidden"
+          className="absolute right-[0.5px] w-[93px] rounded-md bg-white text-xs p-3 border border-gray-300 flex flex-col gap-2 shadow-lg md:hidden"
         >
           {options.map((option) => (
             <div

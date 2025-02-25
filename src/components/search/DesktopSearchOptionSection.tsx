@@ -56,7 +56,7 @@ export default function DesktopSearchOptionSection() {
             ))}
           </section>
           <section className="border-b border-b-gray-100 flex gap-5 p-3 pl-0">
-            <h3 className="font-semibold text-zinc-600 mr-2">판매상태</h3>
+            <h3 className="font-bold text-zinc-600 mr-2">판매상태</h3>
             {saleStatus.map((status, index) => (
               <p
                 key={index}

@@ -59,7 +59,7 @@ export default function SearchOptionSection({
       <ul className="flex w-full flex-row gap-x-2 mt-8">
         {/* 초기화 버튼 */}
         <li className="flex-1">
-          <Button size="full" className="font-light" onClick={handleReset}>
+          <Button size="full" onClick={handleReset}>
             초기화
           </Button>
         </li>
