@@ -294,7 +294,27 @@ export default function JoinForm({
         <Button
           type="submit"
           size="full"
-          disabled={(userType === "buyer" && !checkAge) || !checkAgree}
+          disabled={
+            userType === "buyer"
+              ? !isSendEmail ||
+                !isEmailValid ||
+                !password ||
+                !passwordConfirm ||
+                !userName ||
+                !userPhone ||
+                !checkAge ||
+                !checkAgree
+              : !isSendEmail ||
+                !isEmailValid ||
+                !password ||
+                !passwordConfirm ||
+                !teamName ||
+                !managerName ||
+                !userPhone ||
+                !checkAge ||
+                (isBusiness && !isBusinessNumValid) ||
+                !checkAgree
+          }
           className="absolute bottom-[-54px] right-0 max-w-24 max-h-[30px] text-sm py-[19.5px] px-[7.5px] sm:text-base sm:max-w-40 sm:max-h-12 sm:bottom-[-60px]"
           highlight={true}
         >
