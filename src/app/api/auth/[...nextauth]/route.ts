@@ -57,7 +57,9 @@ const handler = NextAuth({
       if (user) {
         token.userType = user.userType;
         token.id = user.id;
-        token.username = user.username;
+        token.userType === "seller"
+          ? (token.teamName = user.teamName)
+          : (token.username = user.username);
       }
       return token;
     },
@@ -65,7 +67,9 @@ const handler = NextAuth({
       if (session.user) {
         session.user.id = token.id as string;
         session.user.userType = token.userType as "buyer" | "seller";
-        session.user.username = token.username as string;
+        session.user.userType === "seller"
+          ? (session.user.teamName = token.teamName as string)
+          : (session.user.username = token.username as string);
       }
       return session;
     },
