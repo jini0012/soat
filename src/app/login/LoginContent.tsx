@@ -54,10 +54,10 @@ export default function LoginContent() {
 
   return (
     <div className="w-full h-screen flex justify-center items-start pt-8">
-      <main className="relative w-full max-w-lg mx-auto">
-        <div className="flex gap-0 -mb-1">
+      <main className="relative w-full max-w-lg mx-auto p-4 sm:p-0">
+        <div className="flex gap-0 -mb-1 text-base sm:font-bold">
           <button
-            className={`relative flex-1 py-5 px-6 rounded-t-lg border z-10 transition-colors text-foreground
+            className={`relative flex-1 py-3 sm:py-5 px-6 rounded-t-lg border-x border-t z-10 transition-colors text-foreground
             ${
               userType === UserType.TICKETUSER
                 ? "bg-white border-gray-300"
@@ -69,7 +69,7 @@ export default function LoginContent() {
             예매회원 로그인
           </button>
           <button
-            className={`relative flex-1 py-3 px-6 rounded-t-lg border -ml-4 transition-colors text-foreground
+            className={`relative flex-1 py-3 sm:py-5 px-6 rounded-t-lg border-x border-t -ml-4 transition-colors text-foreground whitespace-nowrap
             ${
               userType === UserType.MANAGER
                 ? "bg-white border-gray-300 z-20"
@@ -97,7 +97,7 @@ export default function LoginContent() {
                 placeholder="E-mail"
                 value={email}
                 onChange={setEmail}
-                className="w-full !pl-20"
+                className="w-full !pl-9"
               />
             </div>
             <div className="[&_input]:pl-9 [&_input]:py-4  relative">
