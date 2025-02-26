@@ -85,33 +85,39 @@ export default function JoinForm({
   return (
     <>
       <h2 className="text-xl font-bold mb-3 sm:text-3xl sm:mb-6">회원가입</h2>
-      <ul className="flex mb-3 justify-center w-[calc(100%-10px)] gap-1 sm:mb-4 sm:max-w-[515px]">
+      <ul className="flex justify-center w-full sm:max-w-[525px] text-xs sm:text-base sm:font-bold">
         <li className="flex-1">
-          <Button
-            type="button"
+          <button
+            className={`w-full py-3 sm:py-5 sm:px-6 rounded-t-lg border-x border-t transition-colors 
+            ${
+              userType === "buyer"
+                ? "bg-white border-gray-300 relative z-20"
+                : "bg-gray-100 border-gray-200"
+            }`}
             onClick={() => setUserType("buyer")}
-            size="full"
-            highlight={userType === "buyer" ? true : false}
-            className="h-7 text-xs py-[6.5px] font-normal sm:h-full sm:text-base sm:py-2 sm:font-bold"
+            type="button"
           >
             회원
-          </Button>
+          </button>
         </li>
         <li className="flex-1">
-          <Button
-            type="button"
+          <button
+            className={`w-full py-3 sm:py-5 sm:px-6 rounded-t-lg border-x border-t transition-colors
+            ${
+              userType === "seller"
+                ? "bg-white border-gray-300 relative z-20"
+                : "bg-gray-100 border-gray-200 "
+            }`}
             onClick={() => setUserType("seller")}
-            size="full"
-            highlight={userType === "seller" ? true : false}
-            className="h-7 text-xs py-[6.5px] font-normal sm:h-full sm:text-base sm:py-2 sm:font-bold"
+            type="button"
           >
-            소극장 관리자
-          </Button>
+            공연 관리자
+          </button>
         </li>
       </ul>
       <form
         onSubmit={handleSubmit}
-        className="w-full sm:max-w-[525px] flex flex-col border-2 rounded-lg border-flesh-200 px-5 py-4 gap-[10px] relative sm:gap-[20px]"
+        className="w-full bg-white sm:max-w-[525px] flex flex-col border rounded-xl border border-gray-300 px-5 py-4 gap-[10px] sm:gap-[20px] -mt-[4px] relative "
       >
         <JoinInput
           label="이메일"
@@ -288,7 +294,27 @@ export default function JoinForm({
         <Button
           type="submit"
           size="full"
-          disabled={(userType === "buyer" && !checkAge) || !checkAgree}
+          disabled={
+            userType === "buyer"
+              ? !isSendEmail ||
+                !isEmailValid ||
+                !password ||
+                !passwordConfirm ||
+                !userName ||
+                !userPhone ||
+                !checkAge ||
+                !checkAgree
+              : !isSendEmail ||
+                !isEmailValid ||
+                !password ||
+                !passwordConfirm ||
+                !teamName ||
+                !managerName ||
+                !userPhone ||
+                !checkAge ||
+                (isBusiness && !isBusinessNumValid) ||
+                !checkAgree
+          }
           className="absolute bottom-[-54px] right-0 max-w-24 max-h-[30px] text-sm py-[19.5px] px-[7.5px] sm:text-base sm:max-w-40 sm:max-h-12 sm:bottom-[-60px]"
           highlight={true}
         >
