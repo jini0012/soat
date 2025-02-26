@@ -9,14 +9,14 @@ import Modal from "../Modal";
 export default function TheaterAdminUserForm({
   user,
   radioOptions,
-  radioState,
+  adminUserRadioState,
   onRadioChange,
   onClose,
   onApply,
 }: {
   user: TheaterAdminUser;
   radioOptions: { value: string; label: string }[];
-  radioState: string;
+  adminUserRadioState: string;
   onRadioChange: (value: string) => void;
   onClose: () => void;
   onApply: () => void;
@@ -26,7 +26,7 @@ export default function TheaterAdminUserForm({
   const [isApplyModalOpen, setIsApplyModalOpen] = useState(false); //변경사항 저장 확인 모달 상태 관리
 
   const handleButtonClick = () => {
-    if (radioState) {
+    if (adminUserRadioState) {
       setIsOpenJoinTypeModal(true);
     } else {
       alert("라디오 버튼을 선택하세요.");
@@ -97,18 +97,17 @@ export default function TheaterAdminUserForm({
             </h3>
             <Radio
               className="text-xs mt-1"
-              checked={radioState}
+              checked={adminUserRadioState}
               onChange={onRadioChange}
               items={radioOptions}
             />
             <p className="text-xs text-gray-500 font-light mt-2 mb-4">
-              (현재 상태 : <span>{radioState}</span>)
+              (현재 상태 : <span>{adminUserRadioState}</span>)
             </p>
             <Button
               highlight
               size="small"
               onClick={() => {
-                onApply(); // 상태 변경 함수 실행
                 setIsModalOpen(true); // 모달 열기
               }}
             >
@@ -150,6 +149,7 @@ export default function TheaterAdminUserForm({
                 onClick={() => {
                   setIsApplyModalOpen(true);
                   setIsModalOpen(false);
+                  onApply(); // 상태 변경 함수 실행
                 }}
                 className="mt-2 w-[60px]"
               >

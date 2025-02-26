@@ -27,16 +27,37 @@ export default function PerformanceTable({ data }: { data: Performance[] }) {
     { value: "숨김", label: "숨김" },
   ];
 
-  // 판매 상태 변경 라디오 버튼 관련 상태 관리
+  // 모든 공연의 판매 상태를 저장하는 상태
+  const [saleRadioStates, setSaleRadioStates] = useState<
+    Record<string, string> // 공연 제목을 키로 하여 판매 상태를 저장
+  >({});
+
+  // 선택된 공연의 판매 상태를 저장하는 상태
   const [saleRadioState, setSaleRadioState] = useState<string>("판매예정");
+
   const saleRadioOptions = [
     { value: "판매예정", label: "판매예정" },
     { value: "판매중", label: "판매중" },
     { value: "판매종료", label: "판매종료" },
   ];
 
+  // 공연 클릭 시 상태 설정
   const handleRowClick = (performance: Performance) => {
     setSelectedPerformance(performance);
+    // 선택된 공연에 대한 판매 상태를 가져오기
+    setSaleRadioState(saleRadioStates[performance.title] || "판매예정");
+  };
+
+  // 판매 상태 변경 시 상태 업데이트
+  const handleSaleRadioChange = (value: string) => {
+    if (selectedPerformance) {
+      // saleRadioStates 상태에서 선택된 공연의 판매 상태를 업데이트
+      setSaleRadioStates((prevStates) => ({
+        ...prevStates,
+        [selectedPerformance.title]: value, // 해당 공연의 판매 상태만 변경
+      }));
+      setSaleRadioState(value); // 선택된 공연의 판매 상태도 변경
+    }
   };
 
   const handleClose = () => {
@@ -46,11 +67,6 @@ export default function PerformanceTable({ data }: { data: Performance[] }) {
   // 공연 표시 라디오 버튼 상태 변경
   const handlePerformanceRadioChange = (value: string) => {
     setPerformanceRadioState(value);
-  };
-
-  // 판매 상태 라디오 버튼 상태 변경
-  const handleSaleRadioChange = (value: string) => {
-    setSaleRadioState(value); // 여기를 수정: saleRadioState로 상태를 변경하도록
   };
 
   const handleApply = () => {

@@ -87,7 +87,6 @@ export default function GeneralUserForm({
                 highlight
                 size="small"
                 onClick={() => {
-                  onApply(); // 상태 변경 함수 실행
                   setIsModalOpen(true); // 모달 열기
                 }}
               >
@@ -120,6 +119,7 @@ export default function GeneralUserForm({
                 onClick={() => {
                   setIsApplyModalOpen(true);
                   setIsModalOpen(false);
+                  onApply(); // 상태 변경 함수 실행
                 }}
                 className="mt-2 w-[60px]"
               >

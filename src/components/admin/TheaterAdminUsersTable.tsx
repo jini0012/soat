@@ -20,10 +20,13 @@ export default function TheaterAdminUsersTable({
       가입유형: "joinType",
     };
 
-  const [selectedUser, setSelectedUser] = useState<TheaterAdminUser | null>(
-    null
-  );
-  const [radioState, setRadioState] = useState("활성화");
+  const [selectedAdminUser, setSelectedAdminUser] =
+    useState<TheaterAdminUser | null>(null);
+  const [adminUserRadioStates, setAdminUserRadioStates] = useState<
+    Record<string, string> // 모든 사용자의 상태를 저장
+  >({});
+  const [adminUserRadioState, setAdminUserRadioState] =
+    useState<string>("활성화"); // 사용자의 현재 선택된 상태를 저장하는 state 추가
 
   const radioOptions = [
     { value: "활성화", label: "활성화" },
@@ -32,13 +35,27 @@ export default function TheaterAdminUsersTable({
     { value: "탈퇴", label: "탈퇴" },
   ];
 
-  const handleRadioChange = (value: string) => {
-    setRadioState(value);
+  const handleAdminUserClick = (theaterAdminUser: TheaterAdminUser) => {
+    setSelectedAdminUser(theaterAdminUser);
+    // 해당 사용자의 상태를 userRadioStates에서 가져오거나 기본값 사용
+    setAdminUserRadioState(
+      adminUserRadioStates[theaterAdminUser.email] || "활성화"
+    );
   };
 
-  const handleApply = () => {
+  const handleApplyStatus = () => {
     // 상태 변경 적용 로직 추가
-    console.log(`상태 변경: ${radioState}`);
+    console.log(`상태 변경: ${adminUserRadioState}`);
+  };
+
+  const handleRadioChange = (value: string) => {
+    if (selectedAdminUser) {
+      setAdminUserRadioStates((prevStates) => ({
+        ...prevStates,
+        [selectedAdminUser.email]: value,
+      }));
+      setAdminUserRadioState(value);
+    }
   };
 
   return (
@@ -53,7 +70,7 @@ export default function TheaterAdminUsersTable({
                 rowData={theaterAdminUser}
                 headers={headers}
                 fieldMapping={fieldMapping}
-                onClick={() => setSelectedUser(theaterAdminUser)} // 행 클릭 시 사용자 선택
+                onClick={() => handleAdminUserClick(theaterAdminUser)} // 핸들러 적용
               />
             ))
           ) : (
@@ -67,14 +84,14 @@ export default function TheaterAdminUsersTable({
       </table>
 
       {/* 모달: 소극장관리자 회원정보 */}
-      {selectedUser && (
+      {selectedAdminUser && (
         <TheaterAdminUserForm
-          user={selectedUser} // user 정보를 전달
+          user={selectedAdminUser} // user 정보를 전달
           radioOptions={radioOptions}
-          radioState={radioState}
+          adminUserRadioState={adminUserRadioState}
           onRadioChange={handleRadioChange}
-          onClose={() => setSelectedUser(null)} // 모달 닫기
-          onApply={handleApply} // 상태 변경 적용
+          onClose={() => setSelectedAdminUser(null)} // 모달 닫기
+          onApply={handleApplyStatus} // 상태 변경 적용
         />
       )}
     </>

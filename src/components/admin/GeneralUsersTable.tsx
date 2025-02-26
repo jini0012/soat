@@ -15,7 +15,10 @@ export default function GeneralUsersTable({ data }: { data: GeneralUser[] }) {
   };
 
   const [selectedUser, setSelectedUser] = useState<GeneralUser | null>(null);
-  const [userRadioState, setUserRadioState] = useState("활성화");
+  const [userRadioStates, setUserRadioStates] = useState<
+    Record<string, string> // 모든 사용자의 상태를 저장
+  >({});
+  const [userRadioState, setUserRadioState] = useState<string>("활성화"); // 사용자의 현재 선택된 상태를 저장하는 state 추가
 
   const userRadioOptions = [
     { value: "활성화", label: "활성화" },
@@ -26,18 +29,27 @@ export default function GeneralUsersTable({ data }: { data: GeneralUser[] }) {
 
   const handleUserClick = (generalUser: GeneralUser) => {
     setSelectedUser(generalUser);
+    // 해당 사용자의 상태를 userRadioStates에서 가져오거나 기본값 사용
+    setUserRadioState(userRadioStates[generalUser.email] || "활성화");
   };
 
   const handleClose = () => {
-    setSelectedUser(null); //선택했던 사용자를 모달이 닫힌 후에는 다시 초기화. 다른 사용자를 다시 선택할 수 있도록 함
+    setSelectedUser(null); // 선택했던 사용자를 모달이 닫힌 후에는 다시 초기화. 다른 사용자를 다시 선택할 수 있도록 함
   };
 
   const handleRadioChange = (value: string) => {
-    setUserRadioState(value);
+    if (selectedUser) {
+      setUserRadioStates((prevStates) => ({
+        ...prevStates,
+        [selectedUser.email]: value,
+      }));
+      setUserRadioState(value);
+    }
   };
 
-  const handleApply = () => {
+  const handleApplyStatus = () => {
     console.log(`상태 변경: ${userRadioState}`);
+    // API 연동 필요
   };
 
   return (
@@ -72,7 +84,7 @@ export default function GeneralUsersTable({ data }: { data: GeneralUser[] }) {
           userRadioState={userRadioState}
           onRadioChange={handleRadioChange}
           onClose={handleClose}
-          onApply={handleApply}
+          onApply={handleApplyStatus}
         />
       )}
     </>
