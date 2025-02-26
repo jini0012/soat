@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 
 const CATEGORIES = ["로맨스", "액션", "드라마", "코미디", "공포", "성인"];
