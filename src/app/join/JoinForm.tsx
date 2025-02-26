@@ -6,6 +6,7 @@ import { Checkbox } from "@/components/controls/Inputs";
 import Link from "next/link";
 import { validations } from "@/utils/validations";
 import axios from "axios";
+import { useSession, signOut } from "next-auth/react";
 
 interface JoinFormProps {
   setUserType: (userType: "buyer" | "seller") => void;
@@ -36,6 +37,15 @@ export default function JoinForm({
   const isEmailInputValid = validations.email.safeParse(email).success;
   const isBusinessNumInputValid =
     validations.businessNum.safeParse(businessNum).success;
+
+  // 로그인 상태일 경우 로그아웃
+  const { status } = useSession();
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      signOut();
+    }
+  }, [status]);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
