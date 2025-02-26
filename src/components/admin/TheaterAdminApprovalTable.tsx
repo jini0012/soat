@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { NewTheaterAdmin } from "@/types/admin";
 import TableRow from "./TableRow";
 import TableHeader from "./TableHeader";
@@ -23,15 +23,15 @@ export default function TheaterAdminUsersTable({
   const [selectedUser, setSelectedUser] = useState<NewTheaterAdmin | null>(
     null
   );
-  const modalRef = useRef<HTMLDialogElement>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false); // 모달 열고 닫는 상태
 
   const handleRowClick = (user: NewTheaterAdmin) => {
     setSelectedUser(user);
-    modalRef.current?.showModal();
+    setIsModalOpen(true); // 모달 열기
   };
 
   const handleClose = () => {
-    modalRef.current?.close();
+    setIsModalOpen(false); // 모달 닫기
     setSelectedUser(null);
   };
 
@@ -60,12 +60,16 @@ export default function TheaterAdminUsersTable({
         </tbody>
       </table>
 
-      {/* 모달을 한 번만 렌더링하고 selectedUser를 변경 */}
-      <dialog ref={modalRef} className="w-[400px] h-[270px] max-h-[560px] p-4">
-        {selectedUser && (
-          <NewTheaterAdminForm user={selectedUser} onClose={handleClose} />
-        )}
-      </dialog>
+      {/* 모달을 div로 감싸기 */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-10 flex justify-center items-center">
+          <div className="relative bg-white p-6 rounded-lg w-[330px] max-w-lg z-[9999]">
+            {selectedUser && (
+              <NewTheaterAdminForm user={selectedUser} onClose={handleClose} />
+            )}
+          </div>
+        </div>
+      )}
     </>
   );
 }

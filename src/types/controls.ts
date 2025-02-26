@@ -42,6 +42,7 @@ export interface JoinInputProps extends InputBaseProps {
   validation?: ZodType<string | number>;
   message?: string;
   disabled?: boolean;
+  max?: number;
 }
 
 export interface SearchInputProps extends InputBaseProps {

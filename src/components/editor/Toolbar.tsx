@@ -6,6 +6,8 @@ export default function Toolbar({
   editor,
   headingButtons,
   formattingButtons,
+  codeBlockButton,
+  onClickCodeBlockButton,
 }: EditorToolbarProps) {
   const handleEditorHeadingOnClick = (level: Level) => {
     if (!editor) {
@@ -65,6 +67,14 @@ export default function Toolbar({
           </button>
         );
       })}
+      <button
+        type="button"
+        onClick={onClickCodeBlockButton}
+        aria-label={codeBlockButton.label}
+        className="p-2 m-1 border rounded"
+      >
+        {<codeBlockButton.icon />}
+      </button>
     </div>
   );
 }

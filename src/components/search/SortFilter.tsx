@@ -40,18 +40,20 @@ export default function SortFilter() {
 
   return (
     <div className="relative inline-block">
+      {/* 모바일: 버튼 클릭하면 드롭다운 열림 */}
       <button
         ref={buttonRef}
         onClick={toggleSortFilter}
-        className="text-xs pr-2 bg-filter-icon w-[76px] h-[32px] bg-no-repeat bg-right bg-[length:15px]"
+        className="text-xs pr-2 bg-filter-icon w-[76px] h-[32px] bg-no-repeat bg-right bg-[length:15px] md:hidden"
       >
         {selectedOption}
       </button>
 
+      {/*  모바일: 드롭다운 메뉴 */}
       {isOpenSortFilter && (
         <div
           ref={dropdownRef}
-          className="absolute right-[0.5px]  w-[93px] rounded-md bg-white text-[13px]  p-3 border border-gray-300 flex flex-col gap-2 shadow-lg"
+          className="absolute right-[0.5px] w-[93px] rounded-md bg-white text-[13px] p-3 border border-gray-300 flex flex-col gap-2 shadow-lg md:hidden"
         >
           {options.map((option) => (
             <div
@@ -66,6 +68,21 @@ export default function SortFilter() {
           ))}
         </div>
       )}
+
+      {/* 데스크탑: 가로 정렬 */}
+      <div className="hidden md:flex gap-4 text-xs">
+        {options.map((option) => (
+          <button
+            key={option}
+            onClick={() => handleOptionSelect(option)}
+            className={`${
+              selectedOption === option ? "text-flesh-500 font-bold" : ""
+            }`}
+          >
+            {option}
+          </button>
+        ))}
+      </div>
     </div>
   );
 }
