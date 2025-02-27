@@ -97,7 +97,7 @@ export default function JoinForm({
             onClick={() => setUserType("buyer")}
             type="button"
           >
-            회원
+            예매회원
           </button>
         </li>
         <li className="flex-1">
