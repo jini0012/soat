@@ -25,6 +25,7 @@ export default function JoinForm({
   const [email, setEmail] = useState("");
   const [isEmailValid, setIsEmailValid] = useState<boolean>(false);
   const [isSendEmail, setIsSendEmail] = useState<boolean>(false);
+  const [emailSendMsg, setEmailSendMsg] = useState("");
   const [emailVerifyMsg, setEmailVerifyMsg] = useState("");
   const [verifyNum, setVerifyNum] = useState("");
   const [password, setPassword] = useState("");
@@ -80,6 +81,7 @@ export default function JoinForm({
         };
 
   async function handleSendEmailVerification() {
+    setEmailSendMsg("");
     try {
       const response = await axios.post("/api/auth/email-verification", {
         email,
@@ -91,6 +93,9 @@ export default function JoinForm({
       }
     } catch (error) {
       console.error("이메일 인증 오류:", error);
+      if (axios.isAxiosError(error)) {
+        setEmailSendMsg(error.response?.data.error);
+      }
     }
   }
 
@@ -172,7 +177,7 @@ export default function JoinForm({
           message={
             isSendEmail
               ? "인증 번호가 이메일로 발송되었습니다. 이메일을 확인해 주세요"
-              : ""
+              : emailSendMsg
           }
         >
           <Button
