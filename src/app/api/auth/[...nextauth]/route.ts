@@ -1,7 +1,13 @@
-import NextAuth from "next-auth";
+import NextAuth, { User } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { adminDb } from "../../firebaseAdmin";
 import { compare } from "bcryptjs";
+
+declare module "next-auth" {
+  interface User {
+    phone?: string;
+  }
+}
 
 const handler = NextAuth({
   providers: [
@@ -48,24 +54,29 @@ const handler = NextAuth({
           ...(credentials.userType === "seller"
             ? { teamName: userData.teamName }
             : { username: userData.username }),
+          phone: userData.phoneNumber,
         };
       },
     }),
   ],
   callbacks: {
     async jwt({ token, user }) {
+      console.log("🔹 JWT Token:", token);
       if (user) {
         token.userType = user.userType;
         token.id = user.id;
         token.username = user.username;
+        token.phone = user?.phone;
       }
       return token;
     },
     async session({ session, token }) {
+      console.log("🔹 Session Data:", session);
       if (session.user) {
         session.user.id = token.id as string;
         session.user.userType = token.userType as "buyer" | "seller";
         session.user.username = token.username as string;
+        session.user.phone = token.phone as string;
       }
       return session;
     },
