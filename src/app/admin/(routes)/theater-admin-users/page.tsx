@@ -1,3 +1,5 @@
+"use client";
+import { useState } from "react";
 import AdminHeader from "../../../../components/admin/AdminHeader";
 import AdminMain from "@/components/admin/AdminMain";
 import TheaterAdminUsersTable from "@/components/admin/TheaterAdminUsersTable";
@@ -5,6 +7,8 @@ import ListTitle from "@/components/admin/ListTitle";
 import QueryButton from "@/components/admin/ QueryButton";
 import SubTabDescription from "@/components/admin/SubTabDescription";
 import AdminSearchInput from "@/components/admin/AdminSearchInput";
+import { Select } from "@/components/controls/Select";
+
 export default function TheaterAdminUsersPage() {
   const GeneralUserData = [
     {
@@ -69,6 +73,13 @@ export default function TheaterAdminUsersPage() {
     },
   ];
 
+  const [theaterAdminSelect, setTheaterAdminSelect] = useState("all");
+
+  const filteredData =
+    theaterAdminSelect === "all"
+      ? GeneralUserData
+      : GeneralUserData.filter((user) => user.joinType === theaterAdminSelect);
+
   return (
     <>
       <AdminHeader>회원관리</AdminHeader>
@@ -76,18 +87,31 @@ export default function TheaterAdminUsersPage() {
         <SubTabDescription>
           소극장 관리자 회원 조회 및 상태 관리
         </SubTabDescription>
-        <div className="mt-[20px] mb-4 flex justify-between items-center">
+        <div className="mt-[20px] mb-4 flex flex-wrap justify-between items-center gap-4">
           <ListTitle>소극장 관리자 회원 목록</ListTitle>
-          <form action="">
-            <AdminSearchInput
-              id="theaterAdminUserSearchInput"
-              name="theaterAdminUserSearch"
-              label="소극장 관리자 회원 조회하기"
+          <div className="flex gap-4 items-center justify-end w-full sm:w-auto">
+            <Select
+              className="w-[85px] h-[35px] text-xs py-0"
+              value={theaterAdminSelect}
+              onChange={setTheaterAdminSelect}
+              options={[
+                { value: "all", label: "전체" },
+                { value: "사업자", label: "사업자" },
+                { value: "개인", label: "개인" },
+              ]}
             />
-            <QueryButton />
-          </form>
+            <form action="" className="flex gap-1">
+              <AdminSearchInput
+                id="theaterAdminUserSearchInput"
+                name="theaterAdminUserSearch"
+                label="소극장 관리자 회원 조회하기"
+              />
+              <QueryButton />
+            </form>
+          </div>
         </div>
-        <TheaterAdminUsersTable data={GeneralUserData} />
+
+        <TheaterAdminUsersTable data={filteredData} />
       </AdminMain>
     </>
   );

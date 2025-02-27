@@ -4,6 +4,8 @@ import React, { useState, useEffect } from "react";
 import MarkdownEditor from "react-markdown-editor-lite";
 import "react-markdown-editor-lite/lib/index.css";
 import MarkdownIt from "markdown-it";
+import Modal from "../Modal";
+import { Button } from "../controls/Button";
 
 // 마크다운 파서 설정
 const mdParser = new MarkdownIt();
@@ -11,6 +13,8 @@ const mdParser = new MarkdownIt();
 export default function PrivacyPage() {
   const [isEditing, setIsEditing] = useState(false);
   const [privacy, setPrivacy] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false); //저장여부 모달 상태 관리
+  const [isApplyModalOpen, setIsApplyModalOpen] = useState(false); //저장 확인 모달 상태 관리
 
   // mock date
   const mockPrivacyData = `
@@ -92,13 +96,68 @@ export default function PrivacyPage() {
         </button>
         {isEditing && (
           <button
-            onClick={handleSave}
-            className="w-[70px] py-1 rounded-md text-white text-sm bold-medium flex items-center justify-center bg-flesh-500"
+            onClick={() => {
+              handleSave();
+              setIsModalOpen(true);
+            }}
+            className="w-[70px] py-1 rounded-md text-white text-sm font-medium flex items-center justify-center bg-flesh-500"
           >
             저장
           </button>
         )}
       </div>
+      {/* 저장 여부 모달 */}
+      {isModalOpen && (
+        <Modal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          className="flex flex-col justify-center items-center"
+        >
+          <div className="z-[1000]">
+            <p className="text-xs">해당 내용을 저장하시겠습니까?</p>
+            <div className="flex justify-center gap-2">
+              <Button
+                size="small"
+                onClick={() => setIsModalOpen(false)}
+                className="mt-2 w-[60px]"
+              >
+                아니오
+              </Button>
+              <Button
+                highlight
+                size="small"
+                onClick={() => {
+                  setIsApplyModalOpen(true);
+                  setIsModalOpen(false);
+                }}
+                className="mt-2 w-[60px]"
+              >
+                예
+              </Button>
+            </div>
+          </div>
+        </Modal>
+      )}
+      {/* 저장 완료 모달 */}
+      {isApplyModalOpen && (
+        <Modal
+          isOpen={isApplyModalOpen}
+          onClose={() => setIsApplyModalOpen(false)}
+          className="flex flex-col justify-center items-center"
+        >
+          <div className="z-[1000] flex flex-col items-center">
+            <p className="text-xs">성공적으로 저장되었습니다.</p>
+            <Button
+              highlight
+              size="small"
+              onClick={() => setIsApplyModalOpen(false)}
+              className="mt-2 w-[60px]"
+            >
+              닫기
+            </Button>
+          </div>
+        </Modal>
+      )}
     </>
   );
 }

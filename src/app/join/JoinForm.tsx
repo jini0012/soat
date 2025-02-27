@@ -5,6 +5,7 @@ import { JoinInput } from "@/components/controls/Inputs";
 import { Checkbox } from "@/components/controls/Inputs";
 import Link from "next/link";
 import { validations } from "@/utils/validations";
+import axios from "axios";
 
 interface JoinFormProps {
   setUserType: (userType: "buyer" | "seller") => void;
@@ -48,34 +49,76 @@ export default function JoinForm({
     };
   }, [isSendEmail, isEmailValid]);
 
+  const formData =
+    userType === "seller"
+      ? {
+          userType,
+          email,
+          password,
+          teamName,
+          managerName,
+          phoneNumber: userPhone,
+          businessNum,
+        }
+      : {
+          userType,
+          email,
+          password,
+          username: userName,
+          phoneNumber: userPhone,
+        };
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    console.log(formData);
+    try {
+      const response = await axios.post("/api/auth/signup", formData);
+
+      if (response.status === 201) {
+        setIsJoin(true);
+      }
+    } catch (error) {
+      console.error("회원가입 오류:", error);
+    }
+  }
+
   return (
     <>
       <h2 className="text-xl font-bold mb-3 sm:text-3xl sm:mb-6">회원가입</h2>
-      <ul className="flex mb-3 justify-center w-[calc(100%-10px)] gap-1 sm:mb-4 sm:max-w-[515px]">
+      <ul className="flex justify-center w-full sm:max-w-[525px] text-xs sm:text-base sm:font-bold">
         <li className="flex-1">
-          <Button
-            type="button"
+          <button
+            className={`w-full py-3 sm:py-5 sm:px-6 rounded-t-lg border-x border-t transition-colors 
+            ${
+              userType === "buyer"
+                ? "bg-white border-gray-300 relative z-20"
+                : "bg-gray-100 border-gray-200"
+            }`}
             onClick={() => setUserType("buyer")}
-            size="full"
-            highlight={userType === "buyer" ? true : false}
-            className="h-7 text-xs py-[6.5px] font-normal sm:h-full sm:text-base sm:py-2 sm:font-bold"
+            type="button"
           >
             회원
-          </Button>
+          </button>
         </li>
         <li className="flex-1">
-          <Button
-            type="button"
+          <button
+            className={`w-full py-3 sm:py-5 sm:px-6 rounded-t-lg border-x border-t transition-colors
+            ${
+              userType === "seller"
+                ? "bg-white border-gray-300 relative z-20"
+                : "bg-gray-100 border-gray-200 "
+            }`}
             onClick={() => setUserType("seller")}
-            size="full"
-            highlight={userType === "seller" ? true : false}
-            className="h-7 text-xs py-[6.5px] font-normal sm:h-full sm:text-base sm:py-2 sm:font-bold"
+            type="button"
           >
-            소극장 관리자
-          </Button>
+            공연 관리자
+          </button>
         </li>
       </ul>
-      <form className="w-full sm:max-w-[525px] flex flex-col border-2 rounded-lg border-flesh-200 px-5 py-4 gap-[10px] relative sm:gap-[20px]">
+      <form
+        onSubmit={handleSubmit}
+        className="w-full bg-white sm:max-w-[525px] flex flex-col border rounded-xl border border-gray-300 px-5 py-4 gap-[10px] sm:gap-[20px] -mt-[4px] relative "
+      >
         <JoinInput
           label="이메일"
           type="email"
@@ -130,12 +173,16 @@ export default function JoinForm({
           onChange={setPassword}
           placeholder="8~24자의 영문, 숫자, 특수문자"
           validation={validations.password}
+          type="password"
+          max={24}
         />
         <JoinInput
           label="비밀번호 확인"
           value={passwordConfirm}
           onChange={setPasswordConfirm}
           validation={validations.passwordConfirm(passwordConfirm)}
+          type="password"
+          max={24}
         />
         {userType === "buyer" ? (
           <JoinInput
@@ -144,6 +191,7 @@ export default function JoinForm({
             onChange={setUserName}
             placeholder="10자 이내의 국문 또는 영문"
             validation={validations.name}
+            max={10}
           />
         ) : (
           <>
@@ -153,6 +201,7 @@ export default function JoinForm({
               onChange={setTeamName}
               placeholder="10자 이내의 국문 또는 영문"
               validation={validations.teamName}
+              max={10}
             />
             <JoinInput
               label="관리자명"
@@ -160,6 +209,7 @@ export default function JoinForm({
               onChange={setManagerName}
               placeholder="10자 이내의 국문 또는 영문"
               validation={validations.managerName}
+              max={10}
             />
           </>
         )}
@@ -169,6 +219,7 @@ export default function JoinForm({
           onChange={setUserPhone}
           placeholder="11자 숫자 (‘-’ 문자 제외)"
           validation={validations.phone}
+          max={11}
         />
         {userType === "seller" && (
           <>
@@ -209,6 +260,7 @@ export default function JoinForm({
                       ? "사업자 번호 인증이 완료되었습니다."
                       : ""
                   }
+                  max={10}
                 />
                 <Button
                   highlight={true}
@@ -242,9 +294,28 @@ export default function JoinForm({
         <Button
           type="submit"
           size="full"
-          disabled={(userType === "buyer" && !checkAge) || !checkAgree}
+          disabled={
+            userType === "buyer"
+              ? !isSendEmail ||
+                !isEmailValid ||
+                !password ||
+                !passwordConfirm ||
+                !userName ||
+                !userPhone ||
+                !checkAge ||
+                !checkAgree
+              : !isSendEmail ||
+                !isEmailValid ||
+                !password ||
+                !passwordConfirm ||
+                !teamName ||
+                !managerName ||
+                !userPhone ||
+                !checkAge ||
+                (isBusiness && !isBusinessNumValid) ||
+                !checkAgree
+          }
           className="absolute bottom-[-54px] right-0 max-w-24 max-h-[30px] text-sm py-[19.5px] px-[7.5px] sm:text-base sm:max-w-40 sm:max-h-12 sm:bottom-[-60px]"
-          onClick={() => setIsJoin(true)}
           highlight={true}
         >
           가입 완료

@@ -100,6 +100,7 @@ export function JoinInput({
   disabled,
   validation,
   message,
+  max,
 }: JoinInputProps) {
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (onChange) {
@@ -140,7 +141,7 @@ export function JoinInput({
     <>
       <fieldset className="h-[43px]">
         <label
-          className={`text-sm flex mb-[5px] gap-3 border-b whitespace-nowrap w-full items-center focus-within:border-black sm:text-base ${
+          className={`text-sm flex sm:mb-[5px] gap-3 border-b whitespace-nowrap w-full items-center focus-within:border-black sm:text-base ${
             className ? className : ""
           } `}
         >
@@ -155,6 +156,7 @@ export function JoinInput({
             }`}
             aria-label={label}
             disabled={disabled}
+            maxLength={max}
           />
           {children}
         </label>
