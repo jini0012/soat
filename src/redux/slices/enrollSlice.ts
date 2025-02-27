@@ -33,7 +33,10 @@ const initialState: EnrollState = {
   detailAddress: "",
   poster: null,
   performances: {},
-  content: {},
+  content: {
+    type: "doc",
+    content: [],
+  },
   files: [],
   isDirty: false,
 };
