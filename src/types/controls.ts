@@ -24,6 +24,7 @@ export interface ButtonProps extends BaseProps {
   size?: "default" | "small" | "full";
   onClick?: (e: MouseEvent<HTMLButtonElement>) => void;
   href?: string;
+  target?: string;
 }
 
 export interface InputContainerProps extends BaseProps {
