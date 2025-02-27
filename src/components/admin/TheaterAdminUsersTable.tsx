@@ -22,11 +22,15 @@ export default function TheaterAdminUsersTable({
 
   const [selectedAdminUser, setSelectedAdminUser] =
     useState<TheaterAdminUser | null>(null);
+
   const [adminUserRadioStates, setAdminUserRadioStates] = useState<
     Record<string, string> // 모든 사용자의 상태를 저장
   >({});
   const [adminUserRadioState, setAdminUserRadioState] =
     useState<string>("활성화"); // 사용자의 현재 선택된 상태를 저장하는 state 추가
+
+  // Apply(상태변경적용 버튼)를 눌렀는지 여부를 추적
+  const [applied, setApplied] = useState<boolean>(false);
 
   const radioOptions = [
     { value: "활성화", label: "활성화" },
@@ -41,20 +45,41 @@ export default function TheaterAdminUsersTable({
     setAdminUserRadioState(
       adminUserRadioStates[theaterAdminUser.email] || "활성화"
     );
+    // 새로운 사용자를 클릭할 때마다 applied 상태 초기화
+    setApplied(false);
   };
 
-  const handleApplyStatus = () => {
-    // 상태 변경 적용 로직 추가
-    console.log(`상태 변경: ${adminUserRadioState}`);
+  const handleClose = () => {
+    // 모달을 닫을 때, Apply 버튼을 누르지 않았다면 임시 상태 변경을 취소
+    if (!applied && selectedAdminUser) {
+      // userRadioState를 원래 값으로 되돌리기 (다음에 다시 열 때를 대비)
+      setAdminUserRadioState(
+        adminUserRadioStates[selectedAdminUser.email] || "활성화"
+      );
+    }
+    // applied 상태 초기화 및 선택된 사용자 초기화
+    setApplied(false);
+    setSelectedAdminUser(null);
   };
 
   const handleRadioChange = (value: string) => {
+    // 라디오 버튼을 변경할 때는 임시 상태만 업데이트
+    setAdminUserRadioState(value);
+  };
+
+  const handleApplyStatus = () => {
     if (selectedAdminUser) {
+      // Apply 버튼을 누르면 확정된 상태 업데이트
       setAdminUserRadioStates((prevStates) => ({
         ...prevStates,
-        [selectedAdminUser.email]: value,
+        [selectedAdminUser.email]: adminUserRadioState,
       }));
-      setAdminUserRadioState(value);
+
+      // applied 플래그를 true로 설정
+      setApplied(true);
+
+      console.log(`상태 변경: ${adminUserRadioState}`);
+      // API 연동 필요
     }
   };
 
@@ -90,7 +115,7 @@ export default function TheaterAdminUsersTable({
           radioOptions={radioOptions}
           adminUserRadioState={adminUserRadioState}
           onRadioChange={handleRadioChange}
-          onClose={() => setSelectedAdminUser(null)} // 모달 닫기
+          onClose={handleClose}
           onApply={handleApplyStatus} // 상태 변경 적용
         />
       )}

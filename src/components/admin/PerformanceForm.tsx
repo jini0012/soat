@@ -14,6 +14,7 @@ export default function PerformanceForm({
   onSaleRadioChange,
   onPerformanceRadioChange,
   onClose,
+  onApply,
 }: {
   performance: Performance;
   performanceRadioOptions: { value: string; label: string }[];
@@ -168,6 +169,7 @@ export default function PerformanceForm({
                 onClick={() => {
                   setIsApplyModalOpen(true);
                   setIsModalOpen(false);
+                  onApply();
                 }}
                 className="mt-2 w-[60px]"
               >

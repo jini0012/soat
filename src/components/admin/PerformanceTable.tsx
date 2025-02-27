@@ -19,11 +19,17 @@ export default function PerformanceTable({ data }: { data: Performance[] }) {
   const [selectedPerformance, setSelectedPerformance] =
     useState<Performance | null>(null);
 
-  // 공연 표시 라디오 버튼 관련 상태 관리
+  // 모든 공연의 표시 상태를 저장
+  const [performanceRadioStates, setPerformanceRadioStates] = useState<
+    Record<string, string>
+  >({});
+
+  // 선택된 공연의 표시 상태를 저장
   const [performanceRadioState, setPerformanceRadioState] =
-    useState<string>("정상");
+    useState<string>("표시");
+
   const performanceRadioOptions = [
-    { value: "정상", label: "정상" },
+    { value: "표시", label: "표시" },
     { value: "숨김", label: "숨김" },
   ];
 
@@ -41,37 +47,66 @@ export default function PerformanceTable({ data }: { data: Performance[] }) {
     { value: "판매종료", label: "판매종료" },
   ];
 
+  // Apply(상태변경적용 버튼)를 눌렀는지 여부를 추적
+  const [applied, setApplied] = useState<boolean>(false);
+
   // 공연 클릭 시 상태 설정
   const handleRowClick = (performance: Performance) => {
     setSelectedPerformance(performance);
     // 선택된 공연에 대한 판매 상태를 가져오기
     setSaleRadioState(saleRadioStates[performance.title] || "판매예정");
+    setPerformanceRadioState(
+      performanceRadioStates[performance.title] || "표시"
+    );
+    // 새로운 사용자를 클릭할 때마다 applied 상태 초기화
+    setApplied(false);
   };
 
   // 판매 상태 변경 시 상태 업데이트
   const handleSaleRadioChange = (value: string) => {
-    if (selectedPerformance) {
-      // saleRadioStates 상태에서 선택된 공연의 판매 상태를 업데이트
-      setSaleRadioStates((prevStates) => ({
-        ...prevStates,
-        [selectedPerformance.title]: value, // 해당 공연의 판매 상태만 변경
-      }));
-      setSaleRadioState(value); // 선택된 공연의 판매 상태도 변경
-    }
+    // 라디오 버튼을 변경할 때는 임시 상태만 업데이트
+    setSaleRadioState(value);
   };
 
-  const handleClose = () => {
-    setSelectedPerformance(null);
-  };
-
-  // 공연 표시 라디오 버튼 상태 변경
+  // 공연 표시 상태 변경 시 상태 업데이트
   const handlePerformanceRadioChange = (value: string) => {
     setPerformanceRadioState(value);
   };
 
+  const handleClose = () => {
+    // 모달을 닫을 때, Apply 버튼을 누르지 않았다면 임시 상태 변경을 취소
+    if (!applied && selectedPerformance) {
+      setPerformanceRadioState(
+        performanceRadioStates[selectedPerformance.title] || "표시"
+      );
+      setSaleRadioState(
+        saleRadioStates[selectedPerformance.title] || "판매예정"
+      );
+    }
+    // applied 상태 초기화 및 선택된 사용자 초기화
+    setApplied(false);
+    setSelectedPerformance(null);
+  };
+
   const handleApply = () => {
-    // 상태 변경 적용 로직
-    console.log("상태 변경 적용:", performanceRadioState, saleRadioState);
+    if (selectedPerformance) {
+      // Apply 버튼을 누르면 확정된 상태 업데이트
+      setSaleRadioStates((prevStates) => ({
+        ...prevStates,
+        [selectedPerformance.title]: saleRadioState,
+      }));
+      setPerformanceRadioStates((prevStates) => ({
+        ...prevStates,
+        [selectedPerformance.title]: performanceRadioState,
+      }));
+
+      // applied 플래그를 true로 설정
+      setApplied(true);
+
+      console.log(`상태 변경: ${saleRadioState}`);
+      console.log(`상태 변경: ${performanceRadioState}`);
+      // API 연동 필요
+    }
   };
 
   return (

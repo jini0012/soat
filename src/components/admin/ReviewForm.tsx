@@ -107,7 +107,6 @@ export default function ReviewForm({
                 highlight
                 size="small"
                 onClick={() => {
-                  onApply(); // 상태 변경 함수 실행
                   setIsModalOpen(true); // 모달 열기
                 }}
               >
@@ -140,6 +139,7 @@ export default function ReviewForm({
                 onClick={() => {
                   setIsApplyModalOpen(true);
                   setIsModalOpen(false);
+                  onApply(); // 상태 변경
                 }}
                 className="mt-2 w-[60px]"
               >

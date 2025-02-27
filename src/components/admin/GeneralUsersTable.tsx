@@ -15,10 +15,17 @@ export default function GeneralUsersTable({ data }: { data: GeneralUser[] }) {
   };
 
   const [selectedUser, setSelectedUser] = useState<GeneralUser | null>(null);
+
+  // 모든 사용자의 확정된 상태를 저장
   const [userRadioStates, setUserRadioStates] = useState<
-    Record<string, string> // 모든 사용자의 상태를 저장
+    Record<string, string>
   >({});
-  const [userRadioState, setUserRadioState] = useState<string>("활성화"); // 사용자의 현재 선택된 상태를 저장하는 state 추가
+
+  // 현재 선택된 사용자의 임시 상태
+  const [userRadioState, setUserRadioState] = useState<string>("활성화");
+
+  // Apply(상태변경적용 버튼)를 눌렀는지 여부를 추적
+  const [applied, setApplied] = useState<boolean>(false);
 
   const userRadioOptions = [
     { value: "활성화", label: "활성화" },
@@ -29,27 +36,42 @@ export default function GeneralUsersTable({ data }: { data: GeneralUser[] }) {
 
   const handleUserClick = (generalUser: GeneralUser) => {
     setSelectedUser(generalUser);
-    // 해당 사용자의 상태를 userRadioStates에서 가져오거나 기본값 사용
+    // 해당 사용자의 확정된 상태를 userRadioStates에서 가져오거나 기본값 사용
     setUserRadioState(userRadioStates[generalUser.email] || "활성화");
+    // 새로운 사용자를 클릭할 때마다 applied 상태 초기화
+    setApplied(false);
   };
 
   const handleClose = () => {
-    setSelectedUser(null); // 선택했던 사용자를 모달이 닫힌 후에는 다시 초기화. 다른 사용자를 다시 선택할 수 있도록 함
+    // 모달을 닫을 때, Apply 버튼을 누르지 않았다면 임시 상태 변경을 취소
+    if (!applied && selectedUser) {
+      // userRadioState를 원래 값으로 되돌리기 (다음에 다시 열 때를 대비)
+      setUserRadioState(userRadioStates[selectedUser.email] || "활성화");
+    }
+    // applied 상태 초기화 및 선택된 사용자 초기화
+    setApplied(false);
+    setSelectedUser(null);
   };
 
   const handleRadioChange = (value: string) => {
-    if (selectedUser) {
-      setUserRadioStates((prevStates) => ({
-        ...prevStates,
-        [selectedUser.email]: value,
-      }));
-      setUserRadioState(value);
-    }
+    // 라디오 버튼을 변경할 때는 임시 상태만 업데이트
+    setUserRadioState(value);
   };
 
   const handleApplyStatus = () => {
-    console.log(`상태 변경: ${userRadioState}`);
-    // API 연동 필요
+    if (selectedUser) {
+      // Apply 버튼을 누르면 확정된 상태 업데이트
+      setUserRadioStates((prevStates) => ({
+        ...prevStates,
+        [selectedUser.email]: userRadioState,
+      }));
+
+      // applied 플래그를 true로 설정
+      setApplied(true);
+
+      console.log(`상태 변경: ${userRadioState}`);
+      // API 연동 필요
+    }
   };
 
   return (
@@ -64,7 +86,7 @@ export default function GeneralUsersTable({ data }: { data: GeneralUser[] }) {
                 rowData={generalUser}
                 headers={headers}
                 fieldMapping={fieldMapping}
-                onClick={() => handleUserClick(generalUser)} // 핸들러 적용
+                onClick={() => handleUserClick(generalUser)}
               />
             ))
           ) : (
