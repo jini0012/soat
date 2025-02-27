@@ -83,6 +83,7 @@ export default function JoinForm({
     try {
       const response = await axios.post("/api/auth/email-verification", {
         email,
+        userType,
       });
 
       if (response.status === 200) {

@@ -35,7 +35,20 @@ async function sendEmail({ email, code }: { email: string; code: number }) {
 
 export async function POST(request: NextRequest) {
   const data = await request.json();
-  const { email } = data;
+  const { email, userType } = data;
+
+  // 이메일 중복 확인
+  const userSnapshot = await adminDb
+    .collection(userType === "seller" ? "sellerUsers" : "buyerUsers")
+    .where("email", "==", email)
+    .get();
+
+  if (!userSnapshot.empty) {
+    return NextResponse.json(
+      { error: "이미 가입된 이메일입니다." },
+      { status: 409 }
+    );
+  }
 
   const code = Math.floor(Math.random() * 1000000);
 
