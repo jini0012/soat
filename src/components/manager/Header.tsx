@@ -1,0 +1,35 @@
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+export default function Header() {
+  const pathname = usePathname();
+
+  const pageTitleMap: Record<string, string | null> = {
+    "/manager": null,
+    "/manager/performance": "나의 공연 등록 및 관리",
+    "/manager/ticket": "티켓 검증",
+    "/manager/user": "관리자 정보 수정",
+  };
+
+  const subtitle = pageTitleMap[pathname] || null;
+
+  return (
+    <header className="flex justify-between items-center p-3                            ">
+      <h1>
+        <Link href={"/manager"}>
+          <img src="/images/icons/logo-temp.svg" alt="쏘앳" />
+        </Link>
+      </h1>
+      <div className="flex flex-col items-center">
+        <h2>관리자페이지</h2>
+        {subtitle && <h3 className="text-sm">{subtitle}</h3>}
+      </div>
+      <button className="flex">
+        <img src="/images/icons/people.svg" className="mr-1" />
+        로그아웃
+      </button>
+    </header>
+  );
+}

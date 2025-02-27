@@ -73,12 +73,15 @@ export function Button({
 export function CloseButton({
   onClick,
   className,
+  type,
 }: {
   onClick?: () => void;
   className?: string;
+  type?: "button" | "submit" | "reset";
 }) {
   return (
     <button
+      type={type}
       onClick={onClick}
       className={`bg-cover w-4 h-4 bg-close-btn transition hover:bg-close-btn-hover focus:bg-close-btn-hover active:bg-close-btn-active ${className}`}
       aria-label="닫기"

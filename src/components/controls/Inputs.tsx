@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ReactElement } from "react";
+import { useState, useEffect } from "react";
 import { focusRings } from "@/styles/constants";
 import {
   CheckboxProps,
@@ -94,12 +94,13 @@ export function JoinInput({
   placeholder,
   className,
   children,
-  invalid,
   value,
   onChange,
   type,
   disabled,
   validation,
+  message,
+  max,
 }: JoinInputProps) {
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (onChange) {
@@ -107,7 +108,28 @@ export function JoinInput({
     }
   };
 
-  if (invalid) {
+  const [error, setError] = useState<string | null>(null);
+  const [verifyMessage, setVerifyMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (message) {
+      setError(null);
+      setVerifyMessage(message);
+    }
+  }, [message]);
+
+  const handleOnBlur = () => {
+    if (validation) {
+      const { success, error } = validation.safeParse(value);
+      if (!success) {
+        setError(error.errors[0].message);
+      } else {
+        setError(null);
+      }
+    }
+  };
+
+  if (error) {
     className = "border-flesh-500";
   } else if (!!value) {
     className = "border-black";
@@ -119,7 +141,7 @@ export function JoinInput({
     <>
       <fieldset className="h-[43px]">
         <label
-          className={`text-sm h-[23px] flex mb-[5px] gap-3 border-b whitespace-nowrap w-full items-center focus-within:border-black ${
+          className={`text-sm flex sm:mb-[5px] gap-3 border-b whitespace-nowrap w-full items-center focus-within:border-black sm:text-base ${
             className ? className : ""
           } `}
         >
@@ -128,21 +150,34 @@ export function JoinInput({
             type={type}
             placeholder={placeholder}
             onChange={handleOnChange}
-            className={`focus:outline-none w-full placeholder:text-sm ${
+            onBlur={handleOnBlur}
+            className={`focus:outline-none w-full placeholder:text-sm sm:placeholder:text-base ${
               disabled && "bg-white"
             }`}
             aria-label={label}
             disabled={disabled}
+            maxLength={max}
           />
           {children}
         </label>
-        <span
-          className={`text-flesh-400 ${
-            validation?.includes("이메일") ? "text-[10px]" : "text-xs"
-          }`}
-        >
-          {validation ? validation : "\u00A0"}
-        </span>
+        {error && (
+          <span
+            className={`text-flesh-400 ${
+              error?.includes("이메일") ? "text-[10px]" : "text-xs"
+            } sm:text-base`}
+          >
+            {error}
+          </span>
+        )}
+        {verifyMessage && (
+          <span
+            className={`text-flesh-400 ${
+              error?.includes("이메일") ? "text-[10px]" : "text-xs"
+            } sm:text-base`}
+          >
+            {verifyMessage}
+          </span>
+        )}
       </fieldset>
     </>
   );

@@ -1,4 +1,5 @@
 import { ReactElement, MouseEvent } from "react";
+import { ZodType } from "zod";
 
 // 기본 공통 속성
 interface BaseProps {
@@ -12,7 +13,7 @@ interface InputBaseProps extends BaseProps {
   value: string;
   onChange?: (value: string) => void;
   placeholder?: string;
-  type?: "text" | "password" | "email" | "number" | "tel" | "date";
+  type?: "text" | "password" | "email" | "number" | "tel" | "date" | "time";
   readOnly?: boolean;
 }
 
@@ -39,9 +40,10 @@ export interface TextInputProps extends InputBaseProps {
 
 export interface JoinInputProps extends InputBaseProps {
   label: string; // required
-  validation?: string;
-  invalid?: boolean;
+  validation?: ZodType<string | number>;
+  message?: string;
   disabled?: boolean;
+  max?: number;
 }
 
 export interface SearchInputProps extends InputBaseProps {

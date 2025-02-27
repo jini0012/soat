@@ -2,7 +2,9 @@
   --saturday--color: #3107ff;
   --active--color: #ed3109;
   --hover--color: #fd713a;
-  --today--color: #fd713a;
+  --end--color: #fc3d13;
+  --start--color: #ffbe98;
+  --selected--color: #fc3d13;
 }
 .react-calendar {
   width: 100%;
@@ -37,7 +39,7 @@
 }
 
 .react-calendar__navigation button {
-  min-width: 3rem;
+  min-width: 2rem;
   background: none;
 }
 
@@ -105,6 +107,7 @@
   text-align: center;
   font: inherit;
   font-size: 0.833em;
+  position: relative;
 }
 
 .react-calendar__tile:disabled {
@@ -118,40 +121,56 @@
   color: #cdcdcd;
 }
 
-.react-calendar__tile:enabled:hover,
-.react-calendar__tile:enabled:focus {
+.react-calendar__tile:enabled:hover {
   background-color: #e6e6e6;
 }
 
-.react-calendar__tile--now {
-  background: var(--today--color);
-}
-
-.react-calendar__tile--now:enabled:hover,
-.react-calendar__tile--now:enabled:focus {
-  background: var(--today--color);
-}
-
-.react-calendar__tile--hasActive {
+/* .react-calendar__tile--hasActive {
   background: var(--active--color);
 }
 
 .react-calendar__tile--hasActive:enabled:hover,
 .react-calendar__tile--hasActive:enabled:focus {
   background: var(--hover--color);
-}
-
+  } 
+  .react-calendar__tile--active:enabled:hover,
+  .react-calendar__tile--active:enabled:focus {
+  }
+  
+  */
 .react-calendar__tile--active {
-  background: var(--active--color);
-  border-radius: 100%;
-  color: white;
-}
-
-.react-calendar__tile--active:enabled:hover,
-.react-calendar__tile--active:enabled:focus {
-  background: var(--hover--color);
+  background: transparent;
 }
 
 .react-calendar--selectRange .react-calendar__tile--hover {
   background-color: #e6e6e6;
+}
+
+.events {
+  position: absolute;
+  width: 25%;
+  max-width: 0.5rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background-color: #ddd;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.selectedDate {
+  background-color: var(--selected--color);
+}
+
+.react-calendar__tile--rangeStart {
+  background-color: var(--start--color);
+}
+
+.react-calendar__tile--rangeEnd {
+  background-color: var(--end--color);
+}
+
+.react-calendar__tile--rangeBothEnds {
+  background-color: var(--start--color);
 }
