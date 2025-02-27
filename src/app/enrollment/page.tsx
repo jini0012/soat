@@ -1,65 +1,53 @@
-"use client";
-import React, { useState } from "react";
-import { EnrollFormData } from "../../types/enrollment";
+import React from "react";
+import Link from "next/link";
 import EnrollFormItems from "../../components/enrollment/EnrollFormItems";
 import EnrollPoster from "../../components/enrollment/EnrollPoster";
-import EnrollCalendar from "../../components/enrollment/EnrollCalendar";
+import EnrollCalendar from "../../components/enrollment/Calendar/EnrollCalendar";
 import { Button } from "@/components/controls/Button";
+import dynamic from "next/dynamic";
+
+const Editor = dynamic(() => import("@/components/editor/Editor"), {
+  ssr: false,
+});
 
 export default function EnrollmentPage() {
-  const [formData, setFormData] = useState<EnrollFormData>({
-    type: "",
-    title: "",
-    category: "",
-    bookingStartDate: "",
-    location: "",
-    poster: null,
-  });
-
-  const handleOnPoster = (file: File | null) => {
-    setFormData((prev) => ({
-      ...prev,
-      poster: file,
-    }));
-  };
-  const handleOnChangeInputs = (field: keyof EnrollFormData, value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
-  };
   return (
-    <section>
-      <h2 className="sr-only">공연 정보 등록페이지</h2>
-      <form>
-        <div className="flex flex-row gap-16">
-          <section className="w-[21.6%]">
-            <h3 className="sr-only">공연 포스터</h3>
-            <EnrollPoster onPosterChange={handleOnPoster} />
+    <>
+      <header className="max-w-[1920px] m-auto px-[80px]">
+        <Link href={"/"} className="text-flesh-600">
+          <h1 className="font-bold text-3xl italic py-5">SO@</h1>
+        </Link>
+      </header>
+      <main className="max-w-[1920px] m-auto mb-[140px] px-[80px]">
+        <h2 className="sr-only">공연 정보 등록페이지</h2>
+        <form>
+          <div className="flex flex-row gap-4 flex-wrap">
+            <section className="lg:w-[45.3%] w-full h-full lg:order-1">
+              <h3 className="sr-only">공연 정보</h3>
+              <EnrollFormItems />
+            </section>
+            <section className="lg:w-[21.6%] w-full lg:order-0">
+              <h3 className="lg:sr-only">포스터</h3>
+              <EnrollPoster />
+            </section>
+            <section
+              id="calendar-container"
+              className="lg:w-[28.125%] h-full border rounded-[10px] flex flex-col p-4 lg:order-2"
+            >
+              <h3 className="sr-only">공연 날짜</h3>
+              <EnrollCalendar />
+            </section>
+          </div>
+          <section className="w-full mt-16 min-h-[600px]">
+            <h3 className="mb-4 text-base">공연 세부 정보</h3>
+            <Editor />
           </section>
-          <section className="w-[45.3%]">
-            <h3 className="sr-only">공연 정보</h3>
-            <EnrollFormItems
-              title={formData.title}
-              type={formData.type}
-              category={formData.category}
-              bookingStartDate={formData.bookingStartDate}
-              location={formData.location}
-              onChange={handleOnChangeInputs}
-            />
-          </section>
-          <section className="w-[28.125%]">
-            <h3 className="sr-only">공연 날짜</h3>
-            <EnrollCalendar />
-          </section>
-        </div>
-        <section className="bg-gray-700 w-full h-[50vh]">
-          <h3 className="sr-only">공연 상세 정보</h3>
-        </section>
-        <section>
-          <Button type="submit">등록</Button>
-        </section>
-      </form>
-    </section>
+        </form>
+      </main>
+      <footer className="fixed left-0 bottom-0 bg-flesh-200 w-full h-[120px] flex justify-end items-center pr-[60px] gap-14">
+        <Button type="button">임시 저장</Button>
+        <Button type="submit">공연 등록</Button>
+      </footer>
+    </>
   );
 }

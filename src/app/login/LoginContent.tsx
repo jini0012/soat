@@ -1,8 +1,9 @@
 "use client";
 import { Button } from "@/components/controls/Button";
 import { TextInput, Checkbox } from "@/components/controls/Inputs";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { signIn, signOut, useSession } from "next-auth/react";
 
 enum UserType {
   TICKETUSER = "TICKETUSER",
@@ -22,23 +23,50 @@ export default function LoginContent() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [rememberMe, setRememberMe] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
   const isFormValid = email !== "" && password !== "";
 
+  const { status } = useSession();
+
+  // 로그인 상태일 경우 로그아웃
+  useEffect(() => {
+    if (status === "authenticated") {
+      signOut();
+    }
+  }, [status]);
+
   const lineStyles: LineStyles = {
     width: userType === UserType.TICKETUSER ? "264px" : "264px",
-    left: userType === UserType.TICKETUSER ? "0" : "auto",
-    right: userType === UserType.TICKETUSER ? "auto" : "0",
+    left: userType === UserType.TICKETUSER ? "1px" : "auto",
+    right: userType === UserType.TICKETUSER ? "auto" : "1px",
     height: "1px",
     top: "65px",
   };
 
+  async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setError(null);
+    const result = await signIn("credentials", {
+      email,
+      password,
+      userType: userType === UserType.TICKETUSER ? "buyer" : "seller",
+      redirect: false,
+    });
+
+    if (result?.error) {
+      setError(result.error);
+    } else {
+      window.location.href = "/";
+    }
+  }
+
   return (
     <div className="w-full h-screen flex justify-center items-start pt-8">
-      <main className="relative w-full max-w-lg mx-auto">
-        <div className="flex gap-0 -mb-1">
+      <main className="relative w-full max-w-lg mx-auto p-4 sm:p-0">
+        <div className="flex gap-0 -mb-1 text-base sm:font-bold">
           <button
-            className={`relative flex-1 py-5 px-6 rounded-t-lg border z-10 transition-colors text-foreground
+            className={`relative flex-1 py-3 sm:py-5 px-6 rounded-t-lg border-x border-t z-10 transition-colors text-foreground
             ${
               userType === UserType.TICKETUSER
                 ? "bg-white border-gray-300"
@@ -50,7 +78,7 @@ export default function LoginContent() {
             예매회원 로그인
           </button>
           <button
-            className={`relative flex-1 py-3 px-6 rounded-t-lg border -ml-4 transition-colors text-foreground
+            className={`relative flex-1 py-3 sm:py-5 px-6 rounded-t-lg border-x border-t -ml-4 transition-colors text-foreground whitespace-nowrap
             ${
               userType === UserType.MANAGER
                 ? "bg-white border-gray-300 z-20"
@@ -65,8 +93,8 @@ export default function LoginContent() {
 
         <div className="absolute bg-background z-20" style={lineStyles}></div>
 
-        <div className="bg-white p-8 rounded-xl border border-gray-300">
-          <form className="space-y-4">
+        <div className="bg-white p-8 rounded-b-xl border border-gray-300">
+          <form className="space-y-4" onSubmit={handleLogin}>
             <div className="[&_input]:pl-9 [&_input]:py-4  relative">
               <img
                 src="images/icons/mail-icon.svg"
@@ -78,7 +106,7 @@ export default function LoginContent() {
                 placeholder="E-mail"
                 value={email}
                 onChange={setEmail}
-                className="w-full !pl-20"
+                className="w-full !pl-9"
               />
             </div>
             <div className="[&_input]:pl-9 [&_input]:py-4  relative">
@@ -102,9 +130,11 @@ export default function LoginContent() {
                 </Checkbox>
               </label>
             </div>
+
             <Button highlight size="full" type="submit" disabled={!isFormValid}>
               로그인
             </Button>
+            {error && <p className="text-flesh-400 text-sm">{error}</p>}
           </form>
 
           <div className="mt-6 flex justify-center space-x-4 text-sm">

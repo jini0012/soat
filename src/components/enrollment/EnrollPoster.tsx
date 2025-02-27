@@ -1,8 +1,12 @@
+"use client";
 import React, { useState } from "react";
-import { EnrollPosterProps } from "../../types/enrollment";
-
-export default function EnrollPoster({ onPosterChange }: EnrollPosterProps) {
+import { useDispatch } from "react-redux";
+import { setPoster } from "@/redux/slices/enrollSlice";
+import { Plus } from "lucide-react";
+export default function EnrollPoster() {
+  const [fileName, setFileName] = useState<string>("");
   const [previewPoster, setPreviewPoster] = useState<string | null>(null);
+  const dispatch = useDispatch();
 
   const handleFileOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files ? e.target.files[0] : null;
@@ -12,7 +16,8 @@ export default function EnrollPoster({ onPosterChange }: EnrollPosterProps) {
 
       reader.onloadend = () => {
         setPreviewPoster(reader.result as string);
-        onPosterChange(file);
+        setFileName(file.name);
+        dispatch(setPoster(file));
       };
 
       reader.readAsDataURL(file);
@@ -21,8 +26,8 @@ export default function EnrollPoster({ onPosterChange }: EnrollPosterProps) {
 
   return (
     <>
-      <div className="relative w-full">
-        <div className="w-full bg-gray-300 aspect-[210/297]">
+      <div className="relative lg:h-full w-full flex">
+        <div className="w-full h-full bg-gray-300 hidden lg:block">
           {previewPoster && (
             <img
               className="w-full h-full object-cover"
@@ -31,12 +36,17 @@ export default function EnrollPoster({ onPosterChange }: EnrollPosterProps) {
             />
           )}
         </div>
+
+        <div className="border-2 rounded-lg px-4 py-2 flex-1 w-full bg-background lg:hidden">
+          {fileName ? fileName : "파일을 선택하세요"}
+        </div>
         <label
-          className="w-[20%] aspect-[1/1] rounded-full absolute bottom-0 right-0 bg-flesh-400 z-100 cursor-pointer"
+          className="flex justify-center items-center  rounded-md lg:w-[20%] lg:aspect-[1/1] lg:rounded-full lg:absolute lg:bottom-0 lg:right-0 lg:bg-flesh-400 lg:z-100  cursor-pointer"
           htmlFor="poster"
         >
-          <p className="sr-only">공연 포스터 추가하기</p>
+          <Plus className="" />
         </label>
+
         <input
           className="sr-only"
           id="poster"

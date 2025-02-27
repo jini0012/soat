@@ -1,19 +1,19 @@
 "use client";
 
 import React from "react";
-import { ReactElement } from "react";
+import { useState, useEffect } from "react";
 import { focusRings } from "@/styles/constants";
+import {
+  CheckboxProps,
+  InputContainerProps,
+  JoinInputProps,
+  RadioProps,
+  SearchInputProps,
+  TextInputProps,
+} from "@/types/controls";
 
 // Input을 감쌀 경우 사용하는 컨테이너
-function InputContainer({
-  input,
-  children,
-  className,
-}: {
-  input: ReactElement;
-  children: ReactElement;
-  className?: string;
-}) {
+function InputContainer({ input, children, className }: InputContainerProps) {
   return (
     <div
       className={`${
@@ -38,27 +38,24 @@ export function TextInput({
   align,
   children,
   ariaLabel,
-}: {
-  label?: string;
-  value: string;
-  onChange: (value: string) => void;
-  type?: "text" | "password" | "email" | "number" | "tel" | "date"; // 추가할 타입이 있다면 여기에 추가
-  placeholder?: string;
-  className?: string;
-  align?: "v" | "h";
-  children?: ReactElement;
-  ariaLabel?: string;
-}) {
+  readOnly,
+}: TextInputProps) {
+  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (onChange) {
+      onChange(e.target.value);
+    }
+  };
   const Input = (
     <input
       className={`${
         !children ? `border-2 rounded-lg ${focusRings.default}` : "border-none"
-      } px-4 py-2 flex-1 w-full focus-visible:outline-none bg-background`}
+      } px-4 py-2 flex-1 w-full focus-visible:outline-none bg-background ${className}`}
       value={value}
-      onChange={(e) => onChange(e.target.value)}
+      onChange={handleOnChange}
       type={type}
       placeholder={placeholder}
       aria-label={label || ariaLabel}
+      readOnly={readOnly}
     />
   );
 
@@ -97,21 +94,42 @@ export function JoinInput({
   placeholder,
   className,
   children,
-  invalid,
   value,
   onChange,
   type,
-}: {
-  label: string;
-  placeholder?: string;
-  className?: string;
-  children?: ReactElement;
-  invalid?: boolean;
-  value?: string;
-  onChange: (value: string) => void;
-  type?: "text" | "password" | "email" | "number" | "tel";
-}) {
-  if (invalid) {
+  disabled,
+  validation,
+  message,
+  max,
+}: JoinInputProps) {
+  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (onChange) {
+      onChange(e.target.value);
+    }
+  };
+
+  const [error, setError] = useState<string | null>(null);
+  const [verifyMessage, setVerifyMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (message) {
+      setError(null);
+      setVerifyMessage(message);
+    }
+  }, [message]);
+
+  const handleOnBlur = () => {
+    if (validation) {
+      const { success, error } = validation.safeParse(value);
+      if (!success) {
+        setError(error.errors[0].message);
+      } else {
+        setError(null);
+      }
+    }
+  };
+
+  if (error) {
     className = "border-flesh-500";
   } else if (!!value) {
     className = "border-black";
@@ -121,9 +139,9 @@ export function JoinInput({
 
   return (
     <>
-      <fieldset>
+      <fieldset className="h-[43px]">
         <label
-          className={` flex mb-[5px] gap-3 border-b whitespace-nowrap w-full items-center focus-within:border-black ${
+          className={`text-sm flex sm:mb-[5px] gap-3 border-b whitespace-nowrap w-full items-center focus-within:border-black sm:text-base ${
             className ? className : ""
           } `}
         >
@@ -131,14 +149,35 @@ export function JoinInput({
           <input
             type={type}
             placeholder={placeholder}
-            onChange={(e) => {
-              onChange(e.target.value);
-            }}
-            className="focus:outline-none w-full placeholder:text-sm"
+            onChange={handleOnChange}
+            onBlur={handleOnBlur}
+            className={`focus:outline-none w-full placeholder:text-sm sm:placeholder:text-base ${
+              disabled && "bg-white"
+            }`}
             aria-label={label}
+            disabled={disabled}
+            maxLength={max}
           />
           {children}
         </label>
+        {error && (
+          <span
+            className={`text-flesh-400 ${
+              error?.includes("이메일") ? "text-[10px]" : "text-xs"
+            } sm:text-base`}
+          >
+            {error}
+          </span>
+        )}
+        {verifyMessage && (
+          <span
+            className={`text-flesh-400 ${
+              error?.includes("이메일") ? "text-[10px]" : "text-xs"
+            } sm:text-base`}
+          >
+            {verifyMessage}
+          </span>
+        )}
       </fieldset>
     </>
   );
@@ -153,17 +192,13 @@ export function SearchInput({
   onChange,
   onSearch,
   type = "text",
-}: {
-  label: string;
-  placeholder?: string;
-  className?: string;
-  inputClassName?: string;
-  children?: ReactElement;
-  value?: string;
-  onChange: (value: string) => void;
-  onSearch: () => void;
-  type?: "text" | "password" | "email" | "number" | "tel";
-}) {
+}: SearchInputProps) {
+  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (onChange) {
+      onChange(e.target.value);
+    }
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       onSearch();
@@ -182,7 +217,7 @@ export function SearchInput({
           type={type}
           value={value}
           placeholder={placeholder}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={handleOnChange}
           onKeyDown={handleKeyDown}
           className={`focus:outline-none w-full placeholder:text-sm text-black border-b-[2px] border-flesh-500 ${
             inputClassName ? inputClassName : ""
@@ -199,12 +234,7 @@ export function Checkbox({
   onChange,
   className,
   children,
-}: {
-  checked: boolean;
-  onChange: (checked: boolean) => void;
-  className?: string;
-  children: React.ReactNode;
-}) {
+}: CheckboxProps) {
   return (
     <label
       className={`w-full flex items-center ${className}`}
@@ -230,13 +260,7 @@ export function Radio({
   className,
   items,
   align,
-}: {
-  checked: string;
-  onChange: (checked: string) => void;
-  className?: string;
-  items: { value: string; label: string }[];
-  align?: "v" | "h";
-}) {
+}: RadioProps) {
   let alignClass = "flex-row gap-x-4";
   if (align === "v") {
     alignClass = "flex-col";

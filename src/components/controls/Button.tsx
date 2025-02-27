@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ButtonProps } from "@/types/controls";
 
 export function Button({
   highlight,
@@ -9,16 +10,8 @@ export function Button({
   size,
   onClick,
   href,
-}: {
-  highlight?: boolean;
-  children: React.ReactNode;
-  className?: string;
-  disabled?: boolean;
-  type?: "button" | "submit" | "reset";
-  size?: "default" | "small" | "full";
-  onClick?: () => void;
-  href?: string;
-}) {
+  target,
+}: ButtonProps) {
   let colorClass = highlight
     ? "bg-flesh-500 border-flesh-500 text-background"
     : "bg-background border-flesh-200 text-foreground";
@@ -58,6 +51,7 @@ export function Button({
       <Link
         className={`break-keep h-fit block ${className} ${colorClass} border-2 rounded-lg ${sizeClass} font-bold ${hoverClass} ${activeClass} ${focusClass}`}
         href={href}
+        target={target}
       >
         {children}
       </Link>
@@ -79,12 +73,15 @@ export function Button({
 export function CloseButton({
   onClick,
   className,
+  type,
 }: {
   onClick?: () => void;
   className?: string;
+  type?: "button" | "submit" | "reset";
 }) {
   return (
     <button
+      type={type}
       onClick={onClick}
       className={`bg-cover w-4 h-4 bg-close-btn transition hover:bg-close-btn-hover focus:bg-close-btn-hover active:bg-close-btn-active ${className}`}
       aria-label="닫기"

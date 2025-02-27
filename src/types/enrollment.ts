@@ -1,16 +1,55 @@
-export interface EnrollFormData {
+import { KakaoAddressData } from "./kakao";
+
+export interface Performance {
+  time: string;
+  casting: string[];
+}
+
+export interface DailyPerformances {
+  [date: string]: Performance[];
+}
+
+export interface EnrollFormFields {
   type: string;
   title: string;
   category: string;
   bookingStartDate: string;
-  location: string;
+  address: string;
+  detailAddress: string;
+  postCode: string;
+}
+
+export interface EnrollFormData extends EnrollFormFields {
   poster: File | null;
+  performances: DailyPerformances;
 }
 
 export interface EnrollPosterProps {
   onPosterChange: (value: File | null) => void;
 }
 
-export interface EnrollFormItemsProps extends Omit<EnrollFormData, "poster"> {
-  onChange: (field: keyof EnrollFormData, value: string) => void;
+export interface EnrollFormItemsProps extends EnrollFormFields {
+  onChange: (field: keyof EnrollFormFields, value: string) => void;
+  handleOnClickType: (type: string) => void;
+  handleSearchAddress: (data: KakaoAddressData) => void;
 }
+export type EnrollModalMode = "add" | "edit";
+
+export interface EnrollModalProps {
+  onClose: () => void;
+  onConfirm: (dates: string[], time: string, casting: string[]) => void;
+  selectedDates: CalendarValue;
+  initTime?: string;
+  initCasting?: string[];
+  mode: EnrollModalMode;
+}
+
+export interface PerformanceInfoProps {
+  date: Date;
+  performances: Performance[];
+  onEdit: (time: string, casting: string[], index: number) => void;
+}
+export type CalendarValuePiece = Date | null;
+export type CalendarValue =
+  | CalendarValuePiece
+  | [CalendarValuePiece, CalendarValuePiece];
