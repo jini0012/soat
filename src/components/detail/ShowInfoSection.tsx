@@ -2,10 +2,16 @@
 import React, { useState } from "react";
 import Modal from "./../Modal";
 import { Button } from "../controls/Button";
+import NaverMapModal from "./NaverMap";
 
 export default function ShowInfoSection() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
+  const [isMapModalOpen, setIsMapModalOpen] = useState(false);
+
+  // 장소 정보 (실제 정보로 업데이트 필요)
+  const locationName = "예술의전당";
+  const locationAddress = "서울특별시 서초구 남부순환로 2406"; // 실제 주소로 변경 필요
 
   const handleCopyUrl = () => {
     if (typeof window !== "undefined") {
@@ -21,6 +27,10 @@ export default function ShowInfoSection() {
           setIsModalOpen(true);
         });
     }
+  };
+
+  const handleMapButtonClick = () => {
+    setIsMapModalOpen(true);
   };
 
   return (
@@ -61,8 +71,11 @@ export default function ShowInfoSection() {
             <li>
               <p className="flex items-center gap-2 text-lg md:text-2xl text-neutral-700">
                 <span className="font-semibold">장소 :</span>
-                인천 어쩌구 멘토님 집 (8석)
-                <button>
+                {locationName} (8석)
+                <button
+                  onClick={handleMapButtonClick}
+                  className="flex items-center hover:opacity-75 transition-opacity"
+                >
                   <img
                     src="images/icons/map-icon.svg"
                     alt="지도보기"
@@ -111,6 +124,13 @@ export default function ShowInfoSection() {
           </Button>
         </div>
       </Modal>
+
+      <NaverMapModal
+        isOpen={isMapModalOpen}
+        onClose={() => setIsMapModalOpen(false)}
+        locationName={locationName}
+        locationAddress={locationAddress}
+      />
     </section>
   );
 }
