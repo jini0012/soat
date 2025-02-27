@@ -1,4 +1,5 @@
-import { ReactElement } from "react";
+import { ReactElement, MouseEvent } from "react";
+import { ZodType } from "zod";
 
 // 기본 공통 속성
 interface BaseProps {
@@ -10,9 +11,10 @@ interface BaseProps {
 interface InputBaseProps extends BaseProps {
   label?: string;
   value: string;
-  onChange: (value: string) => void;
+  onChange?: (value: string) => void;
   placeholder?: string;
-  type?: "text" | "password" | "email" | "number" | "tel" | "date";
+  type?: "text" | "password" | "email" | "number" | "tel" | "date" | "time";
+  readOnly?: boolean;
 }
 
 export interface ButtonProps extends BaseProps {
@@ -20,8 +22,9 @@ export interface ButtonProps extends BaseProps {
   disabled?: boolean;
   type?: "button" | "submit" | "reset";
   size?: "default" | "small" | "full";
-  onClick?: () => void;
+  onClick?: (e: MouseEvent<HTMLButtonElement>) => void;
   href?: string;
+  target?: string;
 }
 
 export interface InputContainerProps extends BaseProps {
@@ -37,9 +40,10 @@ export interface TextInputProps extends InputBaseProps {
 
 export interface JoinInputProps extends InputBaseProps {
   label: string; // required
-  validation?: string;
-  invalid?: boolean;
+  validation?: ZodType<string | number>;
+  message?: string;
   disabled?: boolean;
+  max?: number;
 }
 
 export interface SearchInputProps extends InputBaseProps {
@@ -79,4 +83,5 @@ export interface TextAreaProps extends BaseProps {
   disabled?: boolean;
   resize?: boolean;
   rows?: number;
+  max?: number;
 }

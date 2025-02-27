@@ -1,9 +1,12 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/controls/Button";
 import { JoinInput } from "@/components/controls/Inputs";
 import { Checkbox } from "@/components/controls/Inputs";
 import Link from "next/link";
+import { validations } from "@/utils/validations";
+import axios from "axios";
+import { useSession, signOut } from "next-auth/react";
 
 interface JoinFormProps {
   setUserType: (userType: "buyer" | "seller") => void;
@@ -22,6 +25,8 @@ export default function JoinForm({
   const [email, setEmail] = useState("");
   const [isEmailValid, setIsEmailValid] = useState<boolean>(false);
   const [isSendEmail, setIsSendEmail] = useState<boolean>(false);
+  const [emailSendMsg, setEmailSendMsg] = useState("");
+  const [emailVerifyMsg, setEmailVerifyMsg] = useState("");
   const [verifyNum, setVerifyNum] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
@@ -31,61 +36,182 @@ export default function JoinForm({
   const [userPhone, setUserPhone] = useState("");
   const [businessNum, setBusinessNum] = useState("");
   const [isBusinessNumValid, setIsBusinessNumValid] = useState<boolean>(false);
+  const isEmailInputValid = validations.email.safeParse(email).success;
+  const isBusinessNumInputValid =
+    validations.businessNum.safeParse(businessNum).success;
+
+  // 로그인 상태일 경우 로그아웃
+  const { status } = useSession();
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      signOut();
+    }
+  }, [status]);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (isSendEmail && !isEmailValid) {
+      timer = setTimeout(() => {
+        setIsSendEmail(false);
+      }, 60000);
+    }
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
+  }, [isSendEmail, isEmailValid]);
+
+  const formData =
+    userType === "seller"
+      ? {
+          userType,
+          email,
+          password,
+          teamName,
+          managerName,
+          phoneNumber: userPhone,
+          businessNum,
+        }
+      : {
+          userType,
+          email,
+          password,
+          username: userName,
+          phoneNumber: userPhone,
+        };
+
+  async function handleSendEmailVerification() {
+    setEmailSendMsg("");
+    try {
+      const response = await axios.post("/api/auth/email-verification", {
+        email,
+        userType,
+      });
+
+      if (response.status === 200) {
+        setIsSendEmail(true);
+      }
+    } catch (error) {
+      console.error("이메일 인증 오류:", error);
+      if (axios.isAxiosError(error)) {
+        setEmailSendMsg(error.response?.data.error);
+      }
+    }
+  }
+
+  async function handleVerifyEmail() {
+    setEmailVerifyMsg("");
+    try {
+      const response = await axios.put("/api/auth/email-verification/verify", {
+        email,
+        code: Number(verifyNum),
+      });
+
+      if (response.status === 200) {
+        setIsEmailValid(true);
+      }
+    } catch (error) {
+      console.error("이메일 인증 오류:", error);
+      setEmailVerifyMsg("인증번호가 일치하지 않습니다.");
+    }
+  }
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    console.log(formData);
+    try {
+      const response = await axios.post("/api/auth/signup", formData);
+
+      if (response.status === 201) {
+        setIsJoin(true);
+      }
+    } catch (error) {
+      console.error("회원가입 오류:", error);
+    }
+  }
 
   return (
     <>
-      <h2 className="text-xl font-bold mb-3">회원가입</h2>
-      <ul className="flex mb-3 justify-center w-full gap-1">
+      <h2 className="text-xl font-bold mb-3 sm:text-3xl sm:mb-6">회원가입</h2>
+      <ul className="flex justify-center w-full sm:max-w-[525px] text-xs sm:text-base sm:font-bold">
         <li className="flex-1">
-          <Button
-            type="button"
+          <button
+            className={`w-full py-3 sm:py-5 sm:px-6 rounded-t-lg border-x border-t
+            ${
+              userType === "buyer"
+                ? "bg-white border-gray-300 relative z-20"
+                : "bg-gray-100 border-gray-200"
+            }`}
             onClick={() => setUserType("buyer")}
-            highlight={userType === "buyer" ? true : false}
-            className="w-full h-7 text-xs py-[6.5px] font-normal rounded-[10px]"
+            type="button"
           >
-            회원
-          </Button>
+            예매회원
+          </button>
         </li>
         <li className="flex-1">
-          <Button
-            type="button"
+          <button
+            className={`w-full py-3 sm:py-5 sm:px-6 rounded-t-lg border-x border-t
+            ${
+              userType === "seller"
+                ? "bg-white border-gray-300 relative z-20"
+                : "bg-gray-100 border-gray-200"
+            }`}
             onClick={() => setUserType("seller")}
-            highlight={userType === "seller" ? true : false}
-            className="w-full h-7 text-xs py-[6.5px] font-normal whitespace-nowrap rounded-[10px]"
+            type="button"
           >
-            소극장 관리자
-          </Button>
+            공연 관리자
+          </button>
         </li>
       </ul>
-      <form className="flex flex-col border-2 rounded-lg border-flesh-200 px-5 py-4 gap-[10px] mb-[14px]">
-        <JoinInput label="이메일" value={email} onChange={setEmail}>
+      <form
+        onSubmit={handleSubmit}
+        className="w-full bg-white sm:max-w-[525px] flex flex-col border rounded-xl border-gray-300 px-5 py-4 gap-[10px] sm:gap-[20px] -mt-[10px] relative sm:space-y-2"
+      >
+        <div className="bg-white w-1 h-4 absolute top-0 left-[49.5%] z-[100]"></div>
+        <JoinInput
+          label="이메일"
+          type="email"
+          value={email}
+          onChange={setEmail}
+          validation={validations.email}
+          disabled={isSendEmail}
+          message={
+            isSendEmail
+              ? "인증 번호가 이메일로 발송되었습니다. 이메일을 확인해 주세요"
+              : emailSendMsg
+          }
+        >
           <Button
             highlight={true}
             type="button"
-            onClick={() => {
-              alert(
-                "인증 번호가 이메일로 발송되었습니다. 이메일을 확인해주세요"
-              );
-              setIsSendEmail(true);
+            onClick={(e) => {
+              handleSendEmailVerification();
+              (e.target as HTMLButtonElement).textContent = "재전송";
             }}
             size="small"
-            className="mb-1 rounded-[50px] py-[2.5px] px-[8.5px]"
-            disabled={isSendEmail}
+            className="mb-1 py-[2.5px] sm:max-w-32 sm:py-none sm:text-base sm:font-bold"
+            disabled={!isEmailInputValid || isSendEmail || isEmailValid}
           >
             인증번호 받기
           </Button>
         </JoinInput>
-        <JoinInput label="인증번호" value={verifyNum} onChange={setVerifyNum}>
+        <JoinInput
+          label="인증번호"
+          value={verifyNum}
+          onChange={setVerifyNum}
+          disabled={isEmailValid}
+          validation={validations.emailVerifyNum}
+          message={
+            isEmailValid ? "이메일 인증이 완료되었습니다." : emailVerifyMsg
+          }
+        >
           <Button
             highlight={true}
             type="button"
-            onClick={() => {
-              alert("이메일 인증이 완료되었습니다.");
-              setIsEmailValid(true);
-            }}
+            onClick={handleVerifyEmail}
             size="small"
-            className="mb-1 rounded-[50px] py-[2.5px] px-[8.5px]"
-            disabled={!isSendEmail || isEmailValid}
+            className="mb-1 py-[2.5px] sm:max-w-16 sm:py-none sm:text-base sm:font-bold"
+            disabled={isEmailValid || !verifyNum}
           >
             확인
           </Button>
@@ -95,11 +221,17 @@ export default function JoinForm({
           value={password}
           onChange={setPassword}
           placeholder="8~24자의 영문, 숫자, 특수문자"
+          validation={validations.password}
+          type="password"
+          max={24}
         />
         <JoinInput
           label="비밀번호 확인"
           value={passwordConfirm}
           onChange={setPasswordConfirm}
+          validation={validations.passwordConfirm(password)}
+          type="password"
+          max={24}
         />
         {userType === "buyer" ? (
           <JoinInput
@@ -107,6 +239,8 @@ export default function JoinForm({
             value={userName}
             onChange={setUserName}
             placeholder="10자 이내의 국문 또는 영문"
+            validation={validations.name}
+            max={10}
           />
         ) : (
           <>
@@ -115,12 +249,16 @@ export default function JoinForm({
               value={teamName}
               onChange={setTeamName}
               placeholder="10자 이내의 국문 또는 영문"
+              validation={validations.teamName}
+              max={10}
             />
             <JoinInput
               label="관리자명"
               value={managerName}
               onChange={setManagerName}
               placeholder="10자 이내의 국문 또는 영문"
+              validation={validations.managerName}
+              max={10}
             />
           </>
         )}
@@ -129,18 +267,19 @@ export default function JoinForm({
           value={userPhone}
           onChange={setUserPhone}
           placeholder="11자 숫자 (‘-’ 문자 제외)"
+          validation={validations.phone}
+          max={11}
         />
-
         {userType === "seller" && (
           <>
-            <ul className="flex justify-center mb-2">
+            <ul className="flex justify-center mb-2 gap-2">
               <li className="flex-1">
                 <Button
                   type="button"
                   size="small"
                   onClick={() => setIsBusiness(false)}
                   highlight={!isBusiness}
-                  className="w-full h-7 text-xs py-[6.5px] font-normal"
+                  className="w-full h-7 text-xs py-[6.5px] font-normal sm:h-full sm:text-base sm:py-2 sm:font-bold"
                 >
                   사업자가 아닙니다
                 </Button>
@@ -151,42 +290,53 @@ export default function JoinForm({
                   size="small"
                   onClick={() => setIsBusiness(true)}
                   highlight={isBusiness}
-                  className="w-full h-7 text-xs py-[6.5px] font-normal"
+                  className="w-full h-7 text-xs py-[6.5px] font-normal sm:h-full sm:text-base sm:py-2 sm:font-bold"
                 >
                   사업자 입니다
                 </Button>
               </li>
             </ul>
-            <JoinInput
-              label="사업자등록번호"
-              value={businessNum}
-              onChange={setBusinessNum}
-              disabled={!isBusiness}
-              placeholder="10자 숫자 (‘-’ 문자 제외)"
-            />
-            <Button
-              highlight={true}
-              size="small"
-              className="mb-2 rounded-[50px] py-[2.5px] px-[10.5px]"
-              disabled={!isBusiness || isBusinessNumValid}
-              onClick={() => {
-                alert("사업자등록번호 인증이 완료되었습니다.");
-                setIsBusinessNumValid(true);
-              }}
-              type="button"
-            >
-              사업자등록번호 인증
-            </Button>
+            {isBusiness && (
+              <>
+                <JoinInput
+                  label="사업자등록번호"
+                  value={businessNum}
+                  onChange={setBusinessNum}
+                  placeholder="10자 숫자 (‘-’ 문자 제외)"
+                  validation={validations.businessNum}
+                  message={
+                    isBusinessNumValid
+                      ? "사업자 번호 인증이 완료되었습니다."
+                      : ""
+                  }
+                  max={10}
+                />
+                <Button
+                  highlight={true}
+                  size="small"
+                  className="mb-2 py-[2.5px] sm:text-base sm:font-bold"
+                  disabled={!isBusinessNumInputValid || isBusinessNumValid}
+                  onClick={() => {
+                    setIsBusinessNumValid(true);
+                  }}
+                  type="button"
+                >
+                  사업자등록번호 인증
+                </Button>
+              </>
+            )}
           </>
         )}
         {userType === "buyer" && (
           <Checkbox checked={checkAge} onChange={setCheckAge}>
-            <span className="text-xs">저는 만 14세 이상 회원 입니다.</span>
+            <span className="text-xs sm:text-base">
+              저는 만 14세 이상 회원 입니다.
+            </span>
           </Checkbox>
         )}
         <Checkbox checked={checkAgree} onChange={setCheckAgree}>
-          <span className="text-[10px]">
-            SO@의 <Link href="/">이용 정책</Link> 및{" "}
+          <span className="text-[10px] sm:text-base">
+            SO@의 <Link href="/">이용 정책</Link> 및
             <Link href="/">개인정보 처리방침</Link>에 동의합니다.
           </span>
         </Checkbox>
@@ -194,13 +344,26 @@ export default function JoinForm({
           type="submit"
           size="full"
           disabled={
-            !isEmailValid ||
-            (userType === "buyer" && !checkAge) ||
-            (isBusiness && !isBusinessNumValid) ||
-            !checkAgree
+            userType === "buyer"
+              ? !isSendEmail ||
+                !isEmailValid ||
+                !password ||
+                !passwordConfirm ||
+                !userName ||
+                !userPhone ||
+                !checkAge ||
+                !checkAgree
+              : !isSendEmail ||
+                !isEmailValid ||
+                !password ||
+                !passwordConfirm ||
+                !teamName ||
+                !managerName ||
+                !userPhone ||
+                (isBusiness && !isBusinessNumValid) ||
+                !checkAgree
           }
-          className="absolute bottom-[-12px] right-[30px] max-w-[87px] max-h-[30px] text-sm py-[19.5px] px-[7.5px]"
-          onClick={() => setIsJoin(true)}
+          className="absolute bottom-[-54px] right-0 max-w-24 max-h-[30px] text-sm py-[19.5px] px-[7.5px] sm:text-base sm:max-w-40 sm:max-h-12 sm:bottom-[-60px]"
           highlight={true}
         >
           가입 완료

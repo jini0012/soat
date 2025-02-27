@@ -1,44 +1,63 @@
 "use client";
-import { TextInput } from "@/components/controls/Inputs";
 import React from "react";
-import { EnrollFormItemsProps } from "../../types/enrollment";
+import EnrollFormItemsUI from "./EnrollFormItemsUI";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { useDispatch } from "react-redux";
+import {
+  setAddress,
+  setPostCode,
+  setType,
+  updateStringFormField,
+} from "@/redux/slices/enrollSlice";
+import { EnrollFormData } from "@/types/enrollment";
+import { KakaoAddressData } from "@/types/kakao";
 
-export default function EnrollFormItems({
-  type,
-  title,
-  category,
-  bookingStartDate,
-  location,
-  onChange,
-}: EnrollFormItemsProps) {
+export default function EnrollFormItems() {
+  const {
+    title,
+    type,
+    category,
+    bookingStartDate,
+    address,
+    detailAddress,
+    postCode,
+  } = useSelector((state: RootState) => state.enroll);
+  const dispatch = useDispatch();
+
+  const handleOnChangeInputs = (
+    field: keyof Omit<EnrollFormData, "performances" | "poster">,
+    value: string
+  ) => {
+    dispatch(updateStringFormField({ field, value }));
+  };
+
+  const handleOnClickType = (newType: string) => {
+    if (type === newType) {
+      // 같은 버튼 클릭시
+      return;
+    }
+    dispatch(setType(newType));
+  };
+
+  const onComplete = (data: KakaoAddressData) => {
+    const address = data.roadAddress + data.buildingName;
+    dispatch(setAddress(address));
+    dispatch(setPostCode(data.zonecode));
+  };
+
   return (
-    <>
-      <TextInput
-        label="공연유형"
-        value={type}
-        onChange={(value) => onChange("type", value)}
-      />
-      <TextInput
-        label="공연명"
-        value={title}
-        onChange={(value) => onChange("title", value)}
-      />
-      <TextInput
-        label="카테고리"
-        value={category}
-        onChange={(value) => onChange("category", value)}
-      />
-      <TextInput
-        label="예매시작일"
-        type="date"
-        value={bookingStartDate}
-        onChange={(value) => onChange("bookingStartDate", value)}
-      />
-      <TextInput
-        label="위치"
-        value={location}
-        onChange={(value) => onChange("location", value)}
-      />
-    </>
+    <EnrollFormItemsUI
+      title={title}
+      type={type}
+      category={category}
+      bookingStartDate={bookingStartDate}
+      address={address}
+      detailAddress={detailAddress}
+      postCode={postCode}
+      onChange={handleOnChangeInputs}
+      handleOnClickType={handleOnClickType}
+      handleSearchAddress={onComplete}
+    />
   );
 }

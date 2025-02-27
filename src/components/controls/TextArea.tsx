@@ -12,6 +12,7 @@ export default function TextArea({
   disabled,
   resize,
   rows,
+  max,
 }: TextAreaProps) {
   const resizeClass = resize ? "resize" : "resize-none";
 
@@ -26,6 +27,7 @@ export default function TextArea({
           placeholder={placeholder}
           disabled={disabled}
           rows={rows}
+          maxLength={max}
         />
       </label>
     );
@@ -38,6 +40,7 @@ export default function TextArea({
         placeholder={placeholder}
         disabled={disabled}
         rows={rows}
+        maxLength={max}
       />
     );
   }

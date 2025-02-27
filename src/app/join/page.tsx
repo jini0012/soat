@@ -8,13 +8,14 @@ import Header from "@/components/Header";
 export default function page() {
   const [userType, setUserType] = useState<"buyer" | "seller">("buyer");
   const [isJoin, setIsJoin] = useState<boolean>(false); // 회원가입 완료 시 회원가입완료 컴포넌트를 보여줍니다.
+
   return (
     <>
       <Header />
       <main
-        className={`relative m-auto w-[360px] flex flex-col items-center px-[30px] py-6 h-full ${
-          isJoin && "h-[100vh] max-h-[562px] justify-center text-center"
-        }`}
+        className={`m-auto w-full flex flex-col items-center px-[30px] py-6 h-[calc(100vh-76px)] sm:h-[calc(100vh-147.5px)] relative ${
+          isJoin && "justify-center text-center max-w-none"
+        } `}
       >
         {!isJoin && (
           <JoinForm

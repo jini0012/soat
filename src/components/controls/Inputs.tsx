@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ReactElement } from "react";
+import { useState, useEffect } from "react";
 import { focusRings } from "@/styles/constants";
 import {
   CheckboxProps,
@@ -38,17 +38,24 @@ export function TextInput({
   align,
   children,
   ariaLabel,
+  readOnly,
 }: TextInputProps) {
+  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (onChange) {
+      onChange(e.target.value);
+    }
+  };
   const Input = (
     <input
       className={`${
         !children ? `border-2 rounded-lg ${focusRings.default}` : "border-none"
-      } px-4 py-2 flex-1 w-full focus-visible:outline-none bg-background`}
+      } px-4 py-2 flex-1 w-full focus-visible:outline-none bg-background ${className}`}
       value={value}
-      onChange={(e) => onChange(e.target.value)}
+      onChange={handleOnChange}
       type={type}
       placeholder={placeholder}
       aria-label={label || ariaLabel}
+      readOnly={readOnly}
     />
   );
 
@@ -87,14 +94,42 @@ export function JoinInput({
   placeholder,
   className,
   children,
-  invalid,
   value,
   onChange,
   type,
   disabled,
   validation,
+  message,
+  max,
 }: JoinInputProps) {
-  if (invalid) {
+  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (onChange) {
+      onChange(e.target.value);
+    }
+  };
+
+  const [error, setError] = useState<string | null>(null);
+  const [verifyMessage, setVerifyMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (message) {
+      setError(null);
+      setVerifyMessage(message);
+    }
+  }, [message]);
+
+  const handleOnBlur = () => {
+    if (validation) {
+      const { success, error } = validation.safeParse(value);
+      if (!success) {
+        setError(error.errors[0].message);
+      } else {
+        setError(null);
+      }
+    }
+  };
+
+  if (error) {
     className = "border-flesh-500";
   } else if (!!value) {
     className = "border-black";
@@ -106,7 +141,7 @@ export function JoinInput({
     <>
       <fieldset className="h-[43px]">
         <label
-          className={`text-sm h-[23px] flex mb-[5px] gap-3 border-b whitespace-nowrap w-full items-center focus-within:border-black ${
+          className={`text-sm flex sm:mb-[5px] gap-3 border-b whitespace-nowrap w-full items-center focus-within:border-black sm:text-base ${
             className ? className : ""
           } `}
         >
@@ -114,17 +149,35 @@ export function JoinInput({
           <input
             type={type}
             placeholder={placeholder}
-            onChange={(e) => {
-              onChange(e.target.value);
-            }}
-            className="focus:outline-none w-full placeholder:text-sm"
+            onChange={handleOnChange}
+            onBlur={handleOnBlur}
+            className={`focus:outline-none w-full placeholder:text-sm sm:placeholder:text-base ${
+              disabled && "bg-white"
+            }`}
             aria-label={label}
+            disabled={disabled}
+            maxLength={max}
           />
           {children}
         </label>
-        <span className="text-flesh-400 text-xs">
-          {invalid ? validation : "\u00A0"}
-        </span>
+        {error && (
+          <span
+            className={`text-flesh-400 ${
+              error?.includes("이메일") ? "text-[10px]" : "text-xs"
+            } sm:text-base`}
+          >
+            {error}
+          </span>
+        )}
+        {verifyMessage && (
+          <span
+            className={`text-flesh-400 ${
+              error?.includes("이메일") ? "text-[10px]" : "text-xs"
+            } sm:text-base`}
+          >
+            {verifyMessage}
+          </span>
+        )}
       </fieldset>
     </>
   );
@@ -140,6 +193,12 @@ export function SearchInput({
   onSearch,
   type = "text",
 }: SearchInputProps) {
+  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (onChange) {
+      onChange(e.target.value);
+    }
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       onSearch();
@@ -158,7 +217,7 @@ export function SearchInput({
           type={type}
           value={value}
           placeholder={placeholder}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={handleOnChange}
           onKeyDown={handleKeyDown}
           className={`focus:outline-none w-full placeholder:text-sm text-black border-b-[2px] border-flesh-500 ${
             inputClassName ? inputClassName : ""
