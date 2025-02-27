@@ -2,11 +2,19 @@
 import React, { useState } from "react";
 import { SearchInput } from "../controls/Inputs";
 import Link from "next/link";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Ticket, House } from "lucide-react";
+import { useSession, signOut } from "next-auth/react";
 
 export default function Header() {
   const [searchValue, setSearchValue] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { data: session, status } = useSession();
+
+  const isLoggedIn = status === "authenticated";
+  const userType =
+    isLoggedIn && session?.user?.userType ? session.user.userType : null;
+  const isBuyer = userType === "buyer";
+  const isSeller = userType === "seller";
 
   const handleSearch = () => {
     console.log("검색이되었습니다! ");
@@ -15,6 +23,12 @@ export default function Header() {
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const handleLogout = async (e) => {
+    e.preventDefault();
+    await signOut({ redirect: false });
+    window.location.href = "/";
   };
 
   return (
@@ -53,20 +67,54 @@ export default function Header() {
           </div>
         </div>
 
-        {/* 데스크톱 네비게이션 */}
         <ul className="hidden md:flex gap-[20px]">
-          <li className="cursor-pointer">
-            <Link href="./login" className="text-black flex gap-[5px]">
-              <img src="/images/icons/mypage-login-icon.svg" alt="로그인" />
-              로그인
-            </Link>
-          </li>
-          <li className="cursor-pointer">
-            <Link href="./join" className="text-black flex gap-[5px]">
-              <img src="images/icons/join-icon.svg" alt="회원가입" />
-              회원가입
-            </Link>
-          </li>
+          {isLoggedIn ? (
+            <>
+              {/* 로그인된 상태 */}
+              <li className="cursor-pointer">
+                <a onClick={handleLogout} className="text-black flex gap-[5px]">
+                  <img
+                    src="/images/icons/mypage-login-icon.svg"
+                    alt="로그아웃"
+                  />
+                  로그아웃
+                </a>
+              </li>
+              {isBuyer ? (
+                <li className="cursor-pointer">
+                  <Link href="/account" className="text-black flex gap-[5px]">
+                    <House color="#fc4c13" />
+                    마이페이지
+                  </Link>
+                </li>
+              ) : isSeller ? (
+                <li className="cursor-pointer">
+                  <Link
+                    href="/performances"
+                    className="text-black flex gap-[5px]"
+                  >
+                    <Ticket color="#fc4c13" />내 공연
+                  </Link>
+                </li>
+              ) : null}
+            </>
+          ) : (
+            <>
+              {/* 로그인되지 않은 상태 */}
+              <li className="cursor-pointer">
+                <Link href="./login" className="text-black flex gap-[5px]">
+                  <img src="/images/icons/mypage-login-icon.svg" alt="로그인" />
+                  로그인
+                </Link>
+              </li>
+              <li className="cursor-pointer">
+                <Link href="./join" className="text-black flex gap-[5px]">
+                  <img src="images/icons/join-icon.svg" alt="회원가입" />
+                  회원가입
+                </Link>
+              </li>
+            </>
+          )}
         </ul>
 
         {/* 모바일 메뉴 버튼 */}
@@ -79,7 +127,6 @@ export default function Header() {
         </button>
       </div>
 
-      {/* 모바일 메뉴 */}
       {isMenuOpen && (
         <div className="md:hidden fixed top-[72px] left-0 w-full bg-background shadow-lg z-50">
           <div className="p-4">
@@ -102,28 +149,78 @@ export default function Header() {
               />
             </div>
 
-            {/* 모바일 메뉴 항목들 */}
+            {/* 모바일 메뉴 항목들 - 로그인 상태와 유저 타입에 따라 변경 */}
             <ul className="space-y-4">
-              <li className="cursor-pointer">
-                <Link
-                  href="./login"
-                  className="text-black flex gap-[5px] items-center p-2 hover:bg-gray-100 rounded"
-                  onClick={toggleMenu}
-                >
-                  <img src="/images/icons/mypage-login-icon.svg" alt="로그인" />
-                  로그인
-                </Link>
-              </li>
-              <li className="cursor-pointer">
-                <Link
-                  href="./join"
-                  className="text-black flex gap-[5px] items-center p-2 hover:bg-gray-100 rounded"
-                  onClick={toggleMenu}
-                >
-                  <img src="images/icons/join-icon.svg" alt="회원가입" />
-                  회원가입
-                </Link>
-              </li>
+              {isLoggedIn ? (
+                <>
+                  {/* 로그인된 상태 */}
+                  <li className="cursor-pointer">
+                    <a
+                      href="#"
+                      onClick={(e) => {
+                        handleLogout(e);
+                        toggleMenu();
+                      }}
+                      className="text-black flex gap-[5px] items-center p-2 hover:bg-gray-100 rounded"
+                    >
+                      <img
+                        src="/images/icons/mypage-login-icon.svg"
+                        alt="로그아웃"
+                      />
+                      로그아웃
+                    </a>
+                  </li>
+                  {isBuyer ? (
+                    <li className="cursor-pointer">
+                      <Link
+                        href="/account"
+                        className="text-black flex gap-[5px] items-center p-2 hover:bg-gray-100 rounded"
+                        onClick={toggleMenu}
+                      >
+                        <House color="#fc4c13" />
+                        마이페이지
+                      </Link>
+                    </li>
+                  ) : isSeller ? (
+                    <li className="cursor-pointer">
+                      <Link
+                        href="/performances"
+                        className="text-black flex gap-[5px] items-center p-2 hover:bg-gray-100 rounded"
+                        onClick={toggleMenu}
+                      >
+                        <Ticket color="#fc4c13" />내 공연
+                      </Link>
+                    </li>
+                  ) : null}
+                </>
+              ) : (
+                <>
+                  {/* 로그인되지 않은 상태 */}
+                  <li className="cursor-pointer">
+                    <Link
+                      href="./login"
+                      className="text-black flex gap-[5px] items-center p-2 hover:bg-gray-100 rounded"
+                      onClick={toggleMenu}
+                    >
+                      <img
+                        src="/images/icons/mypage-login-icon.svg"
+                        alt="로그인"
+                      />
+                      로그인
+                    </Link>
+                  </li>
+                  <li className="cursor-pointer">
+                    <Link
+                      href="./join"
+                      className="text-black flex gap-[5px] items-center p-2 hover:bg-gray-100 rounded"
+                      onClick={toggleMenu}
+                    >
+                      <img src="images/icons/join-icon.svg" alt="회원가입" />
+                      회원가입
+                    </Link>
+                  </li>
+                </>
+              )}
             </ul>
           </div>
         </div>

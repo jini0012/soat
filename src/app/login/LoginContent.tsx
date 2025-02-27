@@ -1,9 +1,9 @@
 "use client";
 import { Button } from "@/components/controls/Button";
 import { TextInput, Checkbox } from "@/components/controls/Inputs";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { signIn } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 
 enum UserType {
   TICKETUSER = "TICKETUSER",
@@ -26,6 +26,15 @@ export default function LoginContent() {
   const [error, setError] = useState<string | null>(null);
 
   const isFormValid = email !== "" && password !== "";
+
+  const { status } = useSession();
+
+  // 로그인 상태일 경우 로그아웃
+  useEffect(() => {
+    if (status === "authenticated") {
+      signOut();
+    }
+  }, [status]);
 
   const lineStyles: LineStyles = {
     width: userType === UserType.TICKETUSER ? "264px" : "264px",

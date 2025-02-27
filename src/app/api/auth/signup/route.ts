@@ -50,6 +50,48 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // 이메일 인증 확인
+    const emailVerificationSnapshot = await adminDb
+      .collection("emailVerification")
+      .doc(email)
+      .get();
+
+    if (!emailVerificationSnapshot.exists) {
+      return NextResponse.json(
+        { error: "이메일 인증이 필요합니다." },
+        { status: 403 }
+      );
+    }
+
+    const emailVerificationData = emailVerificationSnapshot.data();
+
+    if (!emailVerificationData) {
+      return NextResponse.json(
+        { error: "이메일 인증 데이터가 없습니다." },
+        { status: 403 }
+      );
+    }
+
+    if (emailVerificationData.status !== "verified") {
+      return NextResponse.json(
+        { error: "이메일 인증이 완료되지 않았습니다." },
+        { status: 403 }
+      );
+    } else if (
+      new Date(emailVerificationData.createdAt) <
+      new Date(Date.now() - 1000 * 60 * 60)
+    ) {
+      // 1시간 이내에 인증 완료되지 않은 경우
+      return NextResponse.json(
+        { error: "이메일 인증 시간이 만료되었습니다." },
+        { status: 403 }
+      );
+    } else {
+      // 인증 확인 완료
+      // 이메일 인증 데이터 삭제
+      await adminDb.collection("emailVerification").doc(email).delete();
+    }
+
     // 비밀번호 해싱
     const hashedPassword = await hash(password, 12);
 
