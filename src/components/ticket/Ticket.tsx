@@ -90,7 +90,7 @@ export default function Ticket({
         <div className="p-6 pt-4 bg-white">
           <div className="flex gap-x-2">
             <div className="w-1/2">
-              <div className="bg-flesh-50 rounded-lg p-2 flex flex-col items-center justify-center border border-flesh-100 h-full">
+              <div className="bg-flesh-50 bg-opacity-20 rounded-lg p-2 flex flex-col items-center justify-center border border-flesh-100 h-full">
                 <QRCode
                   value={ticketId}
                   className="w-full h-auto p-2 bg-white"
@@ -102,12 +102,12 @@ export default function Ticket({
             </div>
 
             <div className="w-1/2 gap-y-3 grid grid-cols-1 grid-rows-2">
-              <div className="bg-flesh-50 rounded-lg p-3 border border-flesh-100">
+              <div className="bg-flesh-50 bg-opacity-20 rounded-lg p-3 border border-flesh-100">
                 <p className="text-xs text-flesh-700 mb-2">좌석 번호</p>
                 <p className="font-bold text-lg text-flesh-900">{seat}</p>
               </div>
 
-              <div className="bg-flesh-50 rounded-lg p-3 border border-flesh-100">
+              <div className="bg-flesh-50 bg-opacity-20 rounded-lg p-3 border border-flesh-100">
                 <p className="text-xs text-flesh-700 mb-2">예매 번호</p>
                 <p className="font-bold text-sm text-flesh-900 break-all">
                   {ticketId}
