@@ -20,7 +20,7 @@ export default function TermsAndPrivacySettingsPage() {
         <div className="mt-5 mb-6 text-xs flex gap-1">
           <p
             className={`cursor-pointer ${
-              selectedTab === "terms" ? "text-flesh-500" : ""
+              selectedTab === "terms" ? "text-flesh-500 font-semibold" : ""
             }`}
             onClick={() => setSelectedTab("terms")}
           >
@@ -29,7 +29,7 @@ export default function TermsAndPrivacySettingsPage() {
           <span>|</span> {/* 이용약관과 개인정보처리방침 사이에 '|' 추가 */}
           <p
             className={`cursor-pointer ${
-              selectedTab === "privacy" ? "text-flesh-500" : ""
+              selectedTab === "privacy" ? "text-flesh-500 font-semibold" : ""
             }`}
             onClick={() => setSelectedTab("privacy")}
           >

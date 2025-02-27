@@ -1,6 +1,6 @@
 "use client";
-import React from "react";
-import { useEditor, EditorContent } from "@tiptap/react";
+import React, { useState } from "react";
+import { useEditor, EditorContent, HTMLContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { ToolbarButtonsConfig } from "@/types/editor";
 import {
@@ -14,12 +14,19 @@ import {
   Heading2,
   Heading3,
   Heading4,
+  Code2,
 } from "lucide-react";
 import Toolbar from "./Toolbar";
 import { useDispatch } from "react-redux";
 import { setContent } from "@/redux/slices/enrollSlice";
+import Modal from "../Modal";
+import TextArea from "../controls/TextArea";
+import { Button, CloseButton } from "../controls/Button";
 
 export default function Editor() {
+  const [isOpenHTMLCodeModal, setIsOpenHTMLCodeModal] =
+    useState<boolean>(false);
+  const [htmlCode, setHtmlCode] = useState<string>("");
   const dispatch = useDispatch();
   const editor = useEditor({
     extensions: [StarterKit],
@@ -48,17 +55,48 @@ export default function Editor() {
     { type: "Blockquote", label: "인용", icon: Quote },
   ];
 
+  const codeBlock: ToolbarButtonsConfig = {
+    type: "HTMLCode",
+    label: "HTML 삽입",
+    icon: Code2,
+  };
+
+  const handleOpenHTMLCodeModal = () => {
+    setIsOpenHTMLCodeModal(true);
+  };
+
+  const handleCloseHTMLCodeModal = () => {
+    setIsOpenHTMLCodeModal(false);
+  };
+
+  const handleInsertHTML = () => {
+    if (htmlCode && editor) {
+      editor.commands.insertContent(htmlCode); // HTML 코드를 에디터에 삽입
+      dispatch(setContent(editor.getJSON())); // 상태 업데이트
+    }
+    setHtmlCode(""); // 입력창 초기화
+    handleCloseHTMLCodeModal(); // 모달 닫기
+  };
   return (
     <div className="border w-full">
       <Toolbar
         editor={editor}
         headingButtons={headingButtons}
         formattingButtons={formattingButtons}
+        codeBlockButton={codeBlock}
+        onClickCodeBlockButton={handleOpenHTMLCodeModal}
       />
       <EditorContent
         className=" w-full prose border min-h-[600px]"
         editor={editor}
       />
+      <Modal isOpen={isOpenHTMLCodeModal} onClose={handleCloseHTMLCodeModal}>
+        <>
+          <CloseButton />
+          <TextArea value={htmlCode} onChange={setHtmlCode} />
+          <Button onClick={handleInsertHTML} />
+        </>
+      </Modal>
     </div>
   );
 }

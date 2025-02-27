@@ -24,6 +24,7 @@ export interface ButtonProps extends BaseProps {
   size?: "default" | "small" | "full";
   onClick?: (e: MouseEvent<HTMLButtonElement>) => void;
   href?: string;
+  target?: string;
 }
 
 export interface InputContainerProps extends BaseProps {
@@ -42,6 +43,7 @@ export interface JoinInputProps extends InputBaseProps {
   validation?: ZodType<string | number>;
   message?: string;
   disabled?: boolean;
+  max?: number;
 }
 
 export interface SearchInputProps extends InputBaseProps {

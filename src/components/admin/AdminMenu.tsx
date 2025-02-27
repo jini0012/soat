@@ -4,53 +4,13 @@ import Link from "next/link";
 
 interface AdminMenuProps {
   onClose: () => void;
+  menuData: {
+    title: string;
+    links: { text: string; url: string }[];
+  }[];
 }
 
-export default function AdminMenu({ onClose }: AdminMenuProps) {
-  const menuData = [
-    {
-      title: "회원관리",
-      links: [
-        {
-          text: "일반회원 조회 및 상태 관리",
-          url: "/admin",
-        },
-        {
-          text: "소극장 관리자 회원 조회 및 상태 관리",
-          url: "/admin/theater-admin-users",
-        },
-        {
-          text: "신규 소극장 관리자 승인",
-          url: "/admin/theater-admin-approval",
-        },
-      ],
-    },
-    {
-      title: "공연관리",
-      links: [
-        { text: "공연 조회 및 상태 관리", url: "/admin/performance-list" },
-        { text: "한줄평 조회 및 상태 관리", url: "/admin/review-list" },
-      ],
-    },
-    {
-      title: "컨텐츠관리",
-      links: [
-        { text: "메인 배너 등록 및 관리", url: "/admin/banner-list" },
-        {
-          text: "이용약관 / 개인정보처리방침 관리",
-          url: "terms-privacy-settings",
-        },
-      ],
-    },
-    {
-      title: "시스템 관리",
-      links: [
-        { text: "관리자 계정 관리", url: "/admin/site-admin-list" },
-        { text: "서비스 점검 모드 설정", url: "/admin/maintenance-mode" },
-      ],
-    },
-  ];
-
+export default function AdminMenu({ onClose, menuData }: AdminMenuProps) {
   return (
     <>
       <aside className="w-[240px] h-[100vh] bg-white fixed top-0 left-0 ">
@@ -81,7 +41,7 @@ export default function AdminMenu({ onClose }: AdminMenuProps) {
             />
           </svg>
 
-          <Link href="" className="no-underline text-flesh-500  px-2">
+          <Link href="/home" className="no-underline text-flesh-500  px-2">
             So@ 바로가기
           </Link>
         </div>

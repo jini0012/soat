@@ -13,7 +13,7 @@ export default function page() {
     <>
       <Header />
       <main
-        className={`m-auto w-full flex flex-col items-center px-[30px] py-6 h-[calc(100vh-76px)] sm:h-[calc(100vh-132px)] ${
+        className={`m-auto w-full flex flex-col items-center px-[30px] py-6 h-[calc(100vh-76px)] sm:h-[calc(100vh-147.5px)] relative ${
           isJoin && "justify-center text-center max-w-none"
         } `}
       >

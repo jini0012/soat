@@ -37,7 +37,14 @@ export default function JoinTypeModal({ onClose }: { onClose: () => void }) {
             <input
               type="text"
               value={businessNumber}
-              onChange={(e) => setBusinessNumber(e.target.value)}
+              onChange={(e) => {
+                const inputValue = e.target.value;
+                if (!/^\d*$/.test(inputValue)) {
+                  alert("숫자만 입력해주세요.");
+                  return;
+                }
+                setBusinessNumber(inputValue);
+              }}
               className="w-[180px] h-[22px] border border-gray-500 text-xs focus-visible:outline-none rounded-sm p-1 mr-1"
             />
           </>
