@@ -310,7 +310,7 @@ export default function CurrentShowSection() {
             }}
             className="mySwiper"
           >
-            {SHOWS.map((show) => (
+            {filteredShows.map((show) => (
               <SwiperSlide key={show.id}>
                 <ShowCard show={show} />
               </SwiperSlide>
