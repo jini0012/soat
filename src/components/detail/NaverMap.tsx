@@ -335,6 +335,7 @@ const NaverMapModal = ({
             className="px-6 py-2 mr-2"
             highlight={false}
             href={searchQuery}
+            target="_blank"
           >
             네이버 지도에서 보기
           </Button>
