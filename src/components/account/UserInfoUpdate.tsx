@@ -24,32 +24,38 @@ export default function UserInfoUpdate() {
       <h2 className="text-xl font-bold mb-3 sm:text-3xl sm:mb-6">
         회원 정보 수정
       </h2>
-      <ul className="flex mb-3 justify-center w-[calc(100%-10px)] gap-1 sm:mb-4 sm:max-w-[515px]">
+      <ul className="flex justify-center w-full sm:max-w-[525px] text-xs sm:text-base sm:font-bold">
         <li className="flex-1">
-          <Button
-            type="button"
+          <button
+            className={`w-full py-3 sm:py-5 sm:px-6 rounded-t-lg border-x border-t transition-colors 
+            ${
+              isUpdateType === "password"
+                ? "bg-white border-gray-300 relative z-20"
+                : "bg-gray-100 border-gray-200"
+            }`}
             onClick={() => setIsUpdateType("password")}
-            highlight={isUpdateType === "password" ? true : false}
-            size="full"
-            className="h-7 text-xs py-[6.5px] font-normal sm:h-full sm:text-base sm:py-2 sm:font-bold"
+            type="button"
           >
             비밀번호 변경
-          </Button>
+          </button>
         </li>
         <li className="flex-1">
-          <Button
-            type="button"
+          <button
+            className={`w-full py-3 sm:py-5 sm:px-6 rounded-t-lg border-x border-t transition-colors
+            ${
+              isUpdateType === "accountDelete"
+                ? "bg-white border-gray-300 relative z-20"
+                : "bg-gray-100 border-gray-200 "
+            }`}
             onClick={() => setIsUpdateType("accountDelete")}
-            highlight={isUpdateType === "accountDelete" ? true : false}
-            size="full"
-            className="h-7 text-xs py-[6.5px] font-normal sm:h-full sm:text-base sm:py-2 sm:font-bold"
+            type="button"
           >
             회원 탈퇴
-          </Button>
+          </button>
         </li>
       </ul>
       <form
-        className="w-full sm:max-w-[525px] flex flex-col border-2 rounded-lg border-flesh-200 px-5 py-[30px] gap-[10px] relative sm:gap-5"
+        className="w-full bg-white sm:max-w-[525px] flex flex-col border rounded-xl border-gray-300 px-5 py-[30px] gap-[10px] relative sm:gap-5  -mt-[4px]"
         onSubmit={(e) => {
           e.preventDefault();
           setIsOpenModal(true);
