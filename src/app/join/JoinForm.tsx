@@ -312,7 +312,6 @@ export default function JoinForm({
                 !teamName ||
                 !managerName ||
                 !userPhone ||
-                !checkAge ||
                 (isBusiness && !isBusinessNumValid) ||
                 !checkAgree
           }
