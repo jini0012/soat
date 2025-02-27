@@ -10,6 +10,7 @@ export function Button({
   size,
   onClick,
   href,
+  target,
 }: ButtonProps) {
   let colorClass = highlight
     ? "bg-flesh-500 border-flesh-500 text-background"
@@ -50,6 +51,7 @@ export function Button({
       <Link
         className={`break-keep h-fit block ${className} ${colorClass} border-2 rounded-lg ${sizeClass} font-bold ${hoverClass} ${activeClass} ${focusClass}`}
         href={href}
+        target={target}
       >
         {children}
       </Link>
