@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/controls/Button";
 import { TextInput, Checkbox } from "@/components/controls/Inputs";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 
@@ -24,6 +24,35 @@ export default function LoginContent() {
   const [password, setPassword] = useState<string>("");
   const [rememberMe, setRememberMe] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const savedEmail = localStorage.getItem("rememberedEmail");
+    const savedRememberMe = localStorage.getItem("rememberMe") === "true";
+
+    if (savedEmail) {
+      setEmail(savedEmail);
+    }
+
+    setRememberMe(savedRememberMe);
+  }, []);
+
+  const handleEmailChange = (value: string) => {
+    setEmail(value);
+    if (rememberMe) {
+      localStorage.setItem("rememberedEmail", value);
+    }
+  };
+
+  const handleRememberMeChange = (checked: boolean) => {
+    setRememberMe(checked);
+    localStorage.setItem("rememberMe", checked.toString());
+
+    if (!checked) {
+      localStorage.removeItem("rememberedEmail");
+    } else if (email) {
+      localStorage.setItem("rememberedEmail", email);
+    }
+  };
 
   const isFormValid = email !== "" && password !== "";
 
@@ -96,7 +125,7 @@ export default function LoginContent() {
                 type="email"
                 placeholder="E-mail"
                 value={email}
-                onChange={setEmail}
+                onChange={handleEmailChange}
                 className="w-full !pl-9"
               />
             </div>
@@ -116,7 +145,10 @@ export default function LoginContent() {
             </div>
             <div className="flex justify-end items-center">
               <label className="flex items-center">
-                <Checkbox checked={rememberMe} onChange={setRememberMe}>
+                <Checkbox
+                  checked={rememberMe}
+                  onChange={handleRememberMeChange}
+                >
                   <span className="text-sm text-gray-600">아이디 저장</span>
                 </Checkbox>
               </label>
