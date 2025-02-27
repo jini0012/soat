@@ -6,6 +6,7 @@ import { Checkbox } from "@/components/controls/Inputs";
 import Link from "next/link";
 import { validations } from "@/utils/validations";
 import axios from "axios";
+import { useSession, signOut } from "next-auth/react";
 
 interface JoinFormProps {
   setUserType: (userType: "buyer" | "seller") => void;
@@ -24,6 +25,8 @@ export default function JoinForm({
   const [email, setEmail] = useState("");
   const [isEmailValid, setIsEmailValid] = useState<boolean>(false);
   const [isSendEmail, setIsSendEmail] = useState<boolean>(false);
+  const [emailSendMsg, setEmailSendMsg] = useState("");
+  const [emailVerifyMsg, setEmailVerifyMsg] = useState("");
   const [verifyNum, setVerifyNum] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
@@ -36,6 +39,15 @@ export default function JoinForm({
   const isEmailInputValid = validations.email.safeParse(email).success;
   const isBusinessNumInputValid =
     validations.businessNum.safeParse(businessNum).success;
+
+  // 로그인 상태일 경우 로그아웃
+  const { status } = useSession();
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      signOut();
+    }
+  }, [status]);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -67,6 +79,42 @@ export default function JoinForm({
           username: userName,
           phoneNumber: userPhone,
         };
+
+  async function handleSendEmailVerification() {
+    setEmailSendMsg("");
+    try {
+      const response = await axios.post("/api/auth/email-verification", {
+        email,
+        userType,
+      });
+
+      if (response.status === 200) {
+        setIsSendEmail(true);
+      }
+    } catch (error) {
+      console.error("이메일 인증 오류:", error);
+      if (axios.isAxiosError(error)) {
+        setEmailSendMsg(error.response?.data.error);
+      }
+    }
+  }
+
+  async function handleVerifyEmail() {
+    setEmailVerifyMsg("");
+    try {
+      const response = await axios.put("/api/auth/email-verification/verify", {
+        email,
+        code: Number(verifyNum),
+      });
+
+      if (response.status === 200) {
+        setIsEmailValid(true);
+      }
+    } catch (error) {
+      console.error("이메일 인증 오류:", error);
+      setEmailVerifyMsg("인증번호가 일치하지 않습니다.");
+    }
+  }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -130,19 +178,19 @@ export default function JoinForm({
           message={
             isSendEmail
               ? "인증 번호가 이메일로 발송되었습니다. 이메일을 확인해 주세요"
-              : ""
+              : emailSendMsg
           }
         >
           <Button
             highlight={true}
             type="button"
             onClick={(e) => {
-              setIsSendEmail(true);
+              handleSendEmailVerification();
               (e.target as HTMLButtonElement).textContent = "재전송";
             }}
             size="small"
             className="mb-1 py-[2.5px] sm:max-w-32 sm:py-none sm:text-base sm:font-bold"
-            disabled={!isEmailInputValid || isSendEmail}
+            disabled={!isEmailInputValid || isSendEmail || isEmailValid}
           >
             인증번호 받기
           </Button>
@@ -151,19 +199,19 @@ export default function JoinForm({
           label="인증번호"
           value={verifyNum}
           onChange={setVerifyNum}
-          disabled={!isSendEmail || isEmailValid}
+          disabled={isEmailValid}
           validation={validations.emailVerifyNum}
-          message={isEmailValid ? "이메일 인증이 완료되었습니다." : ""}
+          message={
+            isEmailValid ? "이메일 인증이 완료되었습니다." : emailVerifyMsg
+          }
         >
           <Button
             highlight={true}
             type="button"
-            onClick={() => {
-              setIsEmailValid(true);
-            }}
+            onClick={handleVerifyEmail}
             size="small"
             className="mb-1 py-[2.5px] sm:max-w-16 sm:py-none sm:text-base sm:font-bold"
-            disabled={!isSendEmail || isEmailValid}
+            disabled={isEmailValid || !verifyNum}
           >
             확인
           </Button>

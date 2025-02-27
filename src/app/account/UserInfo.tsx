@@ -1,12 +1,25 @@
-import UserInfoItem from "@/components/account/UserInfoItem";
+import { Li } from "@/components/account/UserInfoItem";
 import Link from "next/link";
 
-export default function UserInfo() {
+export default function UserInfo({
+  username,
+  email,
+  phone,
+  userType,
+}: {
+  username: string;
+  email: string;
+  phone: string;
+  userType: string;
+}) {
   return (
     <section className="sm:row-span-2 sm:flex sm:flex-col sm:border-r-2 sm:pr-6">
       <h2 className="text-sm sm:text-3xl sm:my-6 sm:font-bold">회원 정보</h2>
       <ul className="relative p-5 rounded-[10px] border-2 border-flesh-200 text-xs sm:h-80 sm:flex sm:flex-col sm:justify-center sm:gap-2 whitespace-nowrap ">
-        <UserInfoItem />
+        <Li label="이름" data={username} />
+        <Li label="이메일" data={email} />
+        <Li label="휴대폰" data={phone} />
+        <Li label="회원 유형" data={userType} />
         <li className="absolute bottom-[7px] right-[13px]">
           <Link
             href="/account/edit"

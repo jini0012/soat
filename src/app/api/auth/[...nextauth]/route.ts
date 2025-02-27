@@ -1,15 +1,9 @@
-import NextAuth, { User } from "next-auth";
+import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { adminDb } from "../../firebaseAdmin";
 import { compare } from "bcryptjs";
 
-declare module "next-auth" {
-  interface User {
-    phone?: string;
-  }
-}
-
-const handler = NextAuth({
+export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -54,29 +48,28 @@ const handler = NextAuth({
           ...(credentials.userType === "seller"
             ? { teamName: userData.teamName }
             : { username: userData.username }),
-          phone: userData.phoneNumber,
         };
       },
     }),
   ],
   callbacks: {
     async jwt({ token, user }) {
-      console.log("🔹 JWT Token:", token);
       if (user) {
         token.userType = user.userType;
         token.id = user.id;
-        token.username = user.username;
-        token.phone = user?.phone;
+        token.userType === "seller"
+          ? (token.teamName = user.teamName)
+          : (token.username = user.username);
       }
       return token;
     },
     async session({ session, token }) {
-      console.log("🔹 Session Data:", session);
       if (session.user) {
         session.user.id = token.id as string;
         session.user.userType = token.userType as "buyer" | "seller";
-        session.user.username = token.username as string;
-        session.user.phone = token.phone as string;
+        session.user.userType === "seller"
+          ? (session.user.teamName = token.teamName as string)
+          : (session.user.username = token.username as string);
       }
       return session;
     },
@@ -84,6 +77,8 @@ const handler = NextAuth({
   pages: {
     signIn: "/login",
   },
-});
+};
+
+const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };
