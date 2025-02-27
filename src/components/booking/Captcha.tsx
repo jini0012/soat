@@ -166,6 +166,7 @@ export default function Captcha({
             ariaLabel="보안 문자 입력"
             value={answer}
             onChange={setAnswer}
+            onEnter={verifyCaptcha}
           />
           <Button highlight size="full" onClick={verifyCaptcha}>
             다음
