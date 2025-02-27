@@ -3,11 +3,15 @@ import TextArea from "../controls/TextArea";
 import { Star } from "lucide-react";
 import ReviewList from "./ReviewList";
 import { Button } from "../controls/Button";
+import { useSession } from "next-auth/react";
 
 export default function ReviewArea() {
   const [isReview, setReview] = useState("");
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
+  const { status } = useSession();
+  const isLogined = status === "authenticated";
+
   return (
     <>
       <ul>
@@ -41,19 +45,36 @@ export default function ReviewArea() {
         </li>
         <li className="relative">
           <div className="flex flex-col gap-4">
-            <TextArea
-              value={isReview}
-              onChange={setReview}
-              placeholder="한줄평은 최대 140 글자 까지 작성 가능합니다!"
-              max={140}
-            />
+            {isLogined ? (
+              <TextArea
+                value={isReview}
+                onChange={setReview}
+                placeholder="한줄평은 최대 140 글자 까지 작성 가능합니다!"
+                max={140}
+              />
+            ) : (
+              <TextArea
+                value={isReview}
+                onChange={setReview}
+                placeholder="로그인 후 작성가능합니다!"
+                max={140}
+                className={"bg-gray-100"}
+                disabled={true}
+              />
+            )}
             <span className="absolute bottom-[65px] right-5 text-gray-500 text-sm">
               {isReview.length}/140
             </span>
             <div className="flex justify-end">
-              <Button highlight className=" text-white ">
-                작성하기
-              </Button>
+              {isLogined ? (
+                <Button highlight className=" text-white ">
+                  작성하기
+                </Button>
+              ) : (
+                <Button highlight disabled={true} className=" text-white ">
+                  작성하기
+                </Button>
+              )}
             </div>
           </div>
         </li>
