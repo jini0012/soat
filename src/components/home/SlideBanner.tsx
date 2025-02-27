@@ -16,9 +16,9 @@ export default function SlideBanner() {
         slidesPerView={1}
         navigation
         loop={true}
-        autoplay={{ delay: 2000 }}
+        autoplay={{ delay: 3000 }}
         pagination={{ clickable: true }}
-        className="w-full h-[400px]"
+        className="w-full h-[500px]"
       >
         <SwiperSlide>
           <div className="w-full h-full bg-gray-100">
