@@ -136,7 +136,7 @@ export default function JoinForm({
       <ul className="flex justify-center w-full sm:max-w-[525px] text-xs sm:text-base sm:font-bold">
         <li className="flex-1">
           <button
-            className={`w-full py-3 sm:py-5 sm:px-6 rounded-t-lg border-x border-t transition-colors 
+            className={`w-full py-3 sm:py-5 sm:px-6 rounded-t-lg border-x border-t
             ${
               userType === "buyer"
                 ? "bg-white border-gray-300 relative z-20"
@@ -145,16 +145,16 @@ export default function JoinForm({
             onClick={() => setUserType("buyer")}
             type="button"
           >
-            회원
+            예매회원
           </button>
         </li>
         <li className="flex-1">
           <button
-            className={`w-full py-3 sm:py-5 sm:px-6 rounded-t-lg border-x border-t transition-colors
+            className={`w-full py-3 sm:py-5 sm:px-6 rounded-t-lg border-x border-t
             ${
               userType === "seller"
                 ? "bg-white border-gray-300 relative z-20"
-                : "bg-gray-100 border-gray-200 "
+                : "bg-gray-100 border-gray-200"
             }`}
             onClick={() => setUserType("seller")}
             type="button"
@@ -165,8 +165,9 @@ export default function JoinForm({
       </ul>
       <form
         onSubmit={handleSubmit}
-        className="w-full bg-white sm:max-w-[525px] flex flex-col rounded-xl border border-gray-300 px-5 py-4 gap-[10px] sm:gap-[20px] -mt-[4px] relative "
+        className="w-full bg-white sm:max-w-[525px] flex flex-col border rounded-xl border-gray-300 px-5 py-4 gap-[10px] sm:gap-[20px] -mt-[10px] relative sm:space-y-2"
       >
+        <div className="bg-white w-1 h-4 absolute top-0 left-[49.5%] z-[100]"></div>
         <JoinInput
           label="이메일"
           type="email"
@@ -228,7 +229,7 @@ export default function JoinForm({
           label="비밀번호 확인"
           value={passwordConfirm}
           onChange={setPasswordConfirm}
-          validation={validations.passwordConfirm(passwordConfirm)}
+          validation={validations.passwordConfirm(password)}
           type="password"
           max={24}
         />
@@ -359,7 +360,6 @@ export default function JoinForm({
                 !teamName ||
                 !managerName ||
                 !userPhone ||
-                !checkAge ||
                 (isBusiness && !isBusinessNumValid) ||
                 !checkAgree
           }

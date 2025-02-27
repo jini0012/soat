@@ -1,4 +1,4 @@
-import Li from "@/components/account/UserInfoItem";
+import { Li } from "@/components/account/UserInfoItem";
 import Link from "next/link";
 
 export default function UserInfo({
