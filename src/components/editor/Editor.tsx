@@ -48,7 +48,8 @@ export default function Editor() {
     immediatelyRender: false,
     onUpdate: ({ editor }) => {
       onDeleteImage(editor);
-      dispatch(setContent(editor.getJSON()));
+      const json = editor.getJSON();
+      dispatch(setContent(json));
     },
   });
 
