@@ -28,12 +28,19 @@ const NaverMapModal = ({
   const infoWindow = useRef<any>(null);
   const [mapError, setMapError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const isInitialized = useRef<boolean>(false);
 
   // 네이버 지도 스크립트 로드
   useEffect(() => {
-    if (isOpen && mapRef.current) {
-      // 네이버 지도 스크립트가 로드되었는지 확인
-      if (typeof window.naver === "undefined") {
+    if (!isOpen || !mapRef.current) return;
+
+    // 네이버 지도 스크립트가 로드되었는지 확인
+    if (typeof window.naver === "undefined") {
+      // 스크립트가 이미 추가되었는지 확인
+      const existingScript = document.querySelector(
+        'script[src*="openapi.map.naver.com"]'
+      );
+      if (!existingScript) {
         // 네이버 지도 스크립트 동적 로드
         const script = document.createElement("script");
         // Geocoding API도 함께 로드
@@ -53,17 +60,57 @@ const NaverMapModal = ({
 
         document.head.appendChild(script);
       } else {
-        // 이미 로드된 경우 초기화
+        // 스크립트는 이미 추가되었지만 아직 로드 중일 수 있음
+        setTimeout(checkGeocoderService, 500);
+      }
+    } else {
+      // 이미 로드된 경우 초기화
+      if (!isInitialized.current) {
         initializeMap();
       }
     }
+
+    // 컴포넌트 언마운트 시 또는 모달이 닫힐 때 정리
+    return () => {
+      if (!isOpen) {
+        cleanupMapInstance();
+      }
+    };
   }, [isOpen, locationAddress]);
+
+  // 지도 인스턴스 정리 함수
+  const cleanupMapInstance = () => {
+    if (map.current) {
+      // 마커 제거
+      if (marker.current) {
+        marker.current.setMap(null);
+        marker.current = null;
+      }
+
+      // 정보창 닫기
+      if (infoWindow.current) {
+        infoWindow.current.close();
+        infoWindow.current = null;
+      }
+
+      // 지도 인스턴스 제거 (DOM에서 제거)
+      if (mapRef.current && mapRef.current.innerHTML) {
+        mapRef.current.innerHTML = "";
+      }
+
+      map.current = null;
+      isInitialized.current = false;
+      console.log("지도 인스턴스 정리 완료");
+    }
+  };
 
   // Geocoder 서비스 로드 확인
   const checkGeocoderService = () => {
     if (window.naver && window.naver.maps && window.naver.maps.Service) {
       console.log("Geocoder 서비스 로드됨");
-      initializeMap();
+      if (!isInitialized.current) {
+        initializeMap();
+      }
     } else {
       console.log("Geocoder 서비스 로드 중...");
       setTimeout(checkGeocoderService, 300);
@@ -79,7 +126,15 @@ const NaverMapModal = ({
 
     console.log("지도 초기화 시작");
 
+    // 이미 초기화된 지도가 있으면 정리
+    cleanupMapInstance();
+
     try {
+      // 맵 컨테이너 초기화
+      if (mapRef.current.innerHTML !== "") {
+        mapRef.current.innerHTML = "";
+      }
+
       // 기본 지도 생성 (초기 중심 좌표는 서울시청)
       const defaultCenter = new window.naver.maps.LatLng(
         37.5666805,
@@ -134,6 +189,7 @@ const NaverMapModal = ({
       });
 
       console.log("지도, 마커, 정보창 생성 완료");
+      isInitialized.current = true;
 
       // 주소로 검색
       if (locationAddress && locationAddress.trim() !== "") {
@@ -146,6 +202,7 @@ const NaverMapModal = ({
     } catch (error) {
       console.error("지도 초기화 중 오류 발생:", error);
       setMapError("지도를 초기화하는 중 오류가 발생했습니다.");
+      isInitialized.current = false;
     }
   };
 
