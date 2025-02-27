@@ -181,7 +181,7 @@ export default function JoinForm({
           label="비밀번호 확인"
           value={passwordConfirm}
           onChange={setPasswordConfirm}
-          validation={validations.passwordConfirm(passwordConfirm)}
+          validation={validations.passwordConfirm(password)}
           type="password"
           max={24}
         />
