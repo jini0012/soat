@@ -8,7 +8,7 @@ export default function page() {
   return (
     <>
       <Header />
-      <main className="px-24">
+      <main className="px-[20px] md:px-24 ">
         <ShowInfoSection />
         <ShowDetailSection />
       </main>
