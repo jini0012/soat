@@ -1,10 +1,16 @@
-"use client";
 import { useState, useEffect, useRef } from "react";
 
-export default function SortFilter() {
+interface SortFilterProps {
+  selectedOption: string;
+  setSelectedOption: React.Dispatch<React.SetStateAction<string>>;
+}
+
+export default function SortFilter({
+  selectedOption,
+  setSelectedOption,
+}: SortFilterProps) {
   const options = ["최근날짜순", "한줄평순", "낮은가격순"];
   const [isOpenSortFilter, setIsOpenSortFilter] = useState(false);
-  const [selectedOption, setSelectedOption] = useState(options[0]);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
@@ -49,11 +55,11 @@ export default function SortFilter() {
         {selectedOption}
       </button>
 
-      {/*  모바일: 드롭다운 메뉴 */}
+      {/* 모바일: 드롭다운 메뉴 */}
       {isOpenSortFilter && (
         <div
           ref={dropdownRef}
-          className="absolute right-[0.5px] w-[93px] rounded-md bg-white text-[13px] p-3 border border-gray-300 flex flex-col gap-2 shadow-lg md:hidden"
+          className="absolute right-[0.5px] w-[93px] rounded-md bg-white text-xs p-3 border border-gray-300 flex flex-col gap-2 shadow-lg md:hidden"
         >
           {options.map((option) => (
             <div

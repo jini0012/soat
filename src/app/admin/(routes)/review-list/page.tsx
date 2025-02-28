@@ -9,65 +9,75 @@ import SubTabDescription from "@/components/admin/SubTabDescription";
 import AdminSearchInput from "@/components/admin/AdminSearchInput";
 import { Select } from "@/components/controls/Select";
 export default function ReviewListPage() {
-  const GeneralUserData = [
+  const reviewData = [
     {
-      title: "종이배의 꿈",
-      reviewer: "드라마",
+      title: "별빛 콘서트",
+      category: "콘서트",
+      reviewer: "김지훈",
       reviewDate: "2024.12.25",
       reportedStatus: "신고됨",
     },
     {
-      title: "종이배의 꿈",
-      reviewer: "드라마",
-      reviewDate: "2024.12.25",
+      title: "예술의 조각",
+      category: "전시/행사",
+      reviewer: "이수진",
+      reviewDate: "2024.11.10",
       reportedStatus: "정상",
     },
     {
-      title: "종이배의 꿈",
-      reviewer: "드라마",
-      reviewDate: "2024.12.25",
+      title: "희극의 순간",
+      category: "연극",
+      reviewer: "박준영",
+      reviewDate: "2024.10.05",
       reportedStatus: "정상",
     },
     {
-      title: "종이배의 꿈",
-      reviewer: "드라마",
-      reviewDate: "2024.12.25",
+      title: "팬과 함께",
+      category: "팬미팅",
+      reviewer: "최민지",
+      reviewDate: "2024.09.15",
       reportedStatus: "신고됨",
     },
     {
-      title: "종이배의 꿈",
-      reviewer: "드라마",
-      reviewDate: "2024.12.25",
+      title: "환상의 무대",
+      category: "뮤지컬",
+      reviewer: "한세진",
+      reviewDate: "2024.08.20",
       reportedStatus: "정상",
     },
     {
-      title: "종이배의 꿈",
-      reviewer: "드라마",
-      reviewDate: "2024.12.25",
+      title: "가을밤 콘서트",
+      category: "콘서트",
+      reviewer: "유영민",
+      reviewDate: "2024.07.30",
       reportedStatus: "신고됨",
     },
     {
-      title: "종이배의 꿈",
-      reviewer: "드라마",
-      reviewDate: "2024.12.25",
+      title: "빛과 그림자",
+      category: "전시/행사",
+      reviewer: "장윤수",
+      reviewDate: "2024.06.10",
       reportedStatus: "정상",
     },
     {
-      title: "종이배의 꿈",
-      reviewer: "드라마",
-      reviewDate: "2024.12.25",
+      title: "비극과 희극",
+      category: "연극",
+      reviewer: "김하늘",
+      reviewDate: "2024.05.18",
       reportedStatus: "정상",
     },
     {
-      title: "종이배의 꿈",
-      reviewer: "드라마",
-      reviewDate: "2024.12.25",
+      title: "스타와의 만남",
+      category: "팬미팅",
+      reviewer: "이주희",
+      reviewDate: "2024.04.25",
       reportedStatus: "정상",
     },
     {
-      title: "종이배의 꿈",
-      reviewer: "드라마",
-      reviewDate: "2024.12.25",
+      title: "음악의 향연",
+      category: "뮤지컬",
+      reviewer: "차민호",
+      reviewDate: "2024.03.05",
       reportedStatus: "신고됨",
     },
   ];
@@ -103,7 +113,7 @@ export default function ReviewListPage() {
             </form>
           </div>
         </div>
-        <ReviewTable data={GeneralUserData} />
+        <ReviewTable data={reviewData} />
       </AdminMain>
     </>
   );

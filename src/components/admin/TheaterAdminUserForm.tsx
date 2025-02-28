@@ -9,14 +9,14 @@ import Modal from "../Modal";
 export default function TheaterAdminUserForm({
   user,
   radioOptions,
-  radioState,
+  adminUserRadioState,
   onRadioChange,
   onClose,
   onApply,
 }: {
   user: TheaterAdminUser;
   radioOptions: { value: string; label: string }[];
-  radioState: string;
+  adminUserRadioState: string;
   onRadioChange: (value: string) => void;
   onClose: () => void;
   onApply: () => void;
@@ -26,7 +26,7 @@ export default function TheaterAdminUserForm({
   const [isApplyModalOpen, setIsApplyModalOpen] = useState(false); //변경사항 저장 확인 모달 상태 관리
 
   const handleButtonClick = () => {
-    if (radioState) {
+    if (adminUserRadioState) {
       setIsOpenJoinTypeModal(true);
     } else {
       alert("라디오 버튼을 선택하세요.");
@@ -66,7 +66,7 @@ export default function TheaterAdminUserForm({
                     {value}
                     {label === "가입유형" && (
                       <Button
-                        className="ml-2 h-[20px] text-[9px] flex items-center"
+                        className="ml-2 h-[20px] text-xs flex items-center"
                         size="small"
                         onClick={handleButtonClick}
                       >
@@ -85,7 +85,7 @@ export default function TheaterAdminUserForm({
               보유 공연 목록
             </h3>
             <div className="h-[70px] flex justify-center items-center">
-              <p className="text-[10px] text-gray-500">
+              <p className="text-xs text-gray-500">
                 보유 공연 목록이 없습니다.
               </p>
             </div>
@@ -97,18 +97,17 @@ export default function TheaterAdminUserForm({
             </h3>
             <Radio
               className="text-xs mt-1"
-              checked={radioState}
+              checked={adminUserRadioState}
               onChange={onRadioChange}
               items={radioOptions}
             />
-            <p className="text-[10px] text-gray-500 font-light mt-2 mb-4">
-              (현재 상태 : <span>{radioState}</span>)
+            <p className="text-xs text-gray-500 font-light mt-2 mb-4">
+              (현재 상태 : <span>{adminUserRadioState}</span>)
             </p>
             <Button
               highlight
               size="small"
               onClick={() => {
-                onApply(); // 상태 변경 함수 실행
                 setIsModalOpen(true); // 모달 열기
               }}
             >
@@ -150,6 +149,7 @@ export default function TheaterAdminUserForm({
                 onClick={() => {
                   setIsApplyModalOpen(true);
                   setIsModalOpen(false);
+                  onApply(); // 상태 변경 함수 실행
                 }}
                 className="mt-2 w-[60px]"
               >

@@ -6,55 +6,55 @@ import QueryButton from "@/components/admin/ QueryButton";
 import SubTabDescription from "@/components/admin/SubTabDescription";
 import AdminSearchInput from "@/components/admin/AdminSearchInput";
 export default function SiteAdminListPage() {
-  const GeneralUserData = [
+  const siteAdminData = [
     {
-      email: "dnjs1111@soat.com",
-      siteAdmin: "김예원",
+      email: "john.doe@example.com",
+      siteAdmin: "홍지현",
       permissions: "전체권한",
     },
     {
-      email: "dnjs1111@soat.com",
-      siteAdmin: "김예원",
+      email: "jane.doe@example.com",
+      siteAdmin: "이수민",
+      permissions: "읽기 전용",
+    },
+    {
+      email: "alice.smith@example.com",
+      siteAdmin: "김유리",
+      permissions: "일부 권한",
+    },
+    {
+      email: "bob.jones@example.com",
+      siteAdmin: "박상민",
       permissions: "전체권한",
     },
     {
-      email: "dnjs1111@soat.com",
-      siteAdmin: "김예원",
+      email: "charlie.brown@example.com",
+      siteAdmin: "이하늘",
+      permissions: "읽기 전용",
+    },
+    {
+      email: "david.williams@example.com",
+      siteAdmin: "최지혜",
+      permissions: "일부 권한",
+    },
+    {
+      email: "eva.johnson@example.com",
+      siteAdmin: "강준호",
       permissions: "전체권한",
     },
     {
-      email: "dnjs1111@soat.com",
-      siteAdmin: "김예원",
-      permissions: "전체권한",
+      email: "frank.white@example.com",
+      siteAdmin: "정민수",
+      permissions: "일부 권한",
     },
     {
-      email: "dnjs1111@soat.com",
-      siteAdmin: "김예원",
-      permissions: "전체권한",
+      email: "grace.green@example.com",
+      siteAdmin: "윤영호",
+      permissions: "읽기 전용",
     },
     {
-      email: "dnjs1111@soat.com",
-      siteAdmin: "김예원",
-      permissions: "전체권한",
-    },
-    {
-      email: "dnjs1111@soat.com",
-      siteAdmin: "김예원",
-      permissions: "전체권한",
-    },
-    {
-      email: "dnjs1111@soat.com",
-      siteAdmin: "김예원",
-      permissions: "전체권한",
-    },
-    {
-      email: "dnjs1111@soat.com",
-      siteAdmin: "김예원",
-      permissions: "전체권한",
-    },
-    {
-      email: "dnjs1111@soat.com",
-      siteAdmin: "김예원",
+      email: "hank.lee@example.com",
+      siteAdmin: "차민정",
       permissions: "전체권한",
     },
   ];
@@ -75,7 +75,7 @@ export default function SiteAdminListPage() {
             <QueryButton />
           </form>
         </div>
-        <SiteAdminTable data={GeneralUserData} />
+        <SiteAdminTable data={siteAdminData} />
       </AdminMain>
     </>
   );

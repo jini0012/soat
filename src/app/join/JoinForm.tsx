@@ -7,6 +7,7 @@ import Link from "next/link";
 import { validations } from "@/utils/validations";
 import axios from "axios";
 import { useSession, signOut } from "next-auth/react";
+const businessNumApiKey = process.env.NEXT_PUBLIC_JOIN_BUSINESS_NUM_API_KEY;
 
 interface JoinFormProps {
   setUserType: (userType: "buyer" | "seller") => void;
@@ -36,6 +37,7 @@ export default function JoinForm({
   const [userPhone, setUserPhone] = useState("");
   const [businessNum, setBusinessNum] = useState("");
   const [isBusinessNumValid, setIsBusinessNumValid] = useState<boolean>(false);
+  const [businessNumVerifyMsg, setBusinessNumVerifyMsg] = useState("");
   const isEmailInputValid = validations.email.safeParse(email).success;
   const isBusinessNumInputValid =
     validations.businessNum.safeParse(businessNum).success;
@@ -113,6 +115,46 @@ export default function JoinForm({
     } catch (error) {
       console.error("이메일 인증 오류:", error);
       setEmailVerifyMsg("인증번호가 일치하지 않습니다.");
+    }
+  }
+
+  async function handleBusinessNumVerification() {
+    try {
+      const response = await axios.post(
+        "https://api.odcloud.kr/api/nts-businessman/v1/status",
+        {
+          b_no: [businessNum],
+        },
+        {
+          params: {
+            serviceKey: businessNumApiKey,
+          },
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        const businessData = response.data.data[0];
+        console.log("사업자등록정보 확인 결과:", response.data.data[0]);
+        if (businessData.b_stt_cd !== "01") {
+          throw new Error(`사업자의 상태가 ${businessData.b_stt} 입니다.`);
+        } else {
+          setIsBusinessNumValid(true);
+          setBusinessNumVerifyMsg("사업자 번호 인증이 완료되었습니다.");
+        }
+      }
+    } catch (error) {
+      console.error("사업자등록번호 확인 오류:", error);
+      setIsBusinessNumValid(false);
+      setBusinessNumVerifyMsg("사업자등록번호가 유효하지 않습니다.");
+
+      if (axios.isAxiosError(error)) {
+        console.error("API 오류 메시지:", error.response?.data);
+        setBusinessNumVerifyMsg("사업자 번호 인증에 오류가 발생되었습니다.");
+      }
     }
   }
 
@@ -304,11 +346,7 @@ export default function JoinForm({
                   onChange={setBusinessNum}
                   placeholder="10자 숫자 (‘-’ 문자 제외)"
                   validation={validations.businessNum}
-                  message={
-                    isBusinessNumValid
-                      ? "사업자 번호 인증이 완료되었습니다."
-                      : ""
-                  }
+                  message={businessNumVerifyMsg}
                   max={10}
                 />
                 <Button
@@ -317,7 +355,7 @@ export default function JoinForm({
                   className="mb-2 py-[2.5px] sm:text-base sm:font-bold"
                   disabled={!isBusinessNumInputValid || isBusinessNumValid}
                   onClick={() => {
-                    setIsBusinessNumValid(true);
+                    handleBusinessNumVerification();
                   }}
                   type="button"
                 >

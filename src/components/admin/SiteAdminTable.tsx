@@ -10,11 +10,7 @@ export default function SiteAdminTable({
 }: {
   data: SiteAdmin[]; // data prop 정의
 }) {
-  const [selectedUser, setSelectedUser] = useState<SiteAdmin | null>(null); // 선택된 관리자 상태
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
   const headers = ["이메일", "관리자명", "권한"]; // 테이블 헤더명 선언
-
   const fieldMapping: {
     [key in (typeof headers)[number]]: keyof SiteAdmin;
   } = {
@@ -23,14 +19,50 @@ export default function SiteAdminTable({
     권한: "permissions",
   };
 
-  const handleRowClick = (user: SiteAdmin) => {
-    setSelectedUser(user);
-    setIsModalOpen(true); // 행 클릭 시 모달 열기
+  const [selectedSiteAdmin, setSelectedSiteAdmin] = useState<SiteAdmin | null>(
+    null
+  );
+
+  const [siteAdminRadioStates, setSiteAdminRadioStates] = useState<
+    Record<string, string> // 모든 사용자의 권한 상태를 저장
+  >({});
+  const [siteAdminRadio, setSiteAdminRadio] = useState("전체권한"); // 선택한 사용자의 권한 상태
+
+  // Apply(상태변경적용 버튼)를 눌렀는지 여부를 추적
+  const [applied, setApplied] = useState<boolean>(false);
+
+  const handleRowClick = (siteAdmin: SiteAdmin) => {
+    setSelectedSiteAdmin(siteAdmin);
+    setSiteAdminRadio(siteAdminRadioStates[siteAdmin.email] || "전체권한");
+    // 새로운 사용자를 클릭할 때마다 applied 상태 초기화
+    setApplied(false);
+  };
+
+  const handleRadioChange = (value: string) => {
+    setSiteAdminRadio(value);
+  };
+
+  const handleApplyStatus = () => {
+    if (selectedSiteAdmin) {
+      setSiteAdminRadioStates((prevStates) => ({
+        ...prevStates,
+        [selectedSiteAdmin.email]: siteAdminRadio,
+      }));
+
+      setApplied(true);
+      console.log(`상태 변경: ${siteAdminRadio}`);
+      // API 연동 필요
+    }
   };
 
   const handleModalClose = () => {
-    setIsModalOpen(false);
-    setSelectedUser(null); // 모달 닫기 시 선택된 사용자 초기화
+    if (!applied && selectedSiteAdmin) {
+      setSiteAdminRadio(
+        siteAdminRadioStates[selectedSiteAdmin.email] || "전체권한"
+      );
+    }
+    setApplied(false);
+    setSelectedSiteAdmin(null);
   };
 
   return (
@@ -39,13 +71,13 @@ export default function SiteAdminTable({
         <TableHeader headers={headers} />
         <tbody>
           {data.length > 0 ? (
-            data.map((newTheaterAdmin, index) => (
+            data.map((siteAdmin, index) => (
               <TableRow
                 key={index}
-                rowData={newTheaterAdmin}
+                rowData={siteAdmin}
                 headers={headers}
                 fieldMapping={fieldMapping}
-                onClick={() => handleRowClick(newTheaterAdmin)} // 행 클릭 시 모달 열기
+                onClick={() => handleRowClick(siteAdmin)} // 행 클릭 시 모달 열기
               />
             ))
           ) : (
@@ -58,8 +90,14 @@ export default function SiteAdminTable({
         </tbody>
       </table>
 
-      {isModalOpen && selectedUser && (
-        <SiteAdminModify user={selectedUser} onClose={handleModalClose} />
+      {selectedSiteAdmin && (
+        <SiteAdminModify
+          siteAdmin={selectedSiteAdmin}
+          onClose={handleModalClose}
+          siteAdminRadio={siteAdminRadio} // 라디오 상태를 props로 전달
+          onRadioChange={handleRadioChange}
+          onApply={handleApplyStatus} // 상태 변경 적용
+        />
       )}
     </>
   );

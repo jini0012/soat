@@ -29,13 +29,13 @@ export default function BannerListTable({
               onClick={() => onRowClick(banner)} // 클릭 시 배너 데이터를 onRowClick에 전달
               className="cursor-pointer  hover:bg-gray-100"
             >
-              <td className="text-[10px] text-center py-1 border-t border-gray-300">
+              <td className="text-xs text-center py-1 border-t border-gray-300">
                 {banner.bannerTitle}
               </td>
-              <td className="text-[10px] text-center py-1 border-t border-gray-300">
+              <td className="text-xs text-center py-1 border-t border-gray-300">
                 {banner.registrationDate}
               </td>
-              <td className="text-[10px] text-center py-1 border-t border-gray-300">
+              <td className="text-xs text-center py-1 border-t border-gray-300">
                 {banner.bannerStatus}
               </td>
             </tr>
