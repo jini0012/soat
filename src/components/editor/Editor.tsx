@@ -132,6 +132,13 @@ export default function Editor() {
     );
   };
 
+  const handleOnClickEidtor = () => {
+    if (!editor) {
+      return;
+    }
+    editor?.chain().focus("end");
+  };
+
   return (
     <div className="border w-full">
       <Toolbar
@@ -143,6 +150,7 @@ export default function Editor() {
         onClickCodeBlockButton={handleOpenHTMLCodeModal}
       />
       <EditorContent
+        onClick={handleOnClickEidtor}
         className=" w-full prose border min-h-[600px]"
         editor={editor}
       />
