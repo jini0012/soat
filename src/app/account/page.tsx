@@ -42,7 +42,7 @@ export default function page() {
     };
 
     fetchUser();
-  }, []);
+  }, [status]);
 
   return (
     <>
