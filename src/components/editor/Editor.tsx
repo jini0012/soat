@@ -31,7 +31,7 @@ import { Button, CloseButton } from "../controls/Button";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import CustomImage from "./CustomImage";
-import { useDebounce } from "@/utils/useDebounce";
+import { useDebounce } from "@/hooks/useDebounce";
 
 export default function Editor() {
   const [isOpenHTMLCodeModal, setIsOpenHTMLCodeModal] =
