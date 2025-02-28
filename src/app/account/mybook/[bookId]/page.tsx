@@ -1,4 +1,4 @@
-import Header from "@/components/Header";
+import Header from "@/components/home/Header";
 import ReservationItemDetail from "@/components/account/ReservationItemDetail";
 
 export default function Page() {
