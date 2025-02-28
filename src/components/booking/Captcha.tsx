@@ -24,6 +24,7 @@ export default function Captcha({
   const [captchaData, setCaptchaData] = useState<CaptchaData | null>(null);
   const [answer, setAnswer] = useState("");
   const [message, setMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const CAPTCHA_API_URL = process.env.NEXT_PUBLIC_CAPTCHA_API_URL || "";
 
@@ -45,6 +46,7 @@ export default function Captcha({
   // 답안 제출
   const verifyCaptcha = async () => {
     if (!captchaData?.captchaId) return;
+    setIsSubmitting(true);
 
     try {
       const response = await fetch(
@@ -65,6 +67,7 @@ export default function Captcha({
         getCaptcha();
         setAnswer("");
         setMessage("다시 시도해주세요.");
+        setIsSubmitting(false);
         throw new Error("CAPTCHA 검증 실패");
       }
 
@@ -166,9 +169,24 @@ export default function Captcha({
             ariaLabel="보안 문자 입력"
             value={answer}
             onChange={setAnswer}
+            onEnter={verifyCaptcha}
           />
-          <Button highlight size="full" onClick={verifyCaptcha}>
-            다음
+          <Button
+            highlight
+            size="full"
+            onClick={verifyCaptcha}
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? (
+              <img
+                src="/images/icons/loading-spinner.svg"
+                alt="확인 중..."
+                width={24}
+                height={24}
+              />
+            ) : (
+              "확인"
+            )}
           </Button>
         </>
       )}
