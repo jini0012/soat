@@ -1,7 +1,3 @@
-"use client";
-import { useSession } from "next-auth/react";
-import Loading from "../Loading";
-
 interface UserDataProps {
   label: "회원 유형" | "이름" | "이메일" | "휴대폰";
   data: string;
@@ -17,33 +13,3 @@ export function Li({ label, data }: UserDataProps) {
     </li>
   );
 }
-
-// export default function UserInfoItem() {
-//   const { data: session, status } = useSession();
-
-//   if (status === "loading") {
-//     return <Loading />;
-//   }
-//   if (!session) {
-//     return <p>로그인이 필요합니다.</p>;
-//   }
-//   if (status === "authenticated") {
-//     return (
-//       <>
-//         <Li label="이름" data={session.user.username} />
-//         <Li label="이메일" data={session.user.email} />
-//         <Li
-//           label="휴대폰"
-//           data={session.user.phone.replace(
-//             /^(\d{3})(\d{4})(\d{4})$/,
-//             "$1-$2-$3"
-//           )}
-//         />
-//         <Li
-//           label="회원 유형"
-//           data={session.user.userType === "buyer" ? "예매회원" : "공연 관리자"}
-//         />
-//       </>
-//     );
-//   }
-// }
