@@ -19,7 +19,6 @@ export default function page() {
   const [userType, setUserType] = useState("");
 
   useEffect(() => {
-    console.log(status);
     if (status !== "authenticated" && status !== "loading") {
       router.push("/login");
     }
