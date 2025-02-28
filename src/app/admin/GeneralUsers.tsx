@@ -6,7 +6,7 @@ import QueryButton from "@/components/admin/ QueryButton";
 import SubTabDescription from "@/components/admin/SubTabDescription";
 import AdminSearchInput from "@/components/admin/AdminSearchInput";
 export default function GeneralUsers() {
-  const GeneralUserData = [
+  const generalUserData = [
     {
       email: "dnjs1111@soat.com",
       name: "김예원",
@@ -75,7 +75,7 @@ export default function GeneralUsers() {
             <QueryButton />
           </form>
         </div>
-        <GeneralUsersTable data={GeneralUserData} />
+        <GeneralUsersTable data={generalUserData} />
       </AdminMain>
     </>
   );

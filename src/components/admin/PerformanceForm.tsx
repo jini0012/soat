@@ -14,6 +14,7 @@ export default function PerformanceForm({
   onSaleRadioChange,
   onPerformanceRadioChange,
   onClose,
+  onApply,
 }: {
   performance: Performance;
   performanceRadioOptions: { value: string; label: string }[];
@@ -28,15 +29,17 @@ export default function PerformanceForm({
   const [isOpen, setIsOpen] = useState(true); // 공연 정보 모달 상태 관리
   const [isModalOpen, setIsModalOpen] = useState(false); // 변경여부 모달 상태 관리
   const [isApplyModalOpen, setIsApplyModalOpen] = useState(false); //변경사항 저장 확인 모달 상태 관리
-  const [isSale, setIsSale] = useState<boolean | null>(null); // 판매상태인지 공연 표시 여부인지 구분하는 상태
+  const [changeType, setChangeType] = useState<"sale" | "performance" | null>(
+    null
+  ); // 변경 유형: "sale" 또는 "performance"
 
   const handleSaleButtonClick = () => {
-    setIsSale(true);
+    setChangeType("sale");
     setIsModalOpen(true);
   };
 
   const handlePerformanceButtonClick = () => {
-    setIsSale(false);
+    setChangeType("performance");
     setIsModalOpen(true);
   };
 
@@ -62,7 +65,7 @@ export default function PerformanceForm({
           {/* 공연 정보 내용 */}
           <section className="mt-4 text-xs">
             <h3 className="sr-only">공연정보</h3>
-            <dl className="flex flex-wrap gap-x-1 gap-y-1">
+            <dl className="flex flex-wrap gap-x-1 gap-y-1 ">
               {[
                 { label: "공연명", value: performance.title },
                 { label: "카테고리", value: performance.category },
@@ -75,7 +78,7 @@ export default function PerformanceForm({
                     <div className="flex items-center gap-x-2">
                       <span>신고됨</span>
                       <Button
-                        className="h-[20px] text-[9px] flex items-center"
+                        className="h-[20px] text-xs flex items-center"
                         size="small"
                         onClick={() => alert("상세보기 클릭")}
                       >
@@ -105,7 +108,7 @@ export default function PerformanceForm({
               onChange={onSaleRadioChange}
               items={saleRadioOptions}
             />
-            <p className="text-[10px] text-gray-500 font-light mt-2 mb-4">
+            <p className="text-xs text-gray-500 font-light mt-2 mb-4">
               (현재 상태 : <span>{saleRadioState}</span>)
             </p>
             <Button
@@ -127,7 +130,7 @@ export default function PerformanceForm({
               onChange={onPerformanceRadioChange}
               items={performanceRadioOptions}
             />
-            <p className="text-[10px] text-gray-500 font-light mt-2 mb-4">
+            <p className="text-xs text-gray-500 font-light mt-2 mb-4">
               (현재 상태 : <span>{performanceRadioState}</span>)
             </p>
             <Button
@@ -150,10 +153,13 @@ export default function PerformanceForm({
         >
           <div className="z-[1000]">
             <p className="text-xs">
-              {isSale
+              {changeType === "sale"
                 ? "판매상태를 변경하시겠습니까?"
+                : performanceRadioState === "표시"
+                ? "해당 공연을 표시하시겠습니까?"
                 : "해당 공연을 숨김 처리하시겠습니까?"}
             </p>
+
             <div className="flex justify-center gap-2">
               <Button
                 size="small"
@@ -168,6 +174,7 @@ export default function PerformanceForm({
                 onClick={() => {
                   setIsApplyModalOpen(true);
                   setIsModalOpen(false);
+                  onApply();
                 }}
                 className="mt-2 w-[60px]"
               >
@@ -187,15 +194,20 @@ export default function PerformanceForm({
         >
           <div className="z-[1000] flex flex-col items-center">
             <p className="text-xs">
-              {isSale
-                ? "성공적으로 변경되었습니다."
-                : "성공적으로 숨김 처리되었습니다."}
+              {changeType === "sale" ? (
+                "성공적으로 변경되었습니다."
+              ) : performanceRadioState === "숨김" ? (
+                <div className="flex flex-col items-center">
+                  <p className="text-center">성공적으로 숨김 처리되었습니다.</p>
+                  <p className="text-[10px] text-gray-500 mt-1">
+                    (소극장 관리자에게 즉시 알림 발송됩니다.)
+                  </p>
+                </div>
+              ) : (
+                "성공적으로 표시되었습니다."
+              )}
             </p>
-            {!isSale && (
-              <p className="text-[10px] text-gray-500">
-                (소극장 관리자에게 즉시 알림 발송됩니다.)
-              </p>
-            )}
+
             <Button
               highlight
               size="small"

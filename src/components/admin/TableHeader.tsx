@@ -5,7 +5,7 @@ interface TableHeaderProps {
 export default function TableHeader({ headers }: TableHeaderProps) {
   return (
     <thead>
-      <tr className="text-[11px] bg-gray-200">
+      <tr className="text-xs bg-flesh-100 ">
         {headers.map((header, index) => (
           <th
             key={index}
