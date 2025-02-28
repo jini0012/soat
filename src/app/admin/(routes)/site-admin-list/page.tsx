@@ -6,7 +6,7 @@ import QueryButton from "@/components/admin/ QueryButton";
 import SubTabDescription from "@/components/admin/SubTabDescription";
 import AdminSearchInput from "@/components/admin/AdminSearchInput";
 export default function SiteAdminListPage() {
-  const GeneralUserData = [
+  const siteAdminData = [
     {
       email: "john.doe@example.com",
       siteAdmin: "홍지현",
@@ -75,7 +75,7 @@ export default function SiteAdminListPage() {
             <QueryButton />
           </form>
         </div>
-        <SiteAdminTable data={GeneralUserData} />
+        <SiteAdminTable data={siteAdminData} />
       </AdminMain>
     </>
   );

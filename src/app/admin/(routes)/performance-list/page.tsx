@@ -9,65 +9,65 @@ import SubTabDescription from "@/components/admin/SubTabDescription";
 import AdminSearchInput from "@/components/admin/AdminSearchInput";
 import { Select } from "@/components/controls/Select";
 export default function PerformanceListPage() {
-  const GeneralUserData = [
+  const performanceData = [
     {
-      title: "밤의 노래",
-      category: "드라마",
+      title: "별이 빛나는 밤",
+      category: "콘서트",
+      team: "스타홀",
+      reportedStatus: "신고됨",
+    },
+    {
+      title: "예술의 향연",
+      category: "전시/행사",
+      team: "아트갤러리",
+      reportedStatus: "정상",
+    },
+    {
+      title: "희극의 순간",
+      category: "연극",
       team: "블루극장",
       reportedStatus: "신고됨",
     },
     {
-      title: "불꽃의 춤",
+      title: "팬과 함께",
+      category: "팬미팅",
+      team: "팬존",
+      reportedStatus: "정상",
+    },
+    {
+      title: "뮤지컬의 밤",
       category: "뮤지컬",
-      team: "레드극장",
+      team: "레드홀",
+      reportedStatus: "신고됨",
+    },
+    {
+      title: "소나타의 감동",
+      category: "콘서트",
+      team: "그랜드홀",
       reportedStatus: "정상",
     },
     {
-      title: "빛의 여행",
-      category: "판타지",
+      title: "미술의 세계",
+      category: "전시/행사",
+      team: "갤러리센터",
+      reportedStatus: "정상",
+    },
+    {
+      title: "비극과 희극",
+      category: "연극",
       team: "그린극장",
       reportedStatus: "신고됨",
     },
     {
-      title: "비밀의 숲",
-      category: "스릴러",
-      team: "옐로극장",
+      title: "스타와의 만남",
+      category: "팬미팅",
+      team: "옐로존",
       reportedStatus: "정상",
     },
     {
-      title: "하늘의 별",
-      category: "로맨스",
-      team: "퍼플극장",
-      reportedStatus: "신고됨",
-    },
-    {
-      title: "겨울의 끝자락",
-      category: "드라마",
-      team: "블루극장",
-      reportedStatus: "정상",
-    },
-    {
-      title: "마법의 숲",
-      category: "어드벤처",
-      team: "그린극장",
-      reportedStatus: "정상",
-    },
-    {
-      title: "전설의 시작",
-      category: "액션",
-      team: "레드극장",
-      reportedStatus: "신고됨",
-    },
-    {
-      title: "여름의 끝",
-      category: "로맨스",
-      team: "옐로극장",
-      reportedStatus: "정상",
-    },
-    {
-      title: "가을의 노래",
-      category: "드라마",
-      team: "퍼플극장",
+      title: "환상의 무대",
+      category: "뮤지컬",
+      team: "퍼플홀",
       reportedStatus: "신고됨",
     },
   ];
@@ -103,7 +103,7 @@ export default function PerformanceListPage() {
             </form>
           </div>
         </div>
-        <PerformanceTable data={GeneralUserData} />
+        <PerformanceTable data={performanceData} />
       </AdminMain>
     </>
   );
