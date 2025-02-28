@@ -6,10 +6,12 @@ interface UserDataProps {
 export function Li({ label, data }: UserDataProps) {
   return (
     <li className="flex gap-4 mb-1">
-      <p className="flex-[1] text-end font-bold text-flesh-500 sm:text-lg">
+      <p className="flex-[1] text-end sm:text-start font-bold text-flesh-500 sm:text-lg">
         {label}
       </p>
-      <span className="flex-[2] sm:flex-[1.5] sm:text-lg">{data}</span>
+      <span className="flex-[2] sm:flex-[1.5] sm:text-lg sm:text-end">
+        {data}
+      </span>
     </li>
   );
 }
