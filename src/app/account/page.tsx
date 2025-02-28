@@ -27,15 +27,15 @@ export default function page() {
       try {
         const response = await axios.get("/api/account/me");
         const { user } = response.data;
-
-        setUsername(user.username);
-        setEmail(user.email);
-        setPhone(user.phoneNumber);
         if (user.userType === "seller") {
+          router.push("/manager");
           setUserType("공연 관리자");
         } else {
           setUserType("예매 회원");
         }
+        setUsername(user.username);
+        setEmail(user.email);
+        setPhone(user.phoneNumber);
       } catch (error) {
         console.error("사용자 정보 조회 오류:", error);
       }
