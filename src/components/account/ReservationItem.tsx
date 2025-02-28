@@ -157,7 +157,7 @@ interface ReservationListDataProps {
 function Ul({ children }: { children: React.ReactNode }) {
   return (
     <ul
-      className={`flex justify-between gap-[10px] ${
+      className={`flex gap-[10px] ${
         Array.isArray(children) && children.length > 3 && "flex-wrap"
       }`}
     >
