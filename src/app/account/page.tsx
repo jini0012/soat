@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Header from "@/components/Header";
+import Header from "@/components/home/Header";
 import UserInfo from "./UserInfo";
 import MyReservation from "./MyReservation";
 
@@ -10,7 +10,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 export default function page() {
-  const { status } = useSession();
+  const { data: session, status } = useSession();
   const router = useRouter();
 
   const [username, setUsername] = useState("");
@@ -19,31 +19,32 @@ export default function page() {
   const [userType, setUserType] = useState("");
 
   useEffect(() => {
-    console.log(status);
     if (status !== "authenticated" && status !== "loading") {
       router.push("/login");
+    }
+    if (session && session.user.userType === "seller") {
+      router.push("/manager");
     }
 
     const fetchUser = async () => {
       try {
         const response = await axios.get("/api/account/me");
         const { user } = response.data;
-
-        setUsername(user.username);
-        setEmail(user.email);
-        setPhone(user.phoneNumber);
         if (user.userType === "seller") {
           setUserType("공연 관리자");
         } else {
           setUserType("예매 회원");
         }
+        setUsername(user.username);
+        setEmail(user.email);
+        setPhone(user.phoneNumber);
       } catch (error) {
         console.error("사용자 정보 조회 오류:", error);
       }
     };
 
     fetchUser();
-  }, []);
+  }, [status]);
 
   return (
     <>

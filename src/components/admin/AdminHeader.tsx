@@ -62,7 +62,7 @@ export default function AdminHeader({ children }: AdminHeaderProps) {
         />
       )}
 
-      <header className="w-[100vw] h-[61px] flex items-center bg-flesh-500 text-white text-[22px] font-semibold z-10 relative ">
+      <header className="w-[100vw] h-[61px] flex items-center bg-flesh-500 text-white text-2xl font-semibold z-10 relative ">
         <button
           onClick={() => setIsOpenMenu(true)}
           className="relative z-30 block lg:hidden"
@@ -74,14 +74,14 @@ export default function AdminHeader({ children }: AdminHeaderProps) {
         <div className="absolute w-[100%] text-center hidden lg:flex justify-between items-center px-[6%]">
           <div className="flex items-center">
             <Link href="/admin">
-              <h1 className="text-[25px] text-white font-semibold">Admin</h1>
+              <h1 className="text-2xl text-white font-semibold">Admin</h1>
             </Link>
           </div>
           <div className="flex gap-5">
-            <Link href="/home" className=" text-white text-[14px]">
+            <Link href="/home" className=" text-white text-sm">
               쏘앳 바로가기
             </Link>
-            <button className="text-[14px]">로그아웃</button>
+            <button className="text-sm">로그아웃</button>
           </div>
         </div>
 

@@ -1,5 +1,5 @@
 import { Button } from "@/components/controls/Button";
-import { Ul, Li } from "@/components/account/ReservationItem";
+import ReservationListData from "@/components/account/ReservationItem";
 
 function ReservationList() {
   return (
@@ -12,29 +12,11 @@ function ReservationList() {
         size="small"
         highlight={true}
         className="rounded-[30px] py-[2.5px] px-[13px] bg-flesh-500 absolute top-2 right-0 sm:text-base sm:font-bold sm:top-6"
+        href="/account/mybook?book=total"
       >
         더보기
       </Button>
-      <Ul>
-        <Li
-          imageUrl="공연이미지"
-          bookId={4}
-          title="노는게 제일 조아"
-          viewDate="2025.06.03"
-        />
-        <Li
-          imageUrl="공연이미지"
-          bookId={5}
-          title="도비는 자유에요! 직장 이직 예쁘게 하는 비법 대공개"
-          viewDate="2025.05.05"
-        />
-        <Li
-          imageUrl="공연이미지"
-          bookId={6}
-          title="귤락이란 무엇일까"
-          viewDate="2025.03.25"
-        />
-      </Ul>
+      <ReservationListData slice={3} />
     </section>
   );
 }
@@ -51,32 +33,11 @@ function BeforeReservationList() {
           size="small"
           highlight={true}
           className="rounded-[30px] py-[2.5px] px-[13px] bg-flesh-500 absolute top-2 right-0 sm:text-base sm:font-bold sm:top-6"
+          href="/account/mybook?book=past"
         >
           더보기
         </Button>
-        <Ul>
-          <Li
-            imageUrl="공연이미지"
-            bookId={1}
-            title="주인님 사랑해요!"
-            viewDate="2025.03.04"
-            isViewComplete
-          />
-          <Li
-            imageUrl="공연이미지"
-            bookId={2}
-            title="카리나는 신이에요"
-            viewDate="2025.02.20"
-            isViewComplete
-          />
-          <Li
-            imageUrl="공연이미지"
-            bookId={3}
-            title="라떼 is..horse☕🐎"
-            viewDate="2025.02.18"
-            isViewComplete
-          />
-        </Ul>
+        <ReservationListData slice={3} isViewComplete />
       </section>
     </>
   );

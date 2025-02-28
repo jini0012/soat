@@ -7,7 +7,7 @@ export default function Header() {
         <h1 className="font-bold text-5xl italic py-5">
           <Link href={"/"} className="text-flesh-600">
             <img
-              src="images/icons/logo-temp.svg"
+              src="/images/icons/logo-temp.svg"
               alt="soat"
               className="sm:w-[123px]"
             />

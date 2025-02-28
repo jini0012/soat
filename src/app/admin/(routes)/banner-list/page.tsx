@@ -15,7 +15,7 @@ export default function BannerListPage() {
   const [isBannerModifyOpen, setIsBannerModifyOpen] = useState(false); // 배너 수정 모달 상태 관리
   const [selectedBanner, setSelectedBanner] = useState(null); // 선택된 배너 정보 관리
 
-  const GeneralUserData = [
+  const bannerData = [
     {
       bannerTitle: "햇살극장 신규 오픈",
       registrationDate: "2025.02.10",
@@ -68,15 +68,15 @@ export default function BannerListPage() {
               width={12}
               height={12}
             />
-            <p className="text-[11px] font-medium">배너 등록하기</p>
+            <p className="text-xs font-medium">배너 등록하기</p>
           </button>
         </div>
         <BannerListTable
-          data={GeneralUserData}
+          data={bannerData}
           onRowClick={handleRowClick} // 행 클릭 이벤트 전달
         />
         <section className="mt-10">
-          <BannerDisplayOrder />
+          <BannerDisplayOrder data={bannerData} />
         </section>
       </AdminMain>
 

@@ -10,7 +10,7 @@ import AdminSearchInput from "@/components/admin/AdminSearchInput";
 import { Select } from "@/components/controls/Select";
 
 export default function TheaterAdminUsersPage() {
-  const GeneralUserData = [
+  const theaterAdminData = [
     {
       email: "dnjs1111@soat.com",
       name: "김예원",
@@ -77,8 +77,8 @@ export default function TheaterAdminUsersPage() {
 
   const filteredData =
     theaterAdminSelect === "all"
-      ? GeneralUserData
-      : GeneralUserData.filter((user) => user.joinType === theaterAdminSelect);
+      ? theaterAdminData
+      : theaterAdminData.filter((user) => user.joinType === theaterAdminSelect);
 
   return (
     <>

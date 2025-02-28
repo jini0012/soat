@@ -4,7 +4,7 @@ import TheaterAdminApprovalTable from "@/components/admin/TheaterAdminApprovalTa
 import ListTitle from "@/components/admin/ListTitle";
 import SubTabDescription from "@/components/admin/SubTabDescription";
 export default function TheaterAdminApprovalPage() {
-  const GeneralUserData = [
+  const newTheaterAdminData = [
     {
       email: "dnjs1111@soat.com",
       name: "김예원",
@@ -75,7 +75,7 @@ export default function TheaterAdminApprovalPage() {
         <div className="mt-[20px] mb-4 flex justify-between items-center">
           <ListTitle>대기 중인 소극장 관리자 신청 목록</ListTitle>
         </div>
-        <TheaterAdminApprovalTable data={GeneralUserData} />
+        <TheaterAdminApprovalTable data={newTheaterAdminData} />
       </AdminMain>
     </>
   );

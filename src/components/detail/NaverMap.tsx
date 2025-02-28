@@ -32,40 +32,51 @@ const NaverMapModal = ({
 
   // 네이버 지도 스크립트 로드
   useEffect(() => {
-    if (!isOpen || !mapRef.current) return;
+    if (!isOpen) return;
 
-    // 네이버 지도 스크립트가 로드되었는지 확인
-    if (typeof window.naver === "undefined") {
-      // 스크립트가 이미 추가되었는지 확인
-      const existingScript = document.querySelector(
-        'script[src*="openapi.map.naver.com"]'
-      );
-      if (!existingScript) {
-        // 네이버 지도 스크립트 동적 로드
-        const script = document.createElement("script");
-        // Geocoding API도 함께 로드
-        script.src = `https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${process.env.NEXT_PUBLIC_NAVER_CLIENT_ID}&submodules=geocoder`;
-        script.async = true;
+    // 모달이 열릴 때마다 초기화 상태 재설정
+    if (isOpen) {
+      console.log("모달이 열렸습니다. 지도 초기화 시작");
 
-        script.onload = () => {
-          console.log("네이버 지도 API 스크립트 로드 완료");
-          // 스크립트 로드 후 더 긴 지연시간 적용
-          setTimeout(checkGeocoderService, 500);
-        };
-
-        script.onerror = () => {
-          console.error("네이버 지도 API 로드 실패");
-          setMapError("지도 API를 불러오는데 실패했습니다.");
-        };
-
-        document.head.appendChild(script);
-      } else {
-        // 스크립트는 이미 추가되었지만 아직 로드 중일 수 있음
-        setTimeout(checkGeocoderService, 500);
+      // 지도 DOM이 준비되었는지 확인
+      if (!mapRef.current) {
+        console.error("맵 참조가 없습니다.");
+        return;
       }
-    } else {
-      // 이미 로드된 경우 초기화
-      if (!isInitialized.current) {
+
+      // 네이버 맵 스크립트 로드 여부 확인
+      if (typeof window.naver === "undefined") {
+        // 스크립트가 이미 추가되었는지 확인
+        const existingScript = document.querySelector(
+          'script[src*="openapi.map.naver.com"]'
+        );
+
+        if (!existingScript) {
+          // 네이버 지도 스크립트 동적 로드
+          const script = document.createElement("script");
+          // Geocoding API도 함께 로드
+          script.src = `https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${process.env.NEXT_PUBLIC_NAVER_CLIENT_ID}&submodules=geocoder`;
+          script.async = true;
+
+          script.onload = () => {
+            console.log("네이버 지도 API 스크립트 로드 완료");
+            // 스크립트 로드 후 더 긴 지연시간 적용
+            setTimeout(checkGeocoderService, 500);
+          };
+
+          script.onerror = () => {
+            console.error("네이버 지도 API 로드 실패");
+            setMapError("지도 API를 불러오는데 실패했습니다.");
+          };
+
+          document.head.appendChild(script);
+        } else {
+          // 스크립트는 이미 추가되었지만 아직 로드 중일 수 있음
+          setTimeout(checkGeocoderService, 500);
+        }
+      } else {
+        // 이미 로드된 경우 강제로 재초기화
+        console.log("네이버 API가 이미 로드되어 있습니다. 지도 초기화 시작");
         initializeMap();
       }
     }
@@ -80,6 +91,8 @@ const NaverMapModal = ({
 
   // 지도 인스턴스 정리 함수
   const cleanupMapInstance = () => {
+    console.log("지도 인스턴스 정리 시작");
+
     if (map.current) {
       // 마커 제거
       if (marker.current) {
@@ -94,11 +107,12 @@ const NaverMapModal = ({
       }
 
       // 지도 인스턴스 제거 (DOM에서 제거)
-      if (mapRef.current && mapRef.current.innerHTML) {
+      if (mapRef.current) {
         mapRef.current.innerHTML = "";
       }
 
       map.current = null;
+      // 초기화 상태 변경
       isInitialized.current = false;
       console.log("지도 인스턴스 정리 완료");
     }
@@ -108,9 +122,7 @@ const NaverMapModal = ({
   const checkGeocoderService = () => {
     if (window.naver && window.naver.maps && window.naver.maps.Service) {
       console.log("Geocoder 서비스 로드됨");
-      if (!isInitialized.current) {
-        initializeMap();
-      }
+      initializeMap();
     } else {
       console.log("Geocoder 서비스 로드 중...");
       setTimeout(checkGeocoderService, 300);
@@ -126,14 +138,9 @@ const NaverMapModal = ({
 
     console.log("지도 초기화 시작");
 
-    // 이미 초기화된 지도가 있으면 정리
-    cleanupMapInstance();
-
     try {
-      // 맵 컨테이너 초기화
-      if (mapRef.current.innerHTML !== "") {
-        mapRef.current.innerHTML = "";
-      }
+      // 맵 컨테이너 초기화 - 매번 새로 생성하도록 함
+      mapRef.current.innerHTML = "";
 
       // 기본 지도 생성 (초기 중심 좌표는 서울시청)
       const defaultCenter = new window.naver.maps.LatLng(
@@ -223,7 +230,6 @@ const NaverMapModal = ({
       },
       (status: any, response: any) => {
         console.log("Geocode 응답 상태:", status);
-        console.log("Geocode 응답 데이터:", response);
 
         if (status !== window.naver.maps.Service.Status.OK) {
           console.error("주소 검색 상태 오류:", status);
@@ -290,7 +296,11 @@ const NaverMapModal = ({
         infoWindow.current.setContent(contentHTML);
         infoWindow.current.open(map.current, marker.current);
 
-        setSearchQuery(`https://map.naver.com/p/search/${locationAddress}`);
+        setSearchQuery(
+          `https://map.naver.com/p/search/${encodeURIComponent(
+            locationAddress
+          )}`
+        );
       }
     );
   };
@@ -328,7 +338,12 @@ const NaverMapModal = ({
         </div>
 
         {/* 지도가 표시될 div */}
-        <div ref={mapRef} className="w-full h-[400px]"></div>
+        <div
+          ref={mapRef}
+          className="w-full h-[400px]"
+          // 지도 컨테이너의 스타일을 명시적으로 지정
+          style={{ position: "relative", overflow: "hidden" }}
+        ></div>
 
         <div className="p-4 flex justify-end items-center border-t border-gray-200">
           <Button

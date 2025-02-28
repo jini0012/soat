@@ -128,6 +128,7 @@ export default function EnrollCalendar() {
           type="button"
           className="ml-auto text-xs"
           onClick={handleToggleRangeButton}
+          highlight={isRange}
         >
           범위 선택
         </Button>
