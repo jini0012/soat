@@ -40,7 +40,7 @@ export default function Header() {
           <h1>
             <Link href="/">
               <img
-                src="images/icons/logo-temp.svg"
+                src="/images/icons/logo-temp.svg"
                 alt="soat"
                 className="w-[93px]"
               />
@@ -59,7 +59,7 @@ export default function Header() {
               inputClassName="h-[43.47px] px-[20px]"
             />
             <img
-              src="images/icons/search-icon.svg"
+              src="/images/icons/search-icon.svg"
               alt="검색"
               onClick={handleSearch}
               className="w-[25px] absolute right-0 top-2 cursor-pointer"

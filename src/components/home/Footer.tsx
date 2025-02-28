@@ -5,7 +5,7 @@ export default function Footer() {
     <footer className="px-4 md:px-[60px] py-[30px] bg-[#1E1E1E] flex flex-col md:flex-row justify-between items-center gap-8 md:gap-4">
       <address className="not-italic w-full md:w-[400px] text-[#E2E2E2]">
         <h2 className="mb-4">
-          <img src="images/icons/logo-temp_GRAY.svg" alt="soat" />
+          <img src="/images/icons/logo-temp_GRAY.svg" alt="soat" />
         </h2>
         <dl className="grid grid-cols-[80px_1fr] gap-1">
           <dt className="font-bold">회사명</dt>
@@ -61,16 +61,19 @@ export default function Footer() {
           {" "}
           {/* justify-center 제거 */}
           <li>
-            <img src="images/icons/icon-blog.svg" alt="블로그로 이동" />
+            <img src="/images/icons/icon-blog.svg" alt="블로그로 이동" />
           </li>
           <li>
-            <img src="images/icons/icon-insta.svg" alt="안스타그램으로 이동" />
+            <img src="/images/icons/icon-insta.svg" alt="안스타그램으로 이동" />
           </li>
           <li>
-            <img src="images/icons/icon-facebook.svg" alt="페이스북으로 이동" />
+            <img
+              src="/images/icons/icon-facebook.svg"
+              alt="페이스북으로 이동"
+            />
           </li>
           <li>
-            <img src="images/icons/icon-youtube.svg" alt="유튜브로 이동" />
+            <img src="/images/icons/icon-youtube.svg" alt="유튜브로 이동" />
           </li>
         </ul>
       </section>
