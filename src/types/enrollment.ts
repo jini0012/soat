@@ -30,7 +30,6 @@ export interface EnrollPosterProps {
 
 export interface EnrollFormItemsProps extends EnrollFormFields {
   onChange: (field: keyof EnrollFormFields, value: string) => void;
-  handleOnClickType: (type: string) => void;
   handleSearchAddress: (data: KakaoAddressData) => void;
 }
 export type EnrollModalMode = "add" | "edit";

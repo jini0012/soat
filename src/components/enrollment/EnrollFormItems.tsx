@@ -7,7 +7,6 @@ import { useDispatch } from "react-redux";
 import {
   setAddress,
   setPostCode,
-  setType,
   updateStringFormField,
 } from "@/redux/slices/enrollSlice";
 import { EnrollFormData } from "@/types/enrollment";
@@ -16,7 +15,6 @@ import { KakaoAddressData } from "@/types/kakao";
 export default function EnrollFormItems() {
   const {
     title,
-    type,
     category,
     bookingStartDate,
     address,
@@ -30,14 +28,6 @@ export default function EnrollFormItems() {
     value: string
   ) => {
     dispatch(updateStringFormField({ field, value }));
-  };
-
-  const handleOnClickType = (newType: string) => {
-    if (type === newType) {
-      // 같은 버튼 클릭시
-      return;
-    }
-    dispatch(setType(newType));
   };
 
   const onComplete = (data: KakaoAddressData) => {
@@ -55,7 +45,6 @@ export default function EnrollFormItems() {
       detailAddress={detailAddress}
       postCode={postCode}
       onChange={handleOnChangeInputs}
-      handleOnClickType={handleOnClickType}
       handleSearchAddress={onComplete}
     />
   );

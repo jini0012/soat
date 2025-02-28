@@ -17,23 +17,6 @@ export default function EnrollFormItemsUI({
 }: EnrollFormItemsProps) {
   return (
     <>
-      {/* <div className="flex gap-4">
-        <Button
-          highlight={type === "regular"}
-          type="button"
-          onClick={() => handleOnClickType("regular")}
-        >
-          정기공연
-        </Button>
-        <Button
-          highlight={type === "irregular"}
-          type="button"
-          onClick={() => handleOnClickType("irregular")}
-        >
-          비정기공연
-        </Button>
-      </div>
- */}
       <TextInput
         label="공연명"
         value={title}

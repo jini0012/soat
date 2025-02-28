@@ -9,7 +9,6 @@ import { JSONContent } from "@tiptap/react";
 import { format } from "date-fns";
 
 export interface EnrollState {
-  type: string;
   title: string;
   category: string;
   bookingStartDate: string;
@@ -24,7 +23,6 @@ export interface EnrollState {
 }
 
 const initialState: EnrollState = {
-  type: "irregular",
   title: "",
   category: "",
   bookingStartDate: "",
@@ -45,9 +43,6 @@ const enrollSlice = createSlice({
   name: "enroll",
   initialState,
   reducers: {
-    setType: (state, action: PayloadAction<string>) => {
-      state.type = action.payload;
-    },
     setTitle: (state, action: PayloadAction<string>) => {
       state.title = action.payload;
       state.isDirty = true;
@@ -165,7 +160,6 @@ const enrollSlice = createSlice({
 });
 
 export const {
-  setType,
   setTitle,
   setCategory,
   setBookingStartDate,
@@ -182,4 +176,5 @@ export const {
   deleteFile,
   resetDirty,
 } = enrollSlice.actions;
+
 export default enrollSlice.reducer;
