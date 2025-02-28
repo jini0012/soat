@@ -39,6 +39,7 @@ export function TextInput({
   children,
   ariaLabel,
   readOnly,
+  onEnter,
 }: TextInputProps) {
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (onChange) {
@@ -56,6 +57,7 @@ export function TextInput({
       placeholder={placeholder}
       aria-label={label || ariaLabel}
       readOnly={readOnly}
+      onKeyDown={(e) => e.key === "Enter" && onEnter && onEnter()}
     />
   );
 

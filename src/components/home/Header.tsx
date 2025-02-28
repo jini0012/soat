@@ -109,7 +109,7 @@ export default function Header() {
               </li>
               <li className="cursor-pointer">
                 <Link href="./join" className="text-black flex gap-[5px]">
-                  <img src="images/icons/join-icon.svg" alt="회원가입" />
+                  <img src="/images/icons/join-icon.svg" alt="회원가입" />
                   회원가입
                 </Link>
               </li>
@@ -142,7 +142,7 @@ export default function Header() {
                 inputClassName="h-[43.47px] px-[20px] bg-background"
               />
               <img
-                src="images/icons/search-icon.svg"
+                src="/images/icons/search-icon.svg"
                 alt="검색"
                 onClick={handleSearch}
                 className="w-[25px] absolute right-0 top-2 cursor-pointer"
@@ -215,7 +215,7 @@ export default function Header() {
                       className="text-black flex gap-[5px] items-center p-2 hover:bg-gray-100 rounded"
                       onClick={toggleMenu}
                     >
-                      <img src="images/icons/join-icon.svg" alt="회원가입" />
+                      <img src="/images/icons/join-icon.svg" alt="회원가입" />
                       회원가입
                     </Link>
                   </li>
