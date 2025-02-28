@@ -8,6 +8,8 @@ import { Select } from "../controls/Select";
 import BookSection from "./BookSection";
 import ButtonRow from "./ButtonRow";
 import QRCode from "react-qr-code";
+import { Card, CardContent, CardHeader } from "../ui/card";
+import { LucideMessageCircleWarning } from "lucide-react";
 
 export default function BookComplete() {
   const [purchaseMethod, setPurchaseMethod] = useState("bank");
@@ -34,12 +36,9 @@ export default function BookComplete() {
       </BookSection>
       <BookSection>
         <h3 className="font-bold text-xl">결제하기</h3>
-        <p className="break-keep">
-          QR 코드를 스캔하거나 계좌번호를 직접 입력하여 송금을 진행해주세요.
-        </p>
         <div className="w-fit ml-auto mr-auto grid grid-cols-2 grid-rows-2 justify-center items-center gap-x-4">
           <QRCode
-            className="w-24 h-24 p-2 bg-white ml-auto mr-auto"
+            className="w-24 h-24 p-2 bg-white ml-auto"
             value="https://example.com"
           />
           <ul className="font-bold">
@@ -59,6 +58,34 @@ export default function BookComplete() {
             />
             토스 앱에서 송금하기
           </Button>
+          <Card className="col-span-2 border-2 border-flesh-500 shadow-lg bg-flesh-50 overflow-hidden">
+            <CardHeader className="font-bold bg-flesh-100 text-flesh-800 ">
+              <p className="flex items-center text-lg">
+                <LucideMessageCircleWarning
+                  className="inline-block mr-2 text-flesh-600"
+                  size={24}
+                />
+                <span className="font-extrabold">
+                  송금 전에, 꼭 읽어주세요!
+                </span>
+              </p>
+            </CardHeader>
+            <CardContent className="pt-4">
+              <p className="text-flesh-700 leading-8">
+                <strong className="underline decoration-2">
+                  받는 분 내역 표시
+                </strong>
+                에 예매자 이름{" "}
+                <strong className="bg-flesh-600 text-white px-1 rounded">
+                  {`lorem`}
+                </strong>
+                을 꼭 적어주세요!
+                <br />
+                예매자 이름과 입금자 이름이 다를 경우,{" "}
+                <strong>입금 확인이 어려울 수 있습니다.</strong>
+              </p>
+            </CardContent>
+          </Card>
         </div>
       </BookSection>
       <ButtonRow
