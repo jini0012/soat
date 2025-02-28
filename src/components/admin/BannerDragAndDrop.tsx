@@ -1,13 +1,16 @@
 "use client";
 
 import React, { useState } from "react";
+import { Banner } from "@/types/admin";
 
-export default function BannerDragAndDrop() {
-  const [items, setItems] = useState<string[]>([
-    "햇살극장 신규 오픈",
-    "3월 한정 할인",
-    "여름 페스티벌",
-  ]);
+export default function BannerDragAndDrop({ data }: { data: Banner[] }) {
+  const activeBanners = data.filter(
+    (banner) => banner.bannerStatus === "활성화"
+  );
+
+  const [items, setItems] = useState<string[]>(
+    activeBanners.map((banner) => banner.bannerTitle)
+  ); // 배너 제목으로 items 초기화
 
   const [draggingIndex, setDraggingIndex] = useState<number | null>(null);
 
