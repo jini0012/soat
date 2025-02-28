@@ -184,7 +184,7 @@ export default function Header() {
                   ) : isSeller ? (
                     <li className="cursor-pointer">
                       <Link
-                        href="/performances"
+                        href="/manager"
                         className="text-black flex gap-[5px] items-center p-2 hover:bg-gray-100 rounded"
                         onClick={toggleMenu}
                       >
