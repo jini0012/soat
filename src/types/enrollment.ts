@@ -10,13 +10,13 @@ export interface DailyPerformances {
 }
 
 export interface EnrollFormFields {
-  //  type: string;
   title: string;
   category: string;
   bookingStartDate: string;
   address: string;
   detailAddress: string;
   postCode: string;
+  price: number;
 }
 
 export interface EnrollFormData extends EnrollFormFields {

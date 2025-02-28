@@ -1,9 +1,5 @@
 import { ImageFile } from "@/types/file";
-import {
-  DailyPerformances,
-  EnrollFormFields,
-  Performance,
-} from "./../../types/enrollment";
+import { DailyPerformances, Performance } from "./../../types/enrollment";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { JSONContent } from "@tiptap/react";
 import { format } from "date-fns";
@@ -19,6 +15,7 @@ export interface EnrollState {
   performances: DailyPerformances;
   content: JSONContent;
   files: ImageFile[];
+  price: number;
   isDirty: boolean; //수정 상태를 관리하는 상태
 }
 
@@ -36,6 +33,7 @@ const initialState: EnrollState = {
     content: [],
   },
   files: [],
+  price: 0,
   isDirty: false,
 };
 
@@ -67,6 +65,10 @@ const enrollSlice = createSlice({
       state.postCode = action.payload;
       state.isDirty = true;
     },
+    setPrice: (state, action: PayloadAction<number>) => {
+      state.price = action.payload;
+      state.isDirty = true;
+    },
     setPoster: (state, action: PayloadAction<ImageFile>) => {
       state.poster = action.payload;
       state.isDirty = true;
@@ -75,14 +77,6 @@ const enrollSlice = createSlice({
       state.content = action.payload;
       state.isDirty = true;
     },
-    updateStringFormField: <T extends keyof EnrollFormFields>(
-      state: EnrollState,
-      action: PayloadAction<{ field: T; value: string }>
-    ) => {
-      state[action.payload.field] = action.payload.value;
-      state.isDirty = true;
-    },
-
     addPerformance: (
       state,
       action: PayloadAction<{
@@ -171,10 +165,10 @@ export const {
   addPerformance,
   editPerformance,
   removePerformance,
-  updateStringFormField,
   addFile,
   deleteFile,
   resetDirty,
+  setPrice,
 } = enrollSlice.actions;
 
 export default enrollSlice.reducer;
