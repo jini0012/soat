@@ -12,6 +12,7 @@ function ReservationList() {
         size="small"
         highlight={true}
         className="rounded-[30px] py-[2.5px] px-[13px] bg-flesh-500 absolute top-2 right-0 sm:text-base sm:font-bold sm:top-6"
+        href="/account/mybook?book=total"
       >
         더보기
       </Button>
@@ -32,6 +33,7 @@ function BeforeReservationList() {
           size="small"
           highlight={true}
           className="rounded-[30px] py-[2.5px] px-[13px] bg-flesh-500 absolute top-2 right-0 sm:text-base sm:font-bold sm:top-6"
+          href="/account/mybook?book=past"
         >
           더보기
         </Button>
