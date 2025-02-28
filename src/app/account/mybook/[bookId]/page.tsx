@@ -5,7 +5,9 @@ export default function Page() {
   return (
     <>
       <Header />
-      <main className={`relative m-auto w-full pt-5 px-[30px] sm:max-fit`}>
+      <main
+        className={`relative m-auto w-full pt-5 px-[30px] sm:max-fit md:px-[140px]`}
+      >
         <ReservationItemDetail />
       </main>
     </>
