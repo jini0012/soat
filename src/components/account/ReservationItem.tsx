@@ -204,7 +204,7 @@ function Li({
 }
 
 export default function ReservationListData({
-  slice = 9,
+  slice = reservation.length,
   isViewComplete = false,
 }: ReservationListDataProps) {
   return (
