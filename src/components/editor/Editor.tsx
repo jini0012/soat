@@ -1,6 +1,11 @@
 "use client";
 import React, { useState } from "react";
-import { useEditor, EditorContent, Editor as TsEditor } from "@tiptap/react";
+import {
+  useEditor,
+  EditorContent,
+  Editor as TsEditor,
+  JSONContent,
+} from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { ToolbarButtonsConfig } from "@/types/editor";
 import {
@@ -26,13 +31,16 @@ import { Button, CloseButton } from "../controls/Button";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import CustomImage from "./CustomImage";
+import { useDebounce } from "@/utils/useDebounce";
 
 export default function Editor() {
   const [isOpenHTMLCodeModal, setIsOpenHTMLCodeModal] =
     useState<boolean>(false);
   const [htmlCode, setHtmlCode] = useState<string>("");
+  const content = useSelector((state: RootState) => state.enroll.content);
   const files = useSelector((state: RootState) => state.enroll.files);
   const dispatch = useDispatch();
+
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -41,7 +49,7 @@ export default function Editor() {
         allowBase64: true,
       }),
     ],
-    content: "",
+    content: content || "",
     editorProps: {
       attributes: { class: "focus:outline-none" },
     },
@@ -49,9 +57,13 @@ export default function Editor() {
     onUpdate: ({ editor }) => {
       onDeleteImage(editor);
       const json = editor.getJSON();
-      dispatch(setContent(json));
+      debounceUpdate(json);
     },
   });
+
+  const debounceUpdate = useDebounce((json: JSONContent) => {
+    dispatch(setContent(json));
+  }, 300);
 
   const headingButtons: ToolbarButtonsConfig[] = [
     { type: "heading", label: "헤딩 1", icon: Heading1, level: 1 },
