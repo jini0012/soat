@@ -21,8 +21,9 @@ export default function ReviewForm({
   onApply: () => void;
 }) {
   const [isOpen, setIsOpen] = useState(true);
-  const [isModalOpen, setIsModalOpen] = useState(false); //변경여부 모달 상태 관리
-  const [isApplyModalOpen, setIsApplyModalOpen] = useState(false); //변경사항 저장 확인 모달 상태 관리
+  const [isModalOpen, setIsModalOpen] = useState(false); // 변경여부 모달 상태 관리
+  const [isApplyModalOpen, setIsApplyModalOpen] = useState(false); // 변경사항 저장 확인 모달 상태 관리
+  const [isHideReview, setIsHideReview] = useState(false); // 숨김 상태 관리
 
   return (
     <>
@@ -97,7 +98,10 @@ export default function ReviewForm({
               <Radio
                 className="text-xs mt-1"
                 checked={reviewRadioState}
-                onChange={onReviewRadioChange}
+                onChange={(value) => {
+                  onReviewRadioChange(value);
+                  setIsHideReview(value === "숨김"); // 라디오 값에 따라 숨김 여부 설정
+                }}
                 items={reviewRadioOptions}
               />
               <p className="text-xs text-gray-500 font-light mt-2 mb-4">
@@ -116,6 +120,7 @@ export default function ReviewForm({
           </div>
         </div>
       )}
+
       {/* 한줄평 상태 변경 여부 모달 */}
       {isModalOpen && (
         <Modal
@@ -124,7 +129,11 @@ export default function ReviewForm({
           className=" flex flex-col justify-center items-center z-[1000]"
         >
           <div>
-            <p className="text-xs">해당 한줄평을 숨김 처리하시겠습니까?</p>
+            <p className="text-xs">
+              {isHideReview
+                ? "해당 한줄평을 숨김 처리하시겠습니까?"
+                : "해당 한줄평을 표시하시겠습니까?"}
+            </p>
             <div className="flex justify-center gap-2">
               <Button
                 size="small"
@@ -149,6 +158,7 @@ export default function ReviewForm({
           </div>
         </Modal>
       )}
+
       {/* 변경 완료 모달 */}
       {isApplyModalOpen && (
         <Modal
@@ -157,9 +167,13 @@ export default function ReviewForm({
           className=" flex flex-col justify-center items-center"
         >
           <div className="flex flex-col items-center">
-            <p className="text-xs">정상적으로 숨김 처리되었습니다.</p>
+            <p className="text-xs">
+              {isHideReview
+                ? "성공적으로 숨김 처리되었습니다."
+                : "성공적으로 표시되었습니다."}
+            </p>
             <p className="text-[10px] text-gray-500">
-              (&quot;관리자에 의해 숨겨진 댓글&quot;로 표기됩니다.)
+              {isHideReview ? '"관리자에 의해 숨겨진 댓글"로 표기됩니다.' : ""}
             </p>
             <Button
               highlight
