@@ -1,12 +1,11 @@
 import { TextInput } from "@/components/controls/Inputs";
 import React from "react";
 import { EnrollFormItemsProps } from "../../types/enrollment";
-import { Button } from "../controls/Button";
+
 import { focusRings } from "@/styles/constants";
 import KakaoAddressSearch from "../controls/KakaoAddressSearch";
 import { KakaoAddressData } from "@/types/kakao";
 export default function EnrollFormItemsUI({
-  type,
   title,
   category,
   bookingStartDate,
@@ -14,12 +13,11 @@ export default function EnrollFormItemsUI({
   detailAddress,
   postCode,
   onChange,
-  handleOnClickType,
   handleSearchAddress,
 }: EnrollFormItemsProps) {
   return (
     <>
-      <div className="flex gap-4">
+      {/* <div className="flex gap-4">
         <Button
           highlight={type === "regular"}
           type="button"
@@ -35,7 +33,7 @@ export default function EnrollFormItemsUI({
           비정기공연
         </Button>
       </div>
-
+ */}
       <TextInput
         label="공연명"
         value={title}
@@ -55,8 +53,8 @@ export default function EnrollFormItemsUI({
       <label className="block" htmlFor="detailLocation">
         위치
       </label>
-      <TextInput
-        className="w-[10em] mr-4 mb-2"
+      <input
+        className={`border-2 rounded-lg px-4 py-2 flex-1 focus-visible:outline-none bg-background ${focusRings.default} mr-4 mb-2 w-[10rem]`}
         placeholder="우편번호"
         value={postCode}
         readOnly

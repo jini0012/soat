@@ -5,14 +5,14 @@ import EnrollPoster from "../../components/enrollment/EnrollPoster";
 import EnrollCalendar from "../../components/enrollment/Calendar/EnrollCalendar";
 import { Button } from "@/components/controls/Button";
 import dynamic from "next/dynamic";
-
+import NavigationWrapper from "@/components/enrollment/NavigationWrapper";
 const Editor = dynamic(() => import("@/components/editor/Editor"), {
   ssr: false,
 });
 
 export default function EnrollmentPage() {
   return (
-    <>
+    <NavigationWrapper>
       <header className="max-w-[1920px] m-auto px-[80px]">
         <Link href={"/"} className="text-flesh-600">
           <h1 className="font-bold text-3xl italic py-5">SO@</h1>
@@ -48,6 +48,6 @@ export default function EnrollmentPage() {
         <Button type="button">임시 저장</Button>
         <Button type="submit">공연 등록</Button>
       </footer>
-    </>
+    </NavigationWrapper>
   );
 }

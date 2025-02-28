@@ -10,7 +10,7 @@ export interface DailyPerformances {
 }
 
 export interface EnrollFormFields {
-  type: string;
+  //  type: string;
   title: string;
   category: string;
   bookingStartDate: string;
