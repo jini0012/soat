@@ -27,7 +27,7 @@ export default function UserInfoUpdate() {
       <ul className="flex justify-center w-full sm:max-w-[525px] text-xs sm:text-base sm:font-bold">
         <li className="flex-1">
           <button
-            className={`w-full py-3 sm:py-5 sm:px-6 rounded-t-lg border-x border-t transition-colors 
+            className={`w-full py-3 sm:py-5 sm:px-6 rounded-t-lg border-x border-t 
             ${
               isUpdateType === "password"
                 ? "bg-white border-gray-300 relative z-20"
@@ -41,7 +41,7 @@ export default function UserInfoUpdate() {
         </li>
         <li className="flex-1">
           <button
-            className={`w-full py-3 sm:py-5 sm:px-6 rounded-t-lg border-x border-t transition-colors
+            className={`w-full py-3 sm:py-5 sm:px-6 rounded-t-lg border-x border-t
             ${
               isUpdateType === "accountDelete"
                 ? "bg-white border-gray-300 relative z-20"
@@ -55,12 +55,13 @@ export default function UserInfoUpdate() {
         </li>
       </ul>
       <form
-        className="w-full bg-white sm:max-w-[525px] flex flex-col border rounded-xl border-gray-300 px-5 py-[30px] gap-[10px] relative sm:gap-5  -mt-[4px]"
+        className="w-full bg-white sm:max-w-[525px] flex flex-col border rounded-xl border-gray-300 px-5 py-[30px] gap-[10px] relative sm:gap-5 -mt-[10px]"
         onSubmit={(e) => {
           e.preventDefault();
           setIsOpenModal(true);
         }}
       >
+        <div className="bg-white w-1 h-4 absolute top-0 left-[49.5%] z-[100]"></div>
         <JoinInput
           label="현재 비밀번호"
           value={password}
