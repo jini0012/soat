@@ -1,25 +1,42 @@
+import React from "react";
+
 interface SearchFilterProps {
   children: React.ReactNode;
   onClick: () => void;
+  selectedCount?: number; // 선택된 필터 항목 수 추가
+  isActive?: boolean; // 활성화 여부 추가
 }
 
 export default function SearchOptionFilter({
   children,
   onClick,
+  selectedCount = 0,
+  isActive = false,
 }: SearchFilterProps) {
+  // 선택된 필터가 있으면 텍스트를 변경
+  const displayText =
+    selectedCount > 0 ? `${children}${selectedCount}` : children;
+
+  // 선택된 필터가 있거나 활성화 상태면 flesh-500 색상으로 변경
+  const isHighlighted = selectedCount > 0 || isActive;
+
   return (
     <button
-      onClick={onClick} // 부모로부터 받은 onClick 이벤트 props 적용
-      className="flex justify-center items-center mt-[10px] mb-[23px] border border-gray-300 rounded-2xl pl-2 w-[68px] h-[30px] text-xs text-gray-500 md:hidden"
+      onClick={onClick}
+      className={`flex justify-center items-center mt-[10px] mb-[23px] border rounded-2xl pl-2 w-[64px] h-[30px] text-xs md:hidden ${
+        isHighlighted
+          ? "border-flesh-400 text-flesh-500 font-semibold"
+          : "border-gray-300 text-gray-500 font-semibold"
+      }`}
     >
-      {children}
+      {displayText}
       <svg
         width="15"
         height="15"
         viewBox="0 0 21 21"
         fill="currentColor"
         xmlns="http://www.w3.org/2000/svg"
-        className="text-gray-500"
+        className={isHighlighted ? "text-flesh-500" : "text-gray-500"}
       >
         <path
           fillRule="evenodd"
