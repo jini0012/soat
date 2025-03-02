@@ -77,7 +77,7 @@ export default function MaintenanceModePage() {
                     onChange={() => handleCheckboxChange(key)}
                   >
                     {key === "home"
-                      ? "홈 (/home)"
+                      ? "홈 (/)"
                       : key === "reservation"
                       ? "예매 (/reservation)"
                       : key === "enrollment"
