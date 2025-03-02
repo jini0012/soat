@@ -5,8 +5,7 @@ import EnrollPoster from "../../components/enrollment/EnrollPoster";
 import EnrollCalendar from "../../components/enrollment/Calendar/EnrollCalendar";
 import dynamic from "next/dynamic";
 import EnrollWrapper from "@/components/enrollment/EnrollWrapper";
-
-import EnrollFooter from "./Enrollfooter";
+import EnrollFooter from "./EnrollFooter";
 const Editor = dynamic(() => import("@/components/editor/Editor"), {
   ssr: false,
 });
