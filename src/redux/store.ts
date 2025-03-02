@@ -1,3 +1,4 @@
+import { storage } from "./customStorage";
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import {
   persistStore,
@@ -11,12 +12,11 @@ import {
   REGISTER,
 } from "redux-persist";
 import enrollReducer, { EnrollState } from "./slices/enrollSlice";
-import storage from "redux-persist/lib/storage";
 
-const enrollPersistConfig: PersistConfig<EnrollState> = {
+export const enrollPersistConfig: PersistConfig<EnrollState> = {
   key: "enroll", // enroll 상태의 키
   storage, // localStorage 사용
-  throttle: 10,
+  throttle: 500,
   blacklist: ["isDirty"],
 };
 
@@ -24,8 +24,6 @@ const persistedEnrollReducer = persistReducer(
   enrollPersistConfig,
   enrollReducer
 );
-
-//persistor.pause persistor.persist
 
 const rootReducer = combineReducers({
   enroll: persistedEnrollReducer,
@@ -42,7 +40,8 @@ export const store = configureStore({
     }),
   devTools: process.env.NODE_ENV !== "production",
 });
-export const persistor = persistStore(store);
+export const persistor = persistStore(store, { manualPersist: true }); //공식문서에는 존재하는 옵션인데 찾을 수 없다고 뜨네요..
+
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 
