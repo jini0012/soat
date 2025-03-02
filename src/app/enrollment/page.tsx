@@ -3,16 +3,17 @@ import Link from "next/link";
 import EnrollFormItems from "../../components/enrollment/EnrollFormItems";
 import EnrollPoster from "../../components/enrollment/EnrollPoster";
 import EnrollCalendar from "../../components/enrollment/Calendar/EnrollCalendar";
-import { Button } from "@/components/controls/Button";
 import dynamic from "next/dynamic";
-import NavigationWrapper from "@/components/enrollment/NavigationWrapper";
+import EnrollWrapper from "@/components/enrollment/EnrollWrapper";
+
+import EnrollFooter from "./Enrollfooter";
 const Editor = dynamic(() => import("@/components/editor/Editor"), {
   ssr: false,
 });
 
 export default function EnrollmentPage() {
   return (
-    <NavigationWrapper>
+    <>
       <header className="max-w-[1920px] m-auto px-[80px]">
         <Link href={"/"} className="text-flesh-600">
           <h1 className="font-bold text-3xl italic py-5">SO@</h1>
@@ -44,10 +45,9 @@ export default function EnrollmentPage() {
           </section>
         </form>
       </main>
-      <footer className="fixed left-0 bottom-0 bg-flesh-200 w-full h-[120px] flex justify-end items-center pr-[60px] gap-14">
-        <Button type="button">임시 저장</Button>
-        <Button type="submit">공연 등록</Button>
-      </footer>
-    </NavigationWrapper>
+      <EnrollWrapper>
+        <EnrollFooter />
+      </EnrollWrapper>
+    </>
   );
 }
