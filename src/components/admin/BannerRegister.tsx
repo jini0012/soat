@@ -1,4 +1,3 @@
-"use client";
 import { useState } from "react";
 import { Radio } from "../controls/Inputs";
 import { Button, CloseButton } from "../controls/Button";
@@ -6,31 +5,49 @@ import Modal from "../Modal";
 
 interface BannerRegisterProps {
   onClose: () => void;
+  onRegister: (banner: {
+    bannerTitle: string;
+    bannerImage: File | null;
+    alternativeText: string;
+    bannerLink: string;
+    bannerStatus: string;
+    registrationDate: string;
+  }) => void;
 }
 
-export default function BannerRegister({ onClose }: BannerRegisterProps) {
+export default function BannerRegister({
+  onClose,
+  onRegister,
+}: BannerRegisterProps) {
   const [radio, setRadio] = useState("비활성화");
-  const [isModalOpen, setIsModalOpen] = useState(false); //등록 여부 모달 상태 관리
-  const [isApplyModalOpen, setIsApplyModalOpen] = useState(false); // 확인 모달 상태 관리
+  const [isModalOpen, setIsModalOpen] = useState(false); // 등록 여부 모달
+  const [isApplyModalOpen, setIsApplyModalOpen] = useState(false); // 등록 완료 모달
 
-  // 입력 상태 관리
   const [formData, setFormData] = useState({
     bannerTitle: "",
     bannerImage: null as File | null,
     alternativeText: "",
     bannerLink: "",
+    bannerStatus: "",
+    registrationDate: "",
   });
 
-  // 입력값 변경 핸들러
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, files } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: files ? files[0] : value, // 파일 입력 처리
+      [name]: files ? files[0] : value,
     }));
   };
 
-  // 등록 버튼 클릭 시 입력 값 유효성 검사
+  const handleRadioChange = (value: string) => {
+    setRadio(value);
+    setFormData((prev) => ({
+      ...prev,
+      bannerStatus: value, // radio 상태 반영
+    }));
+  };
+
   const handleSubmit = () => {
     if (!formData.bannerTitle.trim()) {
       alert("배너 제목을 입력해주세요.");
@@ -49,11 +66,41 @@ export default function BannerRegister({ onClose }: BannerRegisterProps) {
       return;
     }
 
+    // 등록 여부 확인 모달 열기
     setIsModalOpen(true);
+  };
+
+  const formatDate = (date: Date) => {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const day = date.getDate().toString().padStart(2, "0");
+
+    return `${year}.${month}.${day}`;
+  };
+
+  const handleConfirmRegister = () => {
+    const formattedDate = formatDate(new Date());
+
+    // 최종 등록 데이터 콘솔에 출력
+    console.log("최종 등록 데이터:", {
+      ...formData,
+      bannerStatus: radio,
+      registrationDate: formattedDate, // 등록일을 yyyy.mm.dd 형식으로
+    });
+
+    onRegister({
+      ...formData,
+      bannerStatus: radio,
+      registrationDate: formattedDate, // 등록일을 yyyy.mm.dd 형식으로
+    });
+
+    setIsApplyModalOpen(true);
+    setIsModalOpen(false);
   };
 
   return (
     <>
+      {/* 배너 등록 폼 */}
       <div>
         <div className="flex justify-between items-center mb-4">
           <h2 className="font-semibold text-lg flex-1 text-center">
@@ -62,10 +109,7 @@ export default function BannerRegister({ onClose }: BannerRegisterProps) {
           <CloseButton onClick={onClose} />
         </div>
 
-        <form
-          action=""
-          className="border border-gray-400 p-4 rounded-md space-y-2"
-        >
+        <form className="border border-gray-400 p-4 rounded-md space-y-2">
           <div>
             <label htmlFor="bannerTitle" className="block text-xs font-medium">
               배너 제목 :
@@ -137,7 +181,7 @@ export default function BannerRegister({ onClose }: BannerRegisterProps) {
             </label>
             <Radio
               checked={radio}
-              onChange={setRadio}
+              onChange={handleRadioChange}
               items={[
                 { value: "활성화", label: "활성화" },
                 { value: "비활성화", label: "비활성화" },
@@ -166,7 +210,7 @@ export default function BannerRegister({ onClose }: BannerRegisterProps) {
             <div className="flex justify-center gap-2">
               <Button
                 size="small"
-                onClick={() => setIsModalOpen(false)}
+                onClick={() => setIsModalOpen(false)} // "아니오" 버튼 클릭 시 모달 닫기
                 className="mt-2 w-[60px]"
               >
                 아니오
@@ -174,10 +218,7 @@ export default function BannerRegister({ onClose }: BannerRegisterProps) {
               <Button
                 highlight
                 size="small"
-                onClick={() => {
-                  setIsApplyModalOpen(true);
-                  setIsModalOpen(false);
-                }}
+                onClick={handleConfirmRegister} // "예" 버튼 클릭 시 등록
                 className="mt-2 w-[60px]"
               >
                 예
@@ -199,7 +240,7 @@ export default function BannerRegister({ onClose }: BannerRegisterProps) {
             <Button
               highlight
               size="small"
-              onClick={() => setIsApplyModalOpen(false)}
+              onClick={() => setIsApplyModalOpen(false)} // "닫기" 버튼 클릭 시 모달 닫기
               className="mt-2 w-[60px]"
             >
               닫기

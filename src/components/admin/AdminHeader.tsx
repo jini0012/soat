@@ -78,7 +78,7 @@ export default function AdminHeader({ children }: AdminHeaderProps) {
             </Link>
           </div>
           <div className="flex gap-5">
-            <Link href="/home" className=" text-white text-sm">
+            <Link href="/" className=" text-white text-sm">
               쏘앳 바로가기
             </Link>
             <button className="text-sm">로그아웃</button>

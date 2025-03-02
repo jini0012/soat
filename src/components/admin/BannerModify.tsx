@@ -6,24 +6,27 @@ import Modal from "../Modal";
 
 interface BannerModifyProps {
   onClose: () => void;
-  bannerData: any; // 수정할 배너 데이터를 받는 prop 추가
+  bannerData: any; // 수정할 배너 데이터를 받는 prop
+  onUpdate: (updatedBanner: any) => void; // 수정된 데이터를 부모로 전달하는 콜백
 }
 
 export default function BannerModify({
   onClose,
   bannerData,
+  onUpdate,
 }: BannerModifyProps) {
   const [radio, setRadio] = useState(bannerData.bannerStatus);
-  const [isModalOpen, setIsModalOpen] = useState(false); // 수정 여부 모달 상태 관리
-  const [isApplyModalOpen, setIsApplyModalOpen] = useState(false); // 변경사항 저장 확인 모달 상태 관리
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // 배너 삭제 확인 모달 상태 관리
+  const [isModalOpen, setIsModalOpen] = useState(false); // 저장 여부 확인 모달
+  const [isApplyModalOpen, setIsApplyModalOpen] = useState(false); // 저장 완료 모달
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // 배너 삭제 확인 모달
   const [isDeleteSuccessModalOpen, setIsDeleteSuccessModalOpen] =
-    useState(false); // 삭제 성공 모달 상태 관리
+    useState(false); // 삭제 성공 모달
+
   const [formData, setFormData] = useState({
     bannerTitle: bannerData.bannerTitle || "",
     bannerImage: null as File | null,
-    alternativeText: "",
-    bannerLink: "",
+    alternativeText: bannerData.alternativeText || "",
+    bannerLink: bannerData.bannerLink || "",
   });
 
   // 입력값 변경 핸들러
@@ -35,16 +38,18 @@ export default function BannerModify({
     }));
   };
 
-  // 저장 버튼 클릭 시 유효성 검사
+  // 저장 버튼 클릭 시 유효성 검사 후 저장 여부 모달 열기
   const handleSave = () => {
     if (!formData.bannerTitle.trim()) {
       alert("배너 제목을 입력해주세요.");
       return;
     }
-    if (!formData.bannerImage) {
-      alert("배너 이미지를 선택해주세요.");
-      return;
-    }
+    // 배너 이미지는 선택하지 않아도 기존 이미지가 있을 수 있으므로
+    // 필요 시 아래 조건을 조정할 수 있습니다.
+    // if (!formData.bannerImage) {
+    //   alert("배너 이미지를 선택해주세요.");
+    //   return;
+    // }
     if (!formData.alternativeText.trim()) {
       alert("대체 텍스트를 입력해주세요.");
       return;
@@ -54,18 +59,32 @@ export default function BannerModify({
       return;
     }
 
-    setIsModalOpen(true); // 저장 확인 모달 열기
+    setIsModalOpen(true); // 저장 여부 확인 모달 열기
   };
 
-  // 배너 삭제 기능 추가
+  // 저장 확인 모달의 "예" 버튼 클릭 시 수정된 데이터를 부모에 전달
+  const handleConfirmSave = () => {
+    const updatedBanner = {
+      ...bannerData,
+      ...formData,
+      bannerStatus: radio,
+    };
+
+    console.log("수정된 배너 데이터:", updatedBanner);
+    onUpdate(updatedBanner); // 부모 콜백 호출하여 데이터 업데이트
+    setIsApplyModalOpen(true);
+    setIsModalOpen(false);
+  };
+
+  // 배너 삭제 기능
   const handleDelete = () => {
-    setIsDeleteModalOpen(true); // 배너 삭제 확인 모달 열기
+    setIsDeleteModalOpen(true);
   };
 
   const confirmDelete = () => {
-    // 배너 삭제 로직을 추가
-    setIsDeleteSuccessModalOpen(true); // 삭제 성공 모달 열기
-    setIsDeleteModalOpen(false); // 배너 삭제 확인 모달 닫기
+    // 배너 삭제 로직을 추가 (예: 부모 콜백 호출)
+    setIsDeleteSuccessModalOpen(true);
+    setIsDeleteModalOpen(false);
   };
 
   return (
@@ -176,7 +195,7 @@ export default function BannerModify({
         </div>
       </div>
 
-      {/* 수정 여부 모달 */}
+      {/* 저장 여부 확인 모달 */}
       {isModalOpen && (
         <Modal
           isOpen={isModalOpen}
@@ -196,10 +215,7 @@ export default function BannerModify({
               <Button
                 highlight
                 size="small"
-                onClick={() => {
-                  setIsApplyModalOpen(true);
-                  setIsModalOpen(false);
-                }}
+                onClick={handleConfirmSave}
                 className="mt-2 w-[60px]"
               >
                 예
@@ -221,7 +237,10 @@ export default function BannerModify({
             <Button
               highlight
               size="small"
-              onClick={() => setIsApplyModalOpen(false)}
+              onClick={() => {
+                setIsApplyModalOpen(false);
+                onClose();
+              }}
               className="mt-2 w-[60px]"
             >
               닫기
@@ -274,7 +293,7 @@ export default function BannerModify({
               size="small"
               onClick={() => {
                 setIsDeleteSuccessModalOpen(false);
-                onClose(); // 삭제 후 모달 닫고 부모 컴포넌트의 onClose 호출
+                onClose();
               }}
               className="mt-2 w-[60px]"
             >

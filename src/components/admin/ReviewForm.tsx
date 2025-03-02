@@ -58,20 +58,21 @@ export default function ReviewForm({
                   { label: "작성일", value: review.reviewDate },
                   {
                     label: "신고여부",
-                    value: review.reportedStatus ? (
-                      <div className="flex items-center gap-x-2">
-                        <span>신고됨</span>
-                        <Button
-                          className="h-[20px] text-xs flex items-center"
-                          size="small"
-                          onClick={() => alert("상세보기 클릭")}
-                        >
-                          상세보기
-                        </Button>
-                      </div>
-                    ) : (
-                      "정상"
-                    ),
+                    value:
+                      review.reportedStatus == "신고됨" ? (
+                        <div className="flex items-center gap-x-2">
+                          <span>신고됨</span>
+                          <Button
+                            className="h-[20px] text-xs flex items-center"
+                            size="small"
+                            onClick={() => alert("상세보기 클릭")}
+                          >
+                            상세보기
+                          </Button>
+                        </div>
+                      ) : (
+                        "정상"
+                      ),
                   },
                 ].map(({ label, value }, index) => (
                   <div className="flex w-full items-center" key={index}>
