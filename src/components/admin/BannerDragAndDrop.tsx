@@ -1,16 +1,15 @@
-"use client";
-
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import { Banner } from "@/types/admin";
 
 export default function BannerDragAndDrop({ data }: { data: Banner[] }) {
+  // 상태를 계산된 값으로 초기화
   const activeBanners = data.filter(
     (banner) => banner.bannerStatus === "활성화"
   );
 
-  const [items, setItems] = useState<string[]>(
+  const [items, setItems] = useState<string[]>(() =>
     activeBanners.map((banner) => banner.bannerTitle)
-  ); // 배너 제목으로 items 초기화
+  );
 
   const [draggingIndex, setDraggingIndex] = useState<number | null>(null);
 
@@ -21,7 +20,7 @@ export default function BannerDragAndDrop({ data }: { data: Banner[] }) {
   const handleDragOver = (index: number): void => {
     if (index !== draggingIndex) {
       const newItems = [...items];
-      const draggedItem = newItems.splice(draggingIndex!, 1)[0]; // Non-null assertion operator
+      const draggedItem = newItems.splice(draggingIndex!, 1)[0];
       newItems.splice(index, 0, draggedItem);
       setItems(newItems);
       setDraggingIndex(index);
@@ -40,7 +39,7 @@ export default function BannerDragAndDrop({ data }: { data: Banner[] }) {
           draggable
           onDragStart={() => handleDragStart(index)}
           onDragOver={(e) => {
-            e.preventDefault(); // 기본 동작 방지
+            e.preventDefault();
             handleDragOver(index);
           }}
           onDragEnd={handleDragEnd}
