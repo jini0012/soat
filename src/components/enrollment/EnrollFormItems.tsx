@@ -45,6 +45,9 @@ export default function EnrollFormItems() {
 
   const handleOnChangePrice = (newPrice: string) => {
     // 숫자 변환 후 상태 업데이트
+    if (isNaN(Number(newPrice))) {
+      return;
+    }
     dispatch(setPrice(Number(newPrice)));
   };
 
@@ -65,7 +68,7 @@ export default function EnrollFormItems() {
       />
       <TextInput
         label="가격"
-        value={price.toString()}
+        value={String(price)}
         onChange={handleOnChangePrice}
       />
       <TextInput
