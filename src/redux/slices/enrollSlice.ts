@@ -19,7 +19,7 @@ export interface EnrollState {
   isDirty: boolean; //수정 상태를 관리하는 상태
 }
 
-const initialState: EnrollState = {
+export const EnrollInitialState: EnrollState = {
   title: "",
   category: "",
   bookingStartDate: "",
@@ -39,7 +39,7 @@ const initialState: EnrollState = {
 
 const enrollSlice = createSlice({
   name: "enroll",
-  initialState,
+  initialState: EnrollInitialState,
   reducers: {
     setTitle: (state, action: PayloadAction<string>) => {
       state.title = action.payload;
