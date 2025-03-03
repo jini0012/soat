@@ -1,4 +1,4 @@
-import Header from "@/components/Header";
+import Header from "@/components/home/Header";
 import UserInfoUpdate from "@/components/account/UserInfoUpdate";
 
 export default function Page() {
