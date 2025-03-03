@@ -19,5 +19,4 @@ export interface EditorToolbarProps {
   formattingButtons: ToolbarButtonsConfig[];
   imageInput: ToolbarButtonsConfig;
   codeBlockButton: ToolbarButtonsConfig;
-  onClickCodeBlockButton: () => void;
 }

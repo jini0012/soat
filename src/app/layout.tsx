@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import ReduxProvider from "@/redux/Provider";
+import ReduxProvider from "@/redux/ReduxProvider";
 import AuthProvider from "@/auth/Provider";
 
 const pretendard = localFont({

@@ -10,13 +10,13 @@ export interface DailyPerformances {
 }
 
 export interface EnrollFormFields {
-  //  type: string;
   title: string;
   category: string;
   bookingStartDate: string;
   address: string;
   detailAddress: string;
   postCode: string;
+  price: number;
 }
 
 export interface EnrollFormData extends EnrollFormFields {
@@ -30,7 +30,6 @@ export interface EnrollPosterProps {
 
 export interface EnrollFormItemsProps extends EnrollFormFields {
   onChange: (field: keyof EnrollFormFields, value: string) => void;
-  handleOnClickType: (type: string) => void;
   handleSearchAddress: (data: KakaoAddressData) => void;
 }
 export type EnrollModalMode = "add" | "edit";
@@ -49,7 +48,13 @@ export interface PerformanceInfoProps {
   performances: Performance[];
   onEdit: (time: string, casting: string[], index: number) => void;
 }
+
 export type CalendarValuePiece = Date | null;
 export type CalendarValue =
   | CalendarValuePiece
   | [CalendarValuePiece, CalendarValuePiece];
+
+export enum EnrollStep {
+  EnrollPerformance = 0,
+  EnrollSeats = 1,
+}
