@@ -17,7 +17,7 @@ export const enrollPersistConfig: PersistConfig<EnrollState> = {
   key: "enroll", // enroll 상태의 키
   storage, // localStorage 사용
   throttle: 500,
-  blacklist: ["isDirty"],
+  blacklist: ["isDirty", "step"],
 };
 
 const persistedEnrollReducer = persistReducer(
