@@ -42,9 +42,13 @@ export default function EnrollWrapper({ children }: EnrollWrapperProps) {
         return;
       }
 
-      // `isDirty` 값을 제외한 비교를 위해 필터링
-      const { isDirty, _persist, ...filteredStoredState } = storedState;
-      const { isDirty: _, ...filteredInitialState } = EnrollInitialState;
+      // `isDirty, step` 값을 제외한 비교를 위해 필터링
+      const { isDirty, step, _persist, ...filteredStoredState } = storedState;
+      const {
+        isDirty: ignoredIsDirty,
+        step: ignoredStep,
+        ...filteredInitialState
+      } = EnrollInitialState;
 
       if (
         JSON.stringify(filteredStoredState) ===
