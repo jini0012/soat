@@ -48,7 +48,13 @@ export interface PerformanceInfoProps {
   performances: Performance[];
   onEdit: (time: string, casting: string[], index: number) => void;
 }
+
 export type CalendarValuePiece = Date | null;
 export type CalendarValue =
   | CalendarValuePiece
   | [CalendarValuePiece, CalendarValuePiece];
+
+export enum EnrollStep {
+  EnrollPerformance = 0,
+  EnrollSeats = 1,
+}
