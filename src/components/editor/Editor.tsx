@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import {
   useEditor,
   EditorContent,
@@ -25,18 +25,12 @@ import {
 import Toolbar from "./Toolbar";
 import { useDispatch } from "react-redux";
 import { deleteFile, setContent } from "@/redux/slices/enrollSlice";
-import Modal from "../Modal";
-import TextArea from "../controls/TextArea";
-import { Button, CloseButton } from "../controls/Button";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import CustomImage from "./CustomImage";
 import { useDebounce } from "@/hooks/useDebounce";
 
 export default function Editor() {
-  const [isOpenHTMLCodeModal, setIsOpenHTMLCodeModal] =
-    useState<boolean>(false);
-  const [htmlCode, setHtmlCode] = useState<string>("");
   const content = useSelector((state: RootState) => state.enroll.content);
   const files = useSelector((state: RootState) => state.enroll.files);
   const dispatch = useDispatch();
@@ -83,7 +77,7 @@ export default function Editor() {
 
   const codeBlock: ToolbarButtonsConfig = {
     type: "HTMLCode",
-    label: "HTML 삽입",
+    label: "HTML 입력",
     icon: Code2,
   };
 
@@ -91,23 +85,6 @@ export default function Editor() {
     type: "Image",
     label: "이미지 추가",
     icon: ImageIcon,
-  };
-
-  const handleOpenHTMLCodeModal = () => {
-    setIsOpenHTMLCodeModal(true);
-  };
-
-  const handleCloseHTMLCodeModal = () => {
-    setIsOpenHTMLCodeModal(false);
-  };
-
-  const handleInsertHTML = () => {
-    if (htmlCode && editor) {
-      editor.commands.insertContent(htmlCode); // HTML 코드를 에디터에 삽입
-      dispatch(setContent(editor.getJSON())); // 상태 업데이트
-    }
-    setHtmlCode(""); // 입력창 초기화
-    handleCloseHTMLCodeModal(); // 모달 닫기
   };
 
   const getImageSrcList = (editor: TsEditor): string[] => {
@@ -147,20 +124,12 @@ export default function Editor() {
         formattingButtons={formattingButtons}
         codeBlockButton={codeBlock}
         imageInput={inputImage}
-        onClickCodeBlockButton={handleOpenHTMLCodeModal}
       />
       <EditorContent
         onClick={handleOnClickEidtor}
         className=" w-full prose border min-h-[600px]"
         editor={editor}
       />
-      <Modal isOpen={isOpenHTMLCodeModal} onClose={handleCloseHTMLCodeModal}>
-        <>
-          <CloseButton />
-          <TextArea value={htmlCode} onChange={setHtmlCode} />
-          <Button onClick={handleInsertHTML} />
-        </>
-      </Modal>
     </div>
   );
 }
