@@ -1,5 +1,9 @@
 import { ImageFile } from "@/types/file";
-import { DailyPerformances, Performance } from "./../../types/enrollment";
+import {
+  DailyPerformances,
+  EnrollStep,
+  Performance,
+} from "./../../types/enrollment";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { JSONContent } from "@tiptap/react";
 import { format } from "date-fns";
@@ -17,6 +21,7 @@ export interface EnrollState {
   files: ImageFile[];
   price: number;
   isDirty: boolean; //수정 상태를 관리하는 상태
+  step: EnrollStep;
 }
 
 export const EnrollInitialState: EnrollState = {
@@ -35,6 +40,7 @@ export const EnrollInitialState: EnrollState = {
   files: [],
   price: 0,
   isDirty: false,
+  step: 0,
 };
 
 const enrollSlice = createSlice({
@@ -150,6 +156,9 @@ const enrollSlice = createSlice({
     resetDirty: (state) => {
       state.isDirty = false;
     },
+    setStep: (state, action: PayloadAction<EnrollStep>) => {
+      state.step = action.payload;
+    },
   },
 });
 
@@ -169,6 +178,7 @@ export const {
   deleteFile,
   resetDirty,
   setPrice,
+  setStep,
 } = enrollSlice.actions;
 
 export default enrollSlice.reducer;
