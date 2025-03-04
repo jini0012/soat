@@ -11,13 +11,20 @@ import {
   PURGE,
   REGISTER,
 } from "redux-persist";
-import enrollReducer, { EnrollState } from "./slices/enrollSlice";
-
-export const enrollPersistConfig: PersistConfig<EnrollState> = {
+import enrollReducer from "./slices/enrollSlice";
+import seatReducer from "./slices/seatSlice";
+export const enrollPersistConfig = {
   key: "enroll", // enroll 상태의 키
   storage, // localStorage 사용
   throttle: 500,
   blacklist: ["isDirty", "step"],
+};
+
+const seatPersistConfig = {
+  key: "seats",
+  storage,
+  throttle: 500,
+  blacklist: ["isDirty"],
 };
 
 const persistedEnrollReducer = persistReducer(
@@ -25,8 +32,11 @@ const persistedEnrollReducer = persistReducer(
   enrollReducer
 );
 
+const persistedSeatReducer = persistReducer(seatPersistConfig, seatReducer);
+
 const rootReducer = combineReducers({
   enroll: persistedEnrollReducer,
+  seat: persistedSeatReducer,
   //reducer 추가 부분
 });
 
