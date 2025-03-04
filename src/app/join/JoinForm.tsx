@@ -1,8 +1,8 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/controls/Button";
-import { JoinInput } from "@/components/controls/Inputs";
-import { Checkbox } from "@/components/controls/Inputs";
+import { JoinInput, Checkbox } from "@/components/controls/Inputs";
+import { JoinSelect } from "@/components/controls/Select";
 import Link from "next/link";
 import { validations } from "@/utils/validations";
 import axios from "axios";
@@ -36,11 +36,15 @@ export default function JoinForm({
   const [managerName, setManagerName] = useState("");
   const [userPhone, setUserPhone] = useState("");
   const [businessNum, setBusinessNum] = useState("");
+  const [selectAccount, setSelectAccount] = useState("000");
+  const [accountNum, setAccountNum] = useState("");
   const [isBusinessNumValid, setIsBusinessNumValid] = useState<boolean>(false);
   const [businessNumVerifyMsg, setBusinessNumVerifyMsg] = useState("");
   const isEmailInputValid = validations.email.safeParse(email).success;
   const isBusinessNumInputValid =
     validations.businessNum.safeParse(businessNum).success;
+  const isAccountNumInputValid =
+    validations.accountNum.safeParse(accountNum).success;
 
   // 로그인 상태일 경우 로그아웃
   const { status } = useSession();
@@ -314,6 +318,110 @@ export default function JoinForm({
         />
         {userType === "seller" && (
           <>
+            <JoinSelect
+              label="은행정보"
+              value={selectAccount}
+              onChange={setSelectAccount}
+              className="mb-5"
+              options={[
+                { value: "000", label: "은행" },
+                { value: "001", label: "한국은행" },
+                { value: "002", label: "산업은행" },
+                { value: "003", label: "기업은행" },
+                { value: "006", label: "국민은행" },
+                { value: "007", label: "수협중앙회" },
+                { value: "008", label: "수출입은행" },
+                { value: "011", label: "농협은행" },
+                { value: "012", label: "지역농축협" },
+                { value: "020", label: "우리은행" },
+                { value: "023", label: "SC제일은행" },
+                { value: "027", label: "한국씨티은행" },
+                { value: "031", label: "대구은행" },
+                { value: "032", label: "부산은행" },
+                { value: "034", label: "광주은행" },
+                { value: "035", label: "제주은행" },
+                { value: "037", label: "전북은행" },
+                { value: "039", label: "경남은행" },
+                { value: "045", label: "새마을금고" },
+                { value: "048", label: "신협" },
+                { value: "050", label: "상호저축은행" },
+                { value: "052", label: "모간스탠리은행" },
+                { value: "054", label: "HSBC은행" },
+                { value: "055", label: "도이치은행" },
+                { value: "056", label: "알비에스피엘씨은행" },
+                { value: "057", label: "JP모간체이스은행" },
+                { value: "058", label: "미즈호은행" },
+                { value: "059", label: "미쓰비시도쿄UFJ은행" },
+                { value: "060", label: "BOA은행" },
+                { value: "061", label: "비엔피파리바은행" },
+                { value: "062", label: "중국공상은행" },
+                { value: "063", label: "중국은행" },
+                { value: "064", label: "산림조합" },
+                { value: "065", label: "대화은행" },
+                { value: "071", label: "우체국" },
+                { value: "076", label: "신용보증기금" },
+                { value: "077", label: "기술보증기금" },
+                { value: "081", label: "하나은행" },
+                { value: "088", label: "신한은행" },
+                { value: "089", label: "케이뱅크" },
+                { value: "090", label: "카카오뱅크" },
+                { value: "092", label: "토스뱅크" },
+                { value: "093", label: "한국주택금융공사" },
+                { value: "094", label: "서울보증보험" },
+                { value: "095", label: "경찰청" },
+                { value: "096", label: "한국전자금융(주)" },
+                { value: "099", label: "금융결제원" },
+                { value: "102", label: "대신저축은행" },
+                { value: "103", label: "에스비아이저축은행" },
+                { value: "104", label: "에이치케이저축은행" },
+                { value: "105", label: "웰컴저축은행" },
+                { value: "106", label: "신한저축은행" },
+                { value: "209", label: "유안타증권" },
+                { value: "218", label: "현대증권" },
+                { value: "221", label: "골든브릿지투자증권" },
+                { value: "222", label: "한양증권" },
+                { value: "223", label: "리딩투자증권" },
+                { value: "224", label: "BNK투자증권" },
+                { value: "225", label: "IBK투자증권" },
+                { value: "226", label: "KB투자증권" },
+                { value: "227", label: "KTB투자증권" },
+                { value: "230", label: "미래에셋증권" },
+                { value: "238", label: "대우증권" },
+                { value: "240", label: "삼성증권" },
+                { value: "243", label: "한국투자증권" },
+                { value: "261", label: "교보증권" },
+                { value: "262", label: "하이투자증권" },
+                { value: "263", label: "HMC투자증권" },
+                { value: "264", label: "키움증권" },
+                { value: "265", label: "이베스트투자증권" },
+                { value: "266", label: "SK증권" },
+                { value: "267", label: "대신증권" },
+                { value: "269", label: "한화투자증권" },
+                { value: "270", label: "하나대투증권" },
+                { value: "278", label: "신한금융투자" },
+                { value: "279", label: "DB금융투자" },
+                { value: "280", label: "유진투자증권" },
+                { value: "287", label: "메리츠종합금융증권" },
+                { value: "289", label: "NH투자증권" },
+                { value: "290", label: "부국증권" },
+                { value: "291", label: "신영증권" },
+                { value: "292", label: "엘아이지투자증권" },
+                { value: "293", label: "한국증권금융" },
+                { value: "294", label: "펀드온라인코리아" },
+                { value: "295", label: "우리종합금융" },
+                { value: "296", label: "삼성선물" },
+                { value: "297", label: "외환선물" },
+                { value: "298", label: "현대선물" },
+              ]}
+            />
+            <JoinInput
+              label="계좌번호"
+              value={accountNum}
+              onChange={setAccountNum}
+              validation={validations.accountNum}
+              placeholder="숫자 (‘-’ 문자 제외)"
+              max={14}
+            />
             <ul className="flex justify-center mb-2 gap-2">
               <li className="flex-1">
                 <Button
@@ -398,6 +506,8 @@ export default function JoinForm({
                 !teamName ||
                 !managerName ||
                 !userPhone ||
+                selectAccount === "000" ||
+                !isAccountNumInputValid ||
                 (isBusiness && !isBusinessNumValid) ||
                 !checkAgree
           }
