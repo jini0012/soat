@@ -63,3 +63,32 @@ export function Select({
     </label>
   );
 }
+
+export function JoinSelect({
+  label,
+  value,
+  onChange,
+  options,
+  className,
+}: SelectProps) {
+  return (
+    <label
+      className={`text-sm flex border-b sm:mb-[5px] gap-3 whitespace-nowrap w-full focus-within:border-black sm:text-base ${
+        className ? className : ""
+      } `}
+    >
+      {label}
+      <select
+        className={`w-full outline-none`}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+      >
+        {options.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+    </label>
+  );
+}
