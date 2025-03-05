@@ -33,7 +33,7 @@ export default function SeatRow({ seatLabel }: SeatRowProps) {
   }, [seats, aisles, setAisles]);
   const dispatch = useDispatch();
 
-  const isAllAisleFunc = useIsAllAisles();
+  const { isAisleInAllRows } = useIsAllAisles();
 
   const handleOnClickSeatMinusBtn = () => {
     if (isSeats.length <= 1 || seats <= 1) {
@@ -48,7 +48,7 @@ export default function SeatRow({ seatLabel }: SeatRowProps) {
       //통로가 아니라면 , 즉 좌석이라면
       dispatch(updateSeats({ rowLabel: seatLabel, newSeats: seats - 1 }));
     }
-    if (isAllAisleFunc(seatLabel, lastIndex)) {
+    if (isAisleInAllRows(seatLabel, lastIndex)) {
       dispatch(addIsAllAisle(lastIndex));
     }
   };
@@ -69,7 +69,7 @@ export default function SeatRow({ seatLabel }: SeatRowProps) {
       //토글한 값이 false이면  즉 통로가 되면
       // 맨 뒤에 새 좌석 추가
       dispatch(addAisles({ rowLabel: seatLabel, aisleNumber: index }));
-      if (isAllAisleFunc(seatLabel, index)) {
+      if (isAisleInAllRows(seatLabel, index)) {
         dispatch(addIsAllAisle(index));
       }
     } else {
