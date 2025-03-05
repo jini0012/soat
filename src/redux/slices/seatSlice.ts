@@ -125,6 +125,9 @@ const seatSlice = createSlice({
         (aisle) => aisle !== action.payload
       );
     },
+    resetIsAllAisle: (state) => {
+      state.isAllAisle = [];
+    },
   },
 });
 
@@ -138,6 +141,7 @@ export const {
   addAisles,
   addIsAllAisle,
   removeIsAllAisle,
+  resetIsAllAisle,
 } = seatSlice.actions;
 
 export default seatSlice.reducer;
