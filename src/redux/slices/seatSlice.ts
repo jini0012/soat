@@ -74,18 +74,17 @@ const seatSlice = createSlice({
     setRows: (state, action: PayloadAction<number>) => {
       state.rows = action.payload;
     },
-    setTotalSeats: (state, action: PayloadAction<number>) => {
-      state.totalSeats = action.payload;
-    },
     addRowsConfigs: (state, action: PayloadAction<number>) => {
       const key = seatLabels[action.payload];
       state.rowsConfigs[key] = {
         seats: 10,
         aisles: [],
       };
+      state.totalSeats += 10;
     },
     deleteRowsConfigs: (state, action: PayloadAction<number>) => {
       const key = seatLabels[action.payload]; // seatLabels에서 인덱스를 기반으로 키를 가져옴
+      state.totalSeats -= state.rowsConfigs[key].seats;
       delete state.rowsConfigs[key];
     },
     updateSeats: (
@@ -94,7 +93,9 @@ const seatSlice = createSlice({
     ) => {
       const { rowLabel, newSeats } = action.payload;
       if (state.rowsConfigs[rowLabel]) {
+        const currentSeats = state.rowsConfigs[rowLabel].seats;
         state.rowsConfigs[rowLabel].seats = newSeats;
+        state.totalSeats = state.totalSeats - currentSeats + newSeats;
       }
     },
     removeAisles: (
@@ -133,7 +134,6 @@ const seatSlice = createSlice({
 
 export const {
   setRows,
-  setTotalSeats,
   addRowsConfigs,
   deleteRowsConfigs,
   updateSeats,
