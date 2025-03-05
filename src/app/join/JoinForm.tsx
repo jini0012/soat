@@ -7,6 +7,8 @@ import Link from "next/link";
 import { validations } from "@/utils/validations";
 import axios from "axios";
 import { useSession, signOut } from "next-auth/react";
+import { Plus } from "lucide-react";
+
 const businessNumApiKey = process.env.NEXT_PUBLIC_JOIN_BUSINESS_NUM_API_KEY;
 
 interface JoinFormProps {
@@ -422,6 +424,24 @@ export default function JoinForm({
               placeholder="숫자 (‘-’ 문자 제외)"
               max={14}
             />
+            <fieldset className="w-full">
+              <legend className="text-sm sm:text-base">통장사본</legend>
+              <label
+                htmlFor="accountImage"
+                className="border-2 rounded-md w-full p-2 inline-block flex justify-end cursor-pointer"
+              >
+                <Plus
+                  className="stroke-white rounded-full bg-flesh-500 lg:z-100 cursor-pointer hover:bg-flesh-700 transition"
+                  strokeWidth={3}
+                />
+              </label>
+              <input
+                className="sr-only"
+                id="accountImage"
+                type="file"
+                accept=".jpg, .png, .gif"
+              />
+            </fieldset>
             <ul className="flex justify-center mb-2 gap-2">
               <li className="flex-1">
                 <Button
