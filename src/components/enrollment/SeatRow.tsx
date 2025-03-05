@@ -1,68 +1,99 @@
 "use client";
-import React, { useState } from "react";
+import React, { useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Minus, Plus } from "lucide-react";
 import SeatItem from "./SeatItem";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { useDispatch } from "react-redux";
+import {
+  addAisles,
+  addIsAllAisle,
+  removeAisles,
+  removeIsAllAisle,
+  updateSeats,
+} from "@/redux/slices/seatSlice";
+import { useIsAllAisles } from "@/hooks/useIsAllAisles";
 interface SeatRowProps {
   seatLabel: string;
 }
 export default function SeatRow({ seatLabel }: SeatRowProps) {
-  const [seats, setSeats] = useState<number>(10);
-  const [aisleCount, setAisleCount] = useState<number>(0);
-  const [isSeats, setIsSeats] = useState<boolean[]>(
-    Array(seats + aisleCount).fill(true)
+  const rowConfigs = useSelector(
+    (state: RootState) => state.seat.rowsConfigs[seatLabel]
   );
+  const isAllAisle = useSelector((state: RootState) => state.seat.isAllAisle);
+  const seats = rowConfigs.seats;
+  const aisles = rowConfigs.aisles;
   const totalMaxNumber = 20;
+  const setAisles = useMemo(() => new Set(aisles), [aisles]);
+  const isSeats = useMemo(() => {
+    return Array.from({ length: seats + aisles.length }, (_, idx) =>
+      setAisles.has(idx) ? false : true
+    );
+  }, [seats, aisles, setAisles]);
+  const dispatch = useDispatch();
+
+  const { isAisleInAllRows } = useIsAllAisles();
+
   const handleOnClickSeatMinusBtn = () => {
     if (isSeats.length <= 1 || seats <= 1) {
       //seats의 최소 수
       return;
     }
-    if (isSeats.at(-1) === false) {
+    const lastIndex = isSeats.length - 1;
+    if (setAisles.has(lastIndex)) {
       //마지막 seats를 제거할 때 통로였다면
-      setAisleCount((prev) => prev - 1);
+      dispatch(removeAisles({ rowLabel: seatLabel, aisleNumber: lastIndex }));
     } else {
       //통로가 아니라면 , 즉 좌석이라면
-      setSeats((prev) => prev - 1);
+      dispatch(updateSeats({ rowLabel: seatLabel, newSeats: seats - 1 }));
     }
-
-    setIsSeats((prev) => {
-      return prev.slice(0, -1);
-    });
+    if (isAisleInAllRows(seatLabel, lastIndex)) {
+      dispatch(addIsAllAisle(lastIndex));
+    }
   };
 
   const handleOnClickSeatPlsuBtn = () => {
     if (seats >= totalMaxNumber) {
       return;
     }
-    setSeats((prev) => prev + 1);
-    setIsSeats((prev) => [...prev, true]);
+    const newSeatNum = seats + 1;
+    if (isAllAisle.includes(newSeatNum)) {
+      dispatch(removeIsAllAisle(newSeatNum));
+    }
+    dispatch(updateSeats({ rowLabel: seatLabel, newSeats: newSeatNum }));
   };
 
   const handleOnToggleSeatItem = (index: number) => {
-    const newIsSeats = [...isSeats];
-    newIsSeats[index] = !newIsSeats[index]; // 토글
-
-    if (!newIsSeats[index]) {
+    if (!setAisles.has(index)) {
       //토글한 값이 false이면  즉 통로가 되면
       // 맨 뒤에 새 좌석 추가
-      setAisleCount((prev) => prev + 1); // 통로 수 ++
-      newIsSeats.push(true);
+      dispatch(addAisles({ rowLabel: seatLabel, aisleNumber: index }));
+      if (isAisleInAllRows(seatLabel, index)) {
+        dispatch(addIsAllAisle(index));
+      }
     } else {
-      setAisleCount((prev) => prev - 1); // 통로 수 --
-      newIsSeats.pop();
+      if (isAllAisle.includes(index)) {
+        dispatch(removeIsAllAisle(index));
+      }
+      dispatch(removeAisles({ rowLabel: seatLabel, aisleNumber: index }));
     }
-
-    setIsSeats(newIsSeats);
   };
 
   const renderSeats = () => {
+    let seatNum = 0;
     return isSeats.map((seat, index) => {
+      const isAisle = isAllAisle.includes(index);
+
+      if (!isAisle) {
+        seatNum++;
+      }
+
       return (
         <SeatItem
           key={`${seatLabel}-${index}`}
           rowID={seatLabel}
-          seatNumber={seat ? index + 1 : null}
+          seatNumber={seat ? seatNum : null}
           isSeat={seat}
           onToggle={() => handleOnToggleSeatItem(index)}
         />

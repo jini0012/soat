@@ -1,66 +1,52 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import SeatRow from "./SeatRow";
 import ControlRowButton from "./ControlRowButton";
-import { RowConfigs } from "@/types/enrollment";
-
-const seatLabels = [
-  "A",
-  "B",
-  "C",
-  "D",
-  "E",
-  "F",
-  "G",
-  "H",
-  "I",
-  "J",
-  "K",
-  "L",
-  "M",
-  "N",
-  "O",
-  "P",
-  "Q",
-  "R",
-  "S",
-  "T",
-  "U",
-  "V",
-  "W",
-  "X",
-  "Y",
-  "Z",
-]; //고정된 값으로 재랜더링 필요 x
-
-export interface TheaterLayoutData {
-  rows: number;
-  rowConfigs: RowConfigs;
-  totalSeats: number;
-}
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { useDispatch } from "react-redux";
+import {
+  addRowsConfigs,
+  deleteRowsConfigs,
+  setRows,
+  resetIsAllAisle,
+} from "@/redux/slices/seatSlice";
+import { useIsAllAisles } from "@/hooks/useIsAllAisles";
 
 export default function EnrollSeat() {
-  const [rowsNumber, setRowsNumber] = useState<number>(5);
+  const { rowsConfigs, rows, totalSeats } = useSelector(
+    (state: RootState) => state.seat
+  );
+  const dispatch = useDispatch();
 
   const renderRows = () => {
-    return Array.from({ length: rowsNumber }, (_, rowsNumber: number) => {
-      return <SeatRow key={rowsNumber} seatLabel={seatLabels[rowsNumber]} />;
+    return Object.keys(rowsConfigs).map((rowsLabel, index) => {
+      return <SeatRow key={index} seatLabel={rowsLabel} />;
     });
   };
 
+  const { validateRemainingAisles } = useIsAllAisles();
+
   const handleOnClickAddRowsBtn = () => {
-    if (rowsNumber === 26) {
+    if (rows === 26) {
       return;
     }
-    setRowsNumber((prev) => prev + 1);
+    dispatch(resetIsAllAisle());
+    dispatch(setRows(rows + 1));
+    dispatch(addRowsConfigs(rows));
   };
+
   const handleOnClickRemoveRowsBtn = () => {
-    if (rowsNumber <= 1) {
+    if (rows <= 1) {
       return;
     }
-    setRowsNumber((prev) => prev - 1);
+    dispatch(setRows(rows - 1));
+
+    dispatch(deleteRowsConfigs(rows - 1));
+    validateRemainingAisles();
   };
+
   return (
     <>
       <Card className="w-full max-w-4xl mx-auto mb-[140px]">
@@ -71,7 +57,7 @@ export default function EnrollSeat() {
           <div className="space-y-6">
             {/* 행 관리 */}
             <ControlRowButton
-              rowNums={rowsNumber}
+              rowNums={rows}
               onMinus={handleOnClickRemoveRowsBtn}
               onPlus={handleOnClickAddRowsBtn}
             />
@@ -89,7 +75,9 @@ export default function EnrollSeat() {
             <div className="bg-gray-100 p-6 rounded-lg ">
               <div className="space-y-4 overflow-x-scroll">{renderRows()}</div>
             </div>
-            <div className="text-sm text-gray-600">전체 좌석 수: {} 개</div>
+            <div className="text-sm text-gray-600">
+              전체 좌석 수: {totalSeats} 개
+            </div>
           </div>
         </CardContent>
       </Card>
