@@ -10,7 +10,9 @@ import {
   addRowsConfigs,
   deleteRowsConfigs,
   setRows,
+  resetIsAllAisle,
 } from "@/redux/slices/seatSlice";
+import { useIsAllAisles } from "@/hooks/useIsAllAisles";
 
 export default function EnrollSeat() {
   const { rowsConfigs, rows } = useSelector((state: RootState) => state.seat);
@@ -26,6 +28,7 @@ export default function EnrollSeat() {
     if (rows === 26) {
       return;
     }
+    dispatch(resetIsAllAisle());
     dispatch(setRows(rows + 1));
     dispatch(addRowsConfigs(rows));
   };
@@ -35,6 +38,7 @@ export default function EnrollSeat() {
       return;
     }
     dispatch(setRows(rows - 1));
+
     dispatch(deleteRowsConfigs(rows - 1));
   };
 
