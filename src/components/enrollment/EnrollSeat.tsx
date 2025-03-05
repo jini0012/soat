@@ -24,6 +24,8 @@ export default function EnrollSeat() {
     });
   };
 
+  const { validateRemainingAisles } = useIsAllAisles();
+
   const handleOnClickAddRowsBtn = () => {
     if (rows === 26) {
       return;
@@ -40,6 +42,7 @@ export default function EnrollSeat() {
     dispatch(setRows(rows - 1));
 
     dispatch(deleteRowsConfigs(rows - 1));
+    validateRemainingAisles();
   };
 
   return (
