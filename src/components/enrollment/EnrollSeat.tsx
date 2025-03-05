@@ -15,7 +15,9 @@ import {
 import { useIsAllAisles } from "@/hooks/useIsAllAisles";
 
 export default function EnrollSeat() {
-  const { rowsConfigs, rows } = useSelector((state: RootState) => state.seat);
+  const { rowsConfigs, rows, totalSeats } = useSelector(
+    (state: RootState) => state.seat
+  );
   const dispatch = useDispatch();
 
   const renderRows = () => {
@@ -73,7 +75,9 @@ export default function EnrollSeat() {
             <div className="bg-gray-100 p-6 rounded-lg ">
               <div className="space-y-4 overflow-x-scroll">{renderRows()}</div>
             </div>
-            <div className="text-sm text-gray-600">전체 좌석 수: {} 개</div>
+            <div className="text-sm text-gray-600">
+              전체 좌석 수: {totalSeats} 개
+            </div>
           </div>
         </CardContent>
       </Card>
