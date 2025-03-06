@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { getStoredState } from "redux-persist";
 import Modal from "../Modal";
 import { Button } from "../controls/Button";
+import { useShowModal } from "@/hooks/useShowModal";
 
 interface EnrollWrapperProps {
   children: React.ReactNode;
@@ -14,21 +15,17 @@ interface EnrollWrapperProps {
 export default function EnrollWrapper({ children }: EnrollWrapperProps) {
   const isDirty = useSelector((state: RootState) => state.enroll.isDirty);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [showModal, setShowModal] = useState<boolean>(false);
-
-  const handleCloseModal = () => {
-    setShowModal(false);
-  };
+  const { showModal, handleShowModal } = useShowModal();
 
   const handleRehydration = () => {
     persistor.persist();
-    handleCloseModal();
+    handleShowModal(false);
   };
 
   const handleDoNotReHydration = () => {
     persistor.purge();
     persistor.persist(); // 상태 초기화 후 저장소에 반영
-    handleCloseModal();
+    handleShowModal(false);
   };
 
   useEffect(() => {
@@ -58,7 +55,7 @@ export default function EnrollWrapper({ children }: EnrollWrapperProps) {
         return; //동일하면
       }
 
-      setShowModal(true);
+      handleShowModal(true);
     };
     checkPersistedState();
   }, []);
@@ -71,7 +68,7 @@ export default function EnrollWrapper({ children }: EnrollWrapperProps) {
   }
   return (
     <>
-      <Modal onClose={handleCloseModal} isOpen={showModal}>
+      <Modal onClose={() => handleShowModal(false)} isOpen={showModal}>
         <>
           <p>작성중이던 글이 있습니다. 불러오시겠습니까?</p>
           <Button onClick={handleDoNotReHydration}>아니오</Button>
