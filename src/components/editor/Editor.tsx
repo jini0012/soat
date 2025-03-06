@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import {
   useEditor,
   EditorContent,
@@ -21,6 +21,7 @@ import {
   Heading4,
   Code2,
   Image as ImageIcon,
+  ImageUp,
 } from "lucide-react";
 import Toolbar from "./Toolbar";
 import { useDispatch } from "react-redux";
@@ -29,8 +30,14 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import CustomImage from "./CustomImage";
 import { useDebounce } from "@/hooks/useDebounce";
+import Modal from "../Modal";
+import { useShowModal } from "@/hooks/useShowModal";
+import { TextInput } from "../controls/Inputs";
+import { Button } from "../controls/Button";
 
 export default function Editor() {
+  const { showModal, handleShowModal } = useShowModal();
+  const [imageURL, setImageURL] = useState<string>("");
   const content = useSelector((state: RootState) => state.enroll.content);
   const files = useSelector((state: RootState) => state.enroll.files);
   const dispatch = useDispatch();
@@ -82,8 +89,14 @@ export default function Editor() {
   };
 
   const inputImage: ToolbarButtonsConfig = {
-    type: "Image",
-    label: "이미지 추가",
+    type: "ImageUpload",
+    label: "이미지 파일 업로드",
+    icon: ImageUp,
+  };
+
+  const urlImage: ToolbarButtonsConfig = {
+    type: "ImageURL",
+    label: "이미지 URL로 추가",
     icon: ImageIcon,
   };
 
@@ -113,7 +126,17 @@ export default function Editor() {
     if (!editor) {
       return;
     }
-    editor?.chain().focus("end");
+    editor.chain().focus("end");
+  };
+
+  const hanldeUploadURLImage = () => {
+    if (!editor || imageURL === "") {
+      handleShowModal(false);
+      return;
+    }
+
+    editor.chain().focus().setImage({ src: imageURL }).run();
+    handleShowModal(false);
   };
 
   return (
@@ -123,13 +146,29 @@ export default function Editor() {
         headingButtons={headingButtons}
         formattingButtons={formattingButtons}
         codeBlockButton={codeBlock}
-        imageInput={inputImage}
+        imageUpload={inputImage}
+        imageURL={urlImage}
+        handleImageURLUploadModal={handleShowModal}
       />
       <EditorContent
         onClick={handleOnClickEidtor}
         className=" w-full prose border min-h-[600px]"
         editor={editor}
       />
+      <Modal isOpen={showModal} onClose={() => handleShowModal(false)}>
+        <article>
+          <h2>URL을 입력하세요.</h2>
+          <TextInput type="text" value={imageURL} onChange={setImageURL} />
+          <div className="flex mt-4 gap-4 justify-end">
+            <Button type="button" onClick={() => handleShowModal(false)}>
+              취소
+            </Button>
+            <Button type="button" highlight onClick={hanldeUploadURLImage}>
+              추가
+            </Button>
+          </div>
+        </article>
+      </Modal>
     </div>
   );
 }
