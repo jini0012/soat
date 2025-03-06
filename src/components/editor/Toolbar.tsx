@@ -8,10 +8,11 @@ export default function Toolbar({
   editor,
   headingButtons,
   formattingButtons,
-  codeBlockButton,
   imageUpload,
   imageURL,
   handleImageURLUploadModal,
+  HTMLEditModeButton,
+  handleEditMode,
 }: EditorToolbarProps) {
   const dispatch = useDispatch();
   const fileKey = useRef(1);
@@ -178,11 +179,11 @@ export default function Toolbar({
       })}
       <button
         type="button"
-        onClick={() => console.log("클릭")}
-        aria-label={codeBlockButton.label}
+        onClick={handleEditMode}
+        aria-label={HTMLEditModeButton.label}
         className="p-2 m-1 border rounded"
       >
-        {<codeBlockButton.icon />}
+        {<HTMLEditModeButton.icon />}
       </button>
       <label className="p-2 m-1 border rounded">
         {<imageUpload.icon />}
