@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/controls/Button";
 import { JoinInput, Checkbox } from "@/components/controls/Inputs";
 import { JoinSelect } from "@/components/controls/Select";
@@ -48,7 +48,9 @@ export default function JoinForm({
     validations.businessNum.safeParse(businessNum).success;
   const isAccountNumInputValid =
     validations.accountNum.safeParse(accountNum).success;
-
+  const [previewAccountImage, setPreviewAccountImage] = useState<string | null>(
+    null
+  );
   // 로그인 상태일 경우 로그아웃
   const { status } = useSession();
 
@@ -69,6 +71,17 @@ export default function JoinForm({
       if (timer) clearTimeout(timer);
     };
   }, [isSendEmail, isEmailValid]);
+
+  const handleAccountImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setPreviewAccountImage(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const formData =
     userType === "seller"
@@ -336,14 +349,23 @@ export default function JoinForm({
               placeholder="숫자 (‘-’ 문자 제외)"
               max={14}
             />
-            <fieldset className="w-full">
+            <fieldset className="w-full relative">
               <legend className="text-sm sm:text-base">통장사본</legend>
               <label
                 htmlFor="accountImage"
                 className="border-2 rounded-md w-full p-2 inline-block flex justify-end cursor-pointer"
               >
+                {previewAccountImage && (
+                  <img
+                    src={previewAccountImage}
+                    alt="업로드 미리보기"
+                    className="size-full object-cover rounded-md"
+                  />
+                )}
                 <Plus
-                  className="stroke-white rounded-full bg-flesh-500 lg:z-100 cursor-pointer hover:bg-flesh-700 transition"
+                  className={`stroke-white rounded-full bg-flesh-500 z-100 cursor-pointer hover:bg-flesh-700 transition ${
+                    previewAccountImage ? "absolute" : ""
+                  }`}
                   strokeWidth={3}
                 />
               </label>
@@ -352,6 +374,7 @@ export default function JoinForm({
                 id="accountImage"
                 type="file"
                 accept=".jpg, .png, .gif"
+                onChange={handleAccountImageChange}
               />
             </fieldset>
             <ul className="flex justify-center mb-2 gap-2">
@@ -440,6 +463,7 @@ export default function JoinForm({
                 !userPhone ||
                 selectAccount === "000" ||
                 !isAccountNumInputValid ||
+                typeof previewAccountImage !== "string" ||
                 (isBusiness && !isBusinessNumValid) ||
                 !checkAgree
           }
