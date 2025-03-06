@@ -17,11 +17,11 @@ import { KakaoAddressData } from "@/types/kakao";
 import { TextInput } from "../controls/Inputs";
 import KakaoAddressSearch from "../controls/KakaoAddressSearch";
 import { focusRings } from "@/styles/constants";
+import Category from "./Category";
 
 export default function EnrollFormItems() {
   const {
     title,
-    category,
     bookingStartDate,
     bookingEndDate,
     address,
@@ -42,6 +42,7 @@ export default function EnrollFormItems() {
   };
 
   const handleOnChangeCategory = (newCategory: string) => {
+    console.log(newCategory);
     dispatch(setCategory(newCategory));
   };
 
@@ -79,11 +80,8 @@ export default function EnrollFormItems() {
   return (
     <>
       <TextInput label="공연명" value={title} onChange={handleOnChangeTitle} />
-      <TextInput
-        label="카테고리"
-        value={category}
-        onChange={handleOnChangeCategory}
-      />
+      <p>카테고리</p>
+      <Category onClick={handleOnChangeCategory} />
       <TextInput
         label="가격"
         value={String(price)}
