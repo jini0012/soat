@@ -9,7 +9,9 @@ export default function Toolbar({
   headingButtons,
   formattingButtons,
   codeBlockButton,
-  imageInput,
+  imageUpload,
+  imageURL,
+  handleImageURLUploadModal,
 }: EditorToolbarProps) {
   const dispatch = useDispatch();
   const fileKey = useRef(1);
@@ -80,6 +82,9 @@ export default function Toolbar({
     }
   };
 
+  const handleUploadImageURL = () => {
+    handleImageURLUploadModal(true);
+  };
   /*  const onClickCodeBlockButton = () => {
     if (!editor) {
       return;
@@ -133,6 +138,7 @@ export default function Toolbar({
         .run();
     }
   }; */
+
   return (
     <div className="flex flex-wrap">
       {headingButtons.map(({ type, label, icon: Icon, level }, index) => {
@@ -179,7 +185,7 @@ export default function Toolbar({
         {<codeBlockButton.icon />}
       </button>
       <label className="p-2 m-1 border rounded">
-        {<imageInput.icon />}
+        {<imageUpload.icon />}
         <input
           key={fileKey.current}
           type="file"
@@ -187,6 +193,14 @@ export default function Toolbar({
           onChange={handleFileChange}
         />
       </label>
+      <button
+        type="button"
+        onClick={handleUploadImageURL}
+        aria-label={imageURL.label}
+        className="p-2 m-1 border rounded"
+      >
+        {<imageURL.icon />}
+      </button>
     </div>
   );
 }
