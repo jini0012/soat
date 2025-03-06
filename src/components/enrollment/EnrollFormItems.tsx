@@ -5,6 +5,7 @@ import { RootState } from "@/redux/store";
 import { useDispatch } from "react-redux";
 import {
   setAddress,
+  setBookingEndDate,
   setBookingStartDate,
   setCategory,
   setDetailAddress,
@@ -22,6 +23,7 @@ export default function EnrollFormItems() {
     title,
     category,
     bookingStartDate,
+    bookingEndDate,
     address,
     detailAddress,
     postCode,
@@ -55,6 +57,22 @@ export default function EnrollFormItems() {
     dispatch(setBookingStartDate(newDate));
   };
 
+  const handleOnChangeBookingEndDate = (newDate: string) => {
+    if (!validationBookinedEndDate(newDate)) {
+      alert("예매 시작일보다 예매 종료일이 빠를 수 없습니다.");
+      return;
+    }
+    dispatch(setBookingEndDate(newDate));
+  };
+
+  const validationBookinedEndDate = (newDate: string): boolean => {
+    const endDate = new Date(newDate);
+    const startDate = new Date(bookingStartDate);
+    if (startDate > endDate) {
+      return false;
+    }
+    return true;
+  };
   const handleOnChangeDetailAddress = (newDetailAddress: string) => {
     dispatch(setDetailAddress(newDetailAddress));
   };
@@ -76,6 +94,12 @@ export default function EnrollFormItems() {
         type="date"
         value={bookingStartDate}
         onChange={handleOnChangeBookingStartDate}
+      />
+      <TextInput
+        label="예매종료일"
+        type="date"
+        value={bookingEndDate}
+        onChange={handleOnChangeBookingEndDate}
       />
       <label className="block" htmlFor="detailLocation">
         위치

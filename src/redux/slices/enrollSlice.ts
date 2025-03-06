@@ -11,6 +11,7 @@ export interface EnrollState {
   title: string;
   category: string;
   bookingStartDate: string;
+  bookingEndDate: string;
   postCode: string;
   address: string;
   detailAddress: string;
@@ -27,12 +28,12 @@ export const EnrollInitialState: EnrollState = {
   title: "",
   category: "",
   bookingStartDate: "",
+  bookingEndDate: "",
   postCode: "",
   address: "",
   detailAddress: "",
   poster: null,
   performances: {},
-
   content: "",
   files: [],
   price: 0,
@@ -54,6 +55,10 @@ const enrollSlice = createSlice({
     },
     setBookingStartDate: (state, action: PayloadAction<string>) => {
       state.bookingStartDate = action.payload;
+      state.isDirty = true;
+    },
+    setBookingEndDate: (state, action: PayloadAction<string>) => {
+      state.bookingEndDate = action.payload;
       state.isDirty = true;
     },
     setAddress: (state, action: PayloadAction<string>) => {
@@ -163,6 +168,7 @@ export const {
   setTitle,
   setCategory,
   setBookingStartDate,
+  setBookingEndDate,
   setAddress,
   setDetailAddress,
   setPostCode,
