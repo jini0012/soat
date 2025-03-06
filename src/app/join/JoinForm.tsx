@@ -26,6 +26,7 @@ export default function JoinForm({
   const [isBusiness, setIsBusiness] = useState<boolean>(false);
   const [checkAge, setCheckAge] = useState(false);
   const [checkAgree, setCheckAgree] = useState(false);
+  const [checkIntermediary, setCheckIntermediary] = useState(false);
   const [email, setEmail] = useState("");
   const [isEmailValid, setIsEmailValid] = useState<boolean>(false);
   const [isSendEmail, setIsSendEmail] = useState<boolean>(false);
@@ -435,10 +436,17 @@ export default function JoinForm({
             </span>
           </Checkbox>
         )}
+
         <Checkbox checked={checkAgree} onChange={setCheckAgree}>
           <span className="text-[10px] sm:text-base">
             SO@의 <Link href="/">이용 정책</Link> 및
             <Link href="/">개인정보 처리방침</Link>에 동의합니다.
+          </span>
+        </Checkbox>
+        <Checkbox checked={checkIntermediary} onChange={setCheckIntermediary}>
+          <span className="text-[10px] sm:text-base">
+            SO@은 '통신판매중개업자'로서 통신판매의 당사자가 아님을
+            확인하였습니다.
           </span>
         </Checkbox>
         <Button
@@ -453,7 +461,8 @@ export default function JoinForm({
                 !userName ||
                 !userPhone ||
                 !checkAge ||
-                !checkAgree
+                !checkAgree ||
+                !checkIntermediary
               : !isSendEmail ||
                 !isEmailValid ||
                 !password ||
@@ -465,7 +474,8 @@ export default function JoinForm({
                 !isAccountNumInputValid ||
                 typeof previewAccountImage !== "string" ||
                 (isBusiness && !isBusinessNumValid) ||
-                !checkAgree
+                !checkAgree ||
+                !checkIntermediary
           }
           className="absolute bottom-[-54px] right-0 max-w-24 max-h-[30px] text-sm py-[19.5px] px-[7.5px] sm:text-base sm:max-w-40 sm:max-h-12 sm:bottom-[-60px]"
           highlight={true}
