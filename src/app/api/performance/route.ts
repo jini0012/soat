@@ -39,7 +39,8 @@ export async function GET(request: NextRequest) {
   let query = adminDb.collection("performances").orderBy(order);
 
   // 현재 날짜 가져오기 (YYYY-MM-DD 형식)
-  const today = new Date().toISOString().split("T")[0];
+  const kstOffset = 9 * 60 * 60 * 1000;
+  const today = new Date(Date.now() + kstOffset).toISOString().split("T")[0];
 
   // status 파라미터에 따른 필터링
   if (status === "booking") {
@@ -54,7 +55,7 @@ export async function GET(request: NextRequest) {
     query = adminDb
       .collection("performances")
       .where("bookingStartDate", ">", today)
-      .orderBy(order);
+      .orderBy("bookingStartDate");
   } else if (status === "past") {
     // 지난 공연 (예매 종료일이 오늘 이전인 경우)
     query = adminDb
