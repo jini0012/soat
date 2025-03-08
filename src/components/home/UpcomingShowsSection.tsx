@@ -1,4 +1,5 @@
 import { PerformanceData } from "@/app/api/performance/route";
+import Link from "next/link";
 import React from "react";
 
 export default function UpcomingShowsSection({
@@ -17,18 +18,20 @@ export default function UpcomingShowsSection({
       <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
         {shows.map((show) => (
           <li key={show.id} className="flex flex-col">
-            <img
-              src={show.poster.url}
-              alt={show.title}
-              className="w-full h-[200px] md:h-[233px] rounded-xl mb-2 md:mb-3 object-cover"
-            />
-            <p className="font-bold text-lg md:text-xl cursor-pointer">
-              {show.title}
-            </p>
-            <p className="text-sm md:text-base">{show.detailAddress}</p>
-            <p className="text-flesh-500 font-bold text-xs md:text-sm py-2 md:py-4">
-              {show.bookingStartDate}
-            </p>
+            <Link href={`/detail/${show.id}`}>
+              <img
+                src={show.poster.url}
+                alt={show.title}
+                className="w-full h-[200px] md:h-[233px] rounded-xl mb-2 md:mb-3 object-cover"
+              />
+              <p className="font-bold text-lg md:text-xl cursor-pointer">
+                {show.title}
+              </p>
+              <p className="text-sm md:text-base">{show.detailAddress}</p>
+              <p className="text-flesh-500 font-bold text-xs md:text-sm py-2 md:py-4">
+                {show.bookingStartDate}
+              </p>
+            </Link>
           </li>
         ))}
       </ul>
