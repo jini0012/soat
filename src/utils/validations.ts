@@ -36,4 +36,9 @@ export const validations = {
   businessNum: z
     .string()
     .regex(/^[0-9]{10}$/, "올바른 사업자등록번호 형식이 아닙니다"),
+  accountNum: z
+    .string()
+    .min(1, "계좌번호를 입력해주세요")
+    .max(14, "14자 이내로 입력해주세요")
+    .regex(/[0-9]/, "숫자로만 작성되어야 합니다."),
 };

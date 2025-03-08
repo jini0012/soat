@@ -1,12 +1,15 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/controls/Button";
-import { JoinInput } from "@/components/controls/Inputs";
-import { Checkbox } from "@/components/controls/Inputs";
+import { JoinInput, Checkbox } from "@/components/controls/Inputs";
+import { JoinSelect } from "@/components/controls/Select";
 import Link from "next/link";
 import { validations } from "@/utils/validations";
 import axios from "axios";
 import { useSession, signOut } from "next-auth/react";
+import { Plus } from "lucide-react";
+import { bankCodeList } from "@/lib/bankCodeList";
+
 const businessNumApiKey = process.env.NEXT_PUBLIC_JOIN_BUSINESS_NUM_API_KEY;
 
 interface JoinFormProps {
@@ -23,6 +26,7 @@ export default function JoinForm({
   const [isBusiness, setIsBusiness] = useState<boolean>(false);
   const [checkAge, setCheckAge] = useState(false);
   const [checkAgree, setCheckAgree] = useState(false);
+  const [checkIntermediary, setCheckIntermediary] = useState(false);
   const [email, setEmail] = useState("");
   const [isEmailValid, setIsEmailValid] = useState<boolean>(false);
   const [isSendEmail, setIsSendEmail] = useState<boolean>(false);
@@ -36,12 +40,18 @@ export default function JoinForm({
   const [managerName, setManagerName] = useState("");
   const [userPhone, setUserPhone] = useState("");
   const [businessNum, setBusinessNum] = useState("");
+  const [selectAccount, setSelectAccount] = useState("000");
+  const [accountNum, setAccountNum] = useState("");
   const [isBusinessNumValid, setIsBusinessNumValid] = useState<boolean>(false);
   const [businessNumVerifyMsg, setBusinessNumVerifyMsg] = useState("");
   const isEmailInputValid = validations.email.safeParse(email).success;
   const isBusinessNumInputValid =
     validations.businessNum.safeParse(businessNum).success;
-
+  const isAccountNumInputValid =
+    validations.accountNum.safeParse(accountNum).success;
+  const [previewAccountImage, setPreviewAccountImage] = useState<string | null>(
+    null
+  );
   // 로그인 상태일 경우 로그아웃
   const { status } = useSession();
 
@@ -62,6 +72,17 @@ export default function JoinForm({
       if (timer) clearTimeout(timer);
     };
   }, [isSendEmail, isEmailValid]);
+
+  const handleAccountImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setPreviewAccountImage(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const formData =
     userType === "seller"
@@ -314,6 +335,49 @@ export default function JoinForm({
         />
         {userType === "seller" && (
           <>
+            <JoinSelect
+              label="은행정보"
+              value={selectAccount}
+              onChange={setSelectAccount}
+              className="mb-5"
+              options={bankCodeList}
+            />
+            <JoinInput
+              label="계좌번호"
+              value={accountNum}
+              onChange={setAccountNum}
+              validation={validations.accountNum}
+              placeholder="숫자 (‘-’ 문자 제외)"
+              max={14}
+            />
+            <fieldset className="w-full relative">
+              <legend className="text-sm sm:text-base">통장사본</legend>
+              <label
+                htmlFor="accountImage"
+                className="border-2 rounded-md w-full p-2 inline-block flex justify-end cursor-pointer"
+              >
+                {previewAccountImage && (
+                  <img
+                    src={previewAccountImage}
+                    alt="업로드 미리보기"
+                    className="size-full object-cover rounded-md"
+                  />
+                )}
+                <Plus
+                  className={`stroke-white rounded-full bg-flesh-500 z-100 cursor-pointer hover:bg-flesh-700 transition ${
+                    previewAccountImage ? "absolute" : ""
+                  }`}
+                  strokeWidth={3}
+                />
+              </label>
+              <input
+                className="sr-only"
+                id="accountImage"
+                type="file"
+                accept=".jpg, .png, .gif"
+                onChange={handleAccountImageChange}
+              />
+            </fieldset>
             <ul className="flex justify-center mb-2 gap-2">
               <li className="flex-1">
                 <Button
@@ -372,10 +436,17 @@ export default function JoinForm({
             </span>
           </Checkbox>
         )}
+
         <Checkbox checked={checkAgree} onChange={setCheckAgree}>
           <span className="text-[10px] sm:text-base">
             SO@의 <Link href="/">이용 정책</Link> 및
             <Link href="/">개인정보 처리방침</Link>에 동의합니다.
+          </span>
+        </Checkbox>
+        <Checkbox checked={checkIntermediary} onChange={setCheckIntermediary}>
+          <span className="text-[10px] sm:text-base">
+            SO@은 '통신판매중개업자'로서 통신판매의 당사자가 아님을
+            확인하였습니다.
           </span>
         </Checkbox>
         <Button
@@ -390,7 +461,8 @@ export default function JoinForm({
                 !userName ||
                 !userPhone ||
                 !checkAge ||
-                !checkAgree
+                !checkAgree ||
+                !checkIntermediary
               : !isSendEmail ||
                 !isEmailValid ||
                 !password ||
@@ -398,8 +470,12 @@ export default function JoinForm({
                 !teamName ||
                 !managerName ||
                 !userPhone ||
+                selectAccount === "000" ||
+                !isAccountNumInputValid ||
+                typeof previewAccountImage !== "string" ||
                 (isBusiness && !isBusinessNumValid) ||
-                !checkAgree
+                !checkAgree ||
+                !checkIntermediary
           }
           className="absolute bottom-[-54px] right-0 max-w-24 max-h-[30px] text-sm py-[19.5px] px-[7.5px] sm:text-base sm:max-w-40 sm:max-h-12 sm:bottom-[-60px]"
           highlight={true}

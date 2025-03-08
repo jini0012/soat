@@ -1,7 +1,7 @@
 import { ImageFile } from "@/types/file";
 import {
   DailyPerformances,
-  EnrollFormFields,
+  EnrollStep,
   Performance,
 } from "./../../types/enrollment";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
@@ -9,7 +9,6 @@ import { JSONContent } from "@tiptap/react";
 import { format } from "date-fns";
 
 export interface EnrollState {
-  type: string;
   title: string;
   category: string;
   bookingStartDate: string;
@@ -20,11 +19,12 @@ export interface EnrollState {
   performances: DailyPerformances;
   content: JSONContent;
   files: ImageFile[];
+  price: number;
   isDirty: boolean; //수정 상태를 관리하는 상태
+  step: EnrollStep;
 }
 
-const initialState: EnrollState = {
-  type: "irregular",
+export const EnrollInitialState: EnrollState = {
   title: "",
   category: "",
   bookingStartDate: "",
@@ -38,16 +38,15 @@ const initialState: EnrollState = {
     content: [],
   },
   files: [],
+  price: 0,
   isDirty: false,
+  step: 0,
 };
 
 const enrollSlice = createSlice({
   name: "enroll",
-  initialState,
+  initialState: EnrollInitialState,
   reducers: {
-    setType: (state, action: PayloadAction<string>) => {
-      state.type = action.payload;
-    },
     setTitle: (state, action: PayloadAction<string>) => {
       state.title = action.payload;
       state.isDirty = true;
@@ -72,6 +71,10 @@ const enrollSlice = createSlice({
       state.postCode = action.payload;
       state.isDirty = true;
     },
+    setPrice: (state, action: PayloadAction<number>) => {
+      state.price = action.payload;
+      state.isDirty = true;
+    },
     setPoster: (state, action: PayloadAction<ImageFile>) => {
       state.poster = action.payload;
       state.isDirty = true;
@@ -80,14 +83,6 @@ const enrollSlice = createSlice({
       state.content = action.payload;
       state.isDirty = true;
     },
-    updateStringFormField: <T extends keyof EnrollFormFields>(
-      state: EnrollState,
-      action: PayloadAction<{ field: T; value: string }>
-    ) => {
-      state[action.payload.field] = action.payload.value;
-      state.isDirty = true;
-    },
-
     addPerformance: (
       state,
       action: PayloadAction<{
@@ -161,11 +156,13 @@ const enrollSlice = createSlice({
     resetDirty: (state) => {
       state.isDirty = false;
     },
+    setStep: (state, action: PayloadAction<EnrollStep>) => {
+      state.step = action.payload;
+    },
   },
 });
 
 export const {
-  setType,
   setTitle,
   setCategory,
   setBookingStartDate,
@@ -177,9 +174,11 @@ export const {
   addPerformance,
   editPerformance,
   removePerformance,
-  updateStringFormField,
   addFile,
   deleteFile,
   resetDirty,
+  setPrice,
+  setStep,
 } = enrollSlice.actions;
+
 export default enrollSlice.reducer;

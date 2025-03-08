@@ -9,7 +9,6 @@ export default function Toolbar({
   headingButtons,
   formattingButtons,
   codeBlockButton,
-  onClickCodeBlockButton,
   imageInput,
 }: EditorToolbarProps) {
   const dispatch = useDispatch();
@@ -81,6 +80,59 @@ export default function Toolbar({
     }
   };
 
+  /*  const onClickCodeBlockButton = () => {
+    if (!editor) {
+      return;
+    }
+    const { from, to } = editor.state.selection; // 현재 커서 위치 가져오기
+    if (from === to) {
+      const resolvedPos = editor.state.doc.resolve(from);
+
+      const parent = resolvedPos.parent;
+      if (parent) {
+        let textContent = "";
+
+        parent.forEach((node) => {
+          if (node.isText) {
+            textContent += node.text;
+          }
+        });
+
+        if (textContent) {
+          // 부모 노드의 시작과 끝 위치 찾기
+          const parentStart = resolvedPos.start();
+          const parentEnd = resolvedPos.end();
+
+          // 해당 영역을 일반 텍스트로 교체
+          editor
+            .chain()
+            .focus()
+            .deleteRange({ from: parentStart, to: parentEnd })
+            .insertContentAt(parentStart, textContent)
+            .run();
+        }
+      }
+      return;
+    }
+
+    // 범위 선택
+    let joinText = "";
+
+    editor.state.doc.nodesBetween(from, to, (node, pos) => {
+      if (node.type.isText) {
+        joinText += node.text;
+      }
+    });
+
+    if (joinText !== "") {
+      editor
+        .chain()
+        .focus()
+        .deleteRange({ from, to })
+        .insertContentAt(from, joinText)
+        .run();
+    }
+  }; */
   return (
     <div className="flex flex-wrap">
       {headingButtons.map(({ type, label, icon: Icon, level }, index) => {
@@ -120,7 +172,7 @@ export default function Toolbar({
       })}
       <button
         type="button"
-        onClick={onClickCodeBlockButton}
+        onClick={() => console.log("클릭")}
         aria-label={codeBlockButton.label}
         className="p-2 m-1 border rounded"
       >
