@@ -1,51 +1,13 @@
+import { PerformanceData } from "@/app/api/performance/route";
 import React from "react";
 
-const UPCOMING_SHOWS = [
-  {
-    id: 1,
-    image: "images/derme.jpg",
-    title: "카리나는 신이에요!",
-    location: "광야",
-    openDate: "2025.02.15 (금) 14:00 오픈",
-  },
-  {
-    id: 2,
-    image: "images/derme.jpg",
-    title: "카리나는 신이에요!",
-    location: "광야",
-    openDate: "2025.02.15 (금) 14:00 오픈",
-  },
-  {
-    id: 3,
-    image: "images/derme.jpg",
-    title: "카리나는 신이에요!",
-    location: "광야",
-    openDate: "2025.02.15 (금) 14:00 오픈",
-  },
-  {
-    id: 4,
-    image: "images/derme.jpg",
-    title: "카리나는 신이에요!",
-    location: "광야",
-    openDate: "2025.02.15 (금) 14:00 오픈",
-  },
-  {
-    id: 5,
-    image: "images/derme.jpg",
-    title: "카리나는 신이에요!",
-    location: "광야",
-    openDate: "2025.02.15 (금) 14:00 오픈",
-  },
-  {
-    id: 6,
-    image: "images/derme.jpg",
-    title: "카리나는 신이에요!",
-    location: "광야",
-    openDate: "2025.02.15 (금) 14:00 오픈",
-  },
-];
+export default function UpcomingShowsSection({
+  data,
+}: {
+  data: PerformanceData[];
+}) {
+  const shows = data;
 
-export default function UpcomingShowsSection() {
   return (
     <section className="container mx-auto px-4">
       <h2 className="font-bold text-2xl md:text-3xl py-3 md:py-5">
@@ -53,19 +15,19 @@ export default function UpcomingShowsSection() {
       </h2>
 
       <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-        {UPCOMING_SHOWS.map((show) => (
+        {shows.map((show) => (
           <li key={show.id} className="flex flex-col">
             <img
-              src={show.image}
+              src={show.poster.url}
               alt={show.title}
               className="w-full h-[200px] md:h-[233px] rounded-xl mb-2 md:mb-3 object-cover"
             />
             <p className="font-bold text-lg md:text-xl cursor-pointer">
               {show.title}
             </p>
-            <p className="text-sm md:text-base">{show.location}</p>
+            <p className="text-sm md:text-base">{show.detailAddress}</p>
             <p className="text-flesh-500 font-bold text-xs md:text-sm py-2 md:py-4">
-              {show.openDate}
+              {show.bookingStartDate}
             </p>
           </li>
         ))}
