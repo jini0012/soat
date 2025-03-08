@@ -11,7 +11,7 @@ export default function UpcomingShowsSection({
   return (
     <section className="container mx-auto px-4">
       <h2 className="font-bold text-2xl md:text-3xl py-3 md:py-5">
-        현재 예매중인 공연
+        오픈 예정 공연
       </h2>
 
       <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
