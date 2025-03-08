@@ -5,6 +5,7 @@ import { RootState } from "@/redux/store";
 import { useDispatch } from "react-redux";
 import {
   setAddress,
+  setBookingEndDate,
   setBookingStartDate,
   setCategory,
   setDetailAddress,
@@ -16,12 +17,13 @@ import { KakaoAddressData } from "@/types/kakao";
 import { TextInput } from "../controls/Inputs";
 import KakaoAddressSearch from "../controls/KakaoAddressSearch";
 import { focusRings } from "@/styles/constants";
+import Category from "./Category";
 
 export default function EnrollFormItems() {
   const {
     title,
-    category,
     bookingStartDate,
+    bookingEndDate,
     address,
     detailAddress,
     postCode,
@@ -30,7 +32,7 @@ export default function EnrollFormItems() {
   const dispatch = useDispatch();
 
   const handleSearchAddress = (data: KakaoAddressData) => {
-    const address = data.roadAddress + data.buildingName;
+    const address = `${data.roadAddress} ${data.buildingName}`;
     dispatch(setAddress(address));
     dispatch(setPostCode(data.zonecode));
   };
@@ -40,6 +42,7 @@ export default function EnrollFormItems() {
   };
 
   const handleOnChangeCategory = (newCategory: string) => {
+    console.log(newCategory);
     dispatch(setCategory(newCategory));
   };
 
@@ -55,17 +58,30 @@ export default function EnrollFormItems() {
     dispatch(setBookingStartDate(newDate));
   };
 
+  const handleOnChangeBookingEndDate = (newDate: string) => {
+    if (!validationBookinedEndDate(newDate)) {
+      alert("예매 시작일보다 예매 종료일이 빠를 수 없습니다.");
+      return;
+    }
+    dispatch(setBookingEndDate(newDate));
+  };
+
+  const validationBookinedEndDate = (newDate: string): boolean => {
+    const endDate = new Date(newDate);
+    const startDate = new Date(bookingStartDate);
+    if (startDate > endDate) {
+      return false;
+    }
+    return true;
+  };
   const handleOnChangeDetailAddress = (newDetailAddress: string) => {
     dispatch(setDetailAddress(newDetailAddress));
   };
   return (
     <>
       <TextInput label="공연명" value={title} onChange={handleOnChangeTitle} />
-      <TextInput
-        label="카테고리"
-        value={category}
-        onChange={handleOnChangeCategory}
-      />
+      <p>카테고리</p>
+      <Category onClick={handleOnChangeCategory} />
       <TextInput
         label="가격"
         value={String(price)}
@@ -76,6 +92,12 @@ export default function EnrollFormItems() {
         type="date"
         value={bookingStartDate}
         onChange={handleOnChangeBookingStartDate}
+      />
+      <TextInput
+        label="예매종료일"
+        type="date"
+        value={bookingEndDate}
+        onChange={handleOnChangeBookingEndDate}
       />
       <label className="block" htmlFor="detailLocation">
         위치

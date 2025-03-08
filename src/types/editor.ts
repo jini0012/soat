@@ -9,6 +9,8 @@ export interface ToolbarButtonsConfig {
 }
 export type Level = 1 | 2 | 3 | 4 | 5 | 6;
 
+export type EditMode = "WYSIWYG" | "HTML";
+
 export interface EditorCommands {
   toggleBold: () => void;
 }
@@ -17,6 +19,9 @@ export interface EditorToolbarProps {
   editor: Editor | null;
   headingButtons: ToolbarButtonsConfig[];
   formattingButtons: ToolbarButtonsConfig[];
-  imageInput: ToolbarButtonsConfig;
-  codeBlockButton: ToolbarButtonsConfig;
+  imageUpload: ToolbarButtonsConfig;
+  imageURL: ToolbarButtonsConfig;
+  handleImageURLUploadModal: (state: boolean) => void;
+  HTMLEditModeButton: ToolbarButtonsConfig;
+  handleEditMode: () => void;
 }
