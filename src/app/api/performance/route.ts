@@ -6,7 +6,7 @@ import { DailyPerformances } from "@/types/enrollment"; // 타입 import
 
 // API 응답에 사용할 타입 정의
 export interface PerformanceData {
-  id: string;
+  id?: string;
   title: string;
   category: string;
   bookingStartDate: string;
@@ -73,6 +73,7 @@ export async function GET(request: NextRequest) {
       .map((doc) => {
         const data = doc.data() as PerformanceData;
         return {
+          id: doc.id,
           ...data,
           account: undefined,
           seats: undefined,
@@ -94,6 +95,7 @@ export async function GET(request: NextRequest) {
   const performances = performancesSnapshot.docs.map((doc) => {
     const data = doc.data() as PerformanceData;
     return {
+      id: doc.id,
       ...data,
       account: undefined,
       seats: undefined,
