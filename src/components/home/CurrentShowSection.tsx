@@ -9,6 +9,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import { PerformanceData } from "@/app/api/performance/route";
 import { DailyPerformances } from "@/types/enrollment";
+import Link from "next/link";
 
 const CATEGORIES = ["전체", "콘서트", "뮤지컬", "연극", "전시/행사", "팬미팅"];
 
@@ -82,28 +83,30 @@ export default function CurrentShowSection({
   };
 
   const ShowCard = ({ show }: { show: PerformanceData }) => (
-    <div className="flex flex-col h-full">
-      <div className="relative w-full pt-[150%] mb-3">
-        <img
-          src={show.poster.url}
-          alt={show.title}
-          className="absolute top-0 left-0 w-full h-full rounded-xl cursor-pointer object-cover"
-        />
+    <Link href={`/detail/${show.id}`}>
+      <div className="flex flex-col h-full">
+        <div className="relative w-full pt-[150%] mb-3">
+          <img
+            src={show.poster.url}
+            alt={show.title}
+            className="absolute top-0 left-0 w-full h-full rounded-xl cursor-pointer object-cover"
+          />
+        </div>
+        <div className="flex flex-col flex-1">
+          <p className="font-bold text-lg md:text-xl cursor-pointer">
+            {show.title}
+          </p>
+          <p className="text-sm md:text-base">{show.detailAddress}</p>
+          <p className="text-gray-500 text-xs md:text-sm mb-2 md:mb-4">
+            {showDate(show.performances)}
+          </p>
+          <p className="text-sm md:text-base mt-auto">
+            <span className="text-flesh-600 font-bold">예매가</span> :{" "}
+            {show.price.toLocaleString()}
+          </p>
+        </div>
       </div>
-      <div className="flex flex-col flex-1">
-        <p className="font-bold text-lg md:text-xl cursor-pointer">
-          {show.title}
-        </p>
-        <p className="text-sm md:text-base">{show.detailAddress}</p>
-        <p className="text-gray-500 text-xs md:text-sm mb-2 md:mb-4">
-          {showDate(show.performances)}
-        </p>
-        <p className="text-sm md:text-base mt-auto">
-          <span className="text-flesh-600 font-bold">예매가</span> :{" "}
-          {show.price.toLocaleString()}
-        </p>
-      </div>
-    </div>
+    </Link>
   );
 
   return (
