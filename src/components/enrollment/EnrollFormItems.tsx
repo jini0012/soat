@@ -32,7 +32,7 @@ export default function EnrollFormItems() {
   const dispatch = useDispatch();
 
   const handleSearchAddress = (data: KakaoAddressData) => {
-    const address = data.roadAddress + data.buildingName;
+    const address = `${data.roadAddress} ${data.buildingName}`;
     dispatch(setAddress(address));
     dispatch(setPostCode(data.zonecode));
   };
