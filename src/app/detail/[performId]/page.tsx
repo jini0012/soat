@@ -4,6 +4,7 @@ import Footer from "@/components/home/Footer";
 import ShowInfoSection from "@/components/detail/ShowInfoSection";
 import ShowDetailSection from "@/components/detail/ShowDetailSection";
 import { getPerformanceById } from "@/lib/performance";
+import { PerformanceData } from "@/app/api/performance/route";
 
 interface PageParams {
   params: {
@@ -29,21 +30,17 @@ export default async function PerformanceDetailPage({ params }: PageParams) {
     );
   }
 
-  const performanceDataString = JSON.stringify(
-    performanceData,
-    (key, value) => {
-      if (key === "createdAt" || key === "updatedAt") {
-        return value?.toDate?.() ? value.toDate().toISOString() : value;
-      }
-      return value;
-    }
-  );
+  const dateParsedPerformanceData = {
+    ...performanceData,
+    createdAt: performanceData.createdAt.toDate().toISOString(),
+    updatedAt: performanceData.updatedAt.toDate().toISOString(),
+  } as PerformanceData;
 
   return (
     <>
       <Header />
       <main className="px-[20px] md:px-24">
-        <ShowInfoSection performanceDataString={performanceDataString} />
+        <ShowInfoSection performanceData={dateParsedPerformanceData} />
         <ShowDetailSection />
       </main>
       <Footer />

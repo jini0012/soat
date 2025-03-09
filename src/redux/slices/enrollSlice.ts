@@ -5,19 +5,19 @@ import {
   Performance,
 } from "./../../types/enrollment";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { JSONContent } from "@tiptap/react";
 import { format } from "date-fns";
 
 export interface EnrollState {
   title: string;
   category: string;
   bookingStartDate: string;
+  bookingEndDate: string;
   postCode: string;
   address: string;
   detailAddress: string;
   poster: ImageFile | null;
   performances: DailyPerformances;
-  content: JSONContent;
+  content: string;
   files: ImageFile[];
   price: number;
   isDirty: boolean; //수정 상태를 관리하는 상태
@@ -28,15 +28,13 @@ export const EnrollInitialState: EnrollState = {
   title: "",
   category: "",
   bookingStartDate: "",
+  bookingEndDate: "",
   postCode: "",
   address: "",
   detailAddress: "",
   poster: null,
   performances: {},
-  content: {
-    type: "doc",
-    content: [],
-  },
+  content: "",
   files: [],
   price: 0,
   isDirty: false,
@@ -59,6 +57,10 @@ const enrollSlice = createSlice({
       state.bookingStartDate = action.payload;
       state.isDirty = true;
     },
+    setBookingEndDate: (state, action: PayloadAction<string>) => {
+      state.bookingEndDate = action.payload;
+      state.isDirty = true;
+    },
     setAddress: (state, action: PayloadAction<string>) => {
       state.address = action.payload;
       state.isDirty = true;
@@ -79,7 +81,7 @@ const enrollSlice = createSlice({
       state.poster = action.payload;
       state.isDirty = true;
     },
-    setContent: (state, action: PayloadAction<JSONContent>) => {
+    setContent: (state, action: PayloadAction<string>) => {
       state.content = action.payload;
       state.isDirty = true;
     },
@@ -166,6 +168,7 @@ export const {
   setTitle,
   setCategory,
   setBookingStartDate,
+  setBookingEndDate,
   setAddress,
   setDetailAddress,
   setPostCode,

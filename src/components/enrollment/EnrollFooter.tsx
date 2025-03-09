@@ -3,6 +3,7 @@ import { Button } from "@/components/controls/Button";
 import { resetDirty, setStep } from "@/redux/slices/enrollSlice";
 import { RootState } from "@/redux/store";
 import { EnrollStep } from "@/types/enrollment";
+import axios from "axios";
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -20,6 +21,29 @@ export default function EnrollFooter() {
   const handleOnClickPrevButton = () => {
     dispatch(setStep(EnrollStep.EnrollPerformance));
   };
+
+  const enrollResult = useSelector((state: RootState) => state.enroll);
+  const seatResult = useSelector((state: RootState) => state.seat);
+  const result = { ...enrollResult, seats: seatResult };
+
+  const handleSubmit = async () => {
+    console.log(result);
+
+    try {
+      const response = await axios.put("/api/enrollment", result);
+
+      if (response.status === 201) {
+        alert("공연 등록이 완료되었습니다.");
+        dispatch(setStep(EnrollStep.EnrollPerformance));
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.log(error.response?.data);
+        alert(error.response?.data.error);
+      }
+    }
+  };
+
   return (
     <footer className="fixed left-0 bottom-0 bg-flesh-200 w-full h-[120px] flex justify-end items-center pr-[60px] gap-14">
       <Button onClick={onClickTempStore} type="button">
@@ -35,7 +59,9 @@ export default function EnrollFooter() {
           좌석 배치하기
         </Button>
       ) : (
-        <Button type="button">공연 등록</Button>
+        <Button type="button" onClick={handleSubmit}>
+          공연 등록
+        </Button>
       )}
     </footer>
   );

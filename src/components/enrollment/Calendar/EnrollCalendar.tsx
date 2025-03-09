@@ -13,10 +13,11 @@ import { useDispatch } from "react-redux";
 import { addPerformance, editPerformance } from "@/redux/slices/enrollSlice";
 import PerformanceInfo from "../PerformanceInfo";
 import "./enrollCalendar.css";
+import { useShowModal } from "@/hooks/useShowModal";
 
 export default function EnrollCalendar() {
   const [value, setValue] = useState<CalendarValue>(null);
-  const [isOpenEnrollModal, setIsOpenEnrollModal] = useState<boolean>(false);
+  const { showModal, handleShowModal } = useShowModal();
   const [modalMode, setModalMode] = useState<EnrollModalMode>("add");
   const [isRange, setIsRange] = useState<boolean>(false);
   const performances = useSelector(
@@ -40,7 +41,7 @@ export default function EnrollCalendar() {
   const dispatch = useDispatch();
 
   const handleOpenEnrollModal = (state: boolean) => {
-    setIsOpenEnrollModal(state);
+    handleShowModal(state);
     resetModalData();
   };
 
@@ -143,10 +144,7 @@ export default function EnrollCalendar() {
           onEdit={handleEditButton}
         />
       )}
-      <Modal
-        isOpen={isOpenEnrollModal}
-        onClose={() => handleOpenEnrollModal(false)}
-      >
+      <Modal isOpen={showModal} onClose={() => handleOpenEnrollModal(false)}>
         <EnrollModal
           mode={modalMode}
           onClose={() => handleOpenEnrollModal(false)}
