@@ -21,10 +21,11 @@ export default function Footer() {
 
           <dt className="font-bold">주소 : </dt>
           <dd className="m-0">인천 멘토님댁 어딘가</dd>
-
-          <dt className="font-bold">통신판매업 :</dt>
-          <dd className="m-0">미신고</dd>
         </dl>
+        <p className="mt-2 text-sm sm:text-xs sm:absolute">
+          SO@은 '통신판매중개자'이며, 통신판매의 당사자가 아닙니다. 상품,
+          상품정보, 거래에 관한 의무와 책임은 판매자에게 있습니다.
+        </p>
       </address>
 
       <section className="w-full md:w-auto">
