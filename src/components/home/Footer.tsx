@@ -58,8 +58,6 @@ export default function Footer() {
       <section className="w-full md:w-auto">
         <h3 className="sr-only">SNS</h3>
         <ul className="flex gap-[15px] justify-start">
-          {" "}
-          {/* justify-center 제거 */}
           <li>
             <img src="/images/icons/icon-blog.svg" alt="블로그로 이동" />
           </li>
