@@ -9,7 +9,6 @@ import { PerformanceData } from "./api/performance/route";
 
 export default async function main() {
   const API_URL = process.env.NEXTAUTH_URL;
-  // const response = await axios.get(`${API_URL}/api/performance`);
   const currentShows: PerformanceData[] = await (
     await axios.get(`${API_URL}/api/performance?status=booking`)
   ).data;
