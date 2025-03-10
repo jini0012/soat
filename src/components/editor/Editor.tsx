@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useEditor, EditorContent, Editor as TsEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { EditMode, ToolbarButtonsConfig } from "@/types/editor";
@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 import Toolbar from "./Toolbar";
 import { useDispatch } from "react-redux";
-import { deleteFile, setContent } from "@/redux/slices/enrollSlice";
+import { addFile, deleteFile, setContent } from "@/redux/slices/enrollSlice";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import CustomImage from "./CustomImage";
@@ -30,6 +30,8 @@ import { useShowModal } from "@/hooks/useShowModal";
 import { TextInput } from "../controls/Inputs";
 import { Button } from "../controls/Button";
 import HtmlEditor from "./HtmlEditor";
+import { getImageURLIndexedDB } from "@/utils/indexDB";
+import { deleteImage } from "@/services/indexedDBService";
 
 export default function Editor() {
   const [editMode, setEditMode] = useState<EditMode>("WYSIWYG");
@@ -63,6 +65,37 @@ export default function Editor() {
     },
     [isRehydrated, editMode]
   );
+
+  useEffect(() => {
+    const replaceImageURL = async (): Promise<string> => {
+      const imgTags = Array.from(
+        content.matchAll(/<img[^>]*data-key="([^"]*)"[^>]*>/g)
+      );
+      let html = content;
+      for (const imgTag of imgTags) {
+        const imageKey = Number(imgTag[1]);
+        try {
+          const newImageURL = await getImageURLIndexedDB(imageKey);
+          if (newImageURL) {
+            html = html.replace(
+              new RegExp(`<img[^>]*data-key="${imageKey}"[^>]*>`, "g"),
+              `<img data-key="${imageKey}" src="${newImageURL}" />`
+            );
+          }
+        } catch (error) {
+          console.error("이미지 불러오기를 실패했습니다", error);
+        }
+      }
+      return html;
+    };
+
+    if (isRehydrated) {
+      replaceImageURL().then((newContent) => {
+        dispatch(setContent(newContent));
+        editor?.commands.setContent(newContent);
+      });
+    }
+  }, [isRehydrated, editor]);
 
   const debounceUpdate = useDebounce((HtmlString: string) => {
     dispatch(setContent(HtmlString));
@@ -113,15 +146,16 @@ export default function Editor() {
   const onDeleteImage = (editor: TsEditor) => {
     const currentImages = getImageSrcList(editor);
     const deletedImages = files.filter(
-      (file) => !currentImages.includes(String(file.fileKey))
+      (key) => !currentImages.includes(String(key))
     );
 
     if (deletedImages.length === 0) {
       return;
     }
-    deletedImages.forEach((image) =>
-      dispatch(deleteFile(image.fileKey as number))
-    );
+    deletedImages.forEach((key) => {
+      deleteImage(Number(key)); //indexDB제거
+      dispatch(deleteFile(key)); //redux 제거
+    });
   };
 
   const handleOnClickEidtor = () => {
@@ -137,6 +171,7 @@ export default function Editor() {
       return;
     }
 
+    dispatch(addFile(imageURL));
     editor.chain().focus().setImage({ src: imageURL }).run();
     handleShowModal(false);
   };
