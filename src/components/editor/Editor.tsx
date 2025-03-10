@@ -30,7 +30,7 @@ import { useShowModal } from "@/hooks/useShowModal";
 import { TextInput } from "../controls/Inputs";
 import { Button } from "../controls/Button";
 import HtmlEditor from "./HtmlEditor";
-import { getImageURLIndexedDB } from "@/utils/indexDB";
+import { getImageURLIndexedDB } from "@/utils/images";
 import { deleteImage } from "@/services/indexedDBService";
 
 export default function Editor() {

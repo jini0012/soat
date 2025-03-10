@@ -1,6 +1,6 @@
 import { addFile } from "@/redux/slices/enrollSlice";
 import { EditorToolbarProps, Level } from "@/types/editor";
-import { getImageURLIndexedDB, saveImageIndexedDB } from "@/utils/indexDB";
+import { getImageURLIndexedDB, saveImageIndexedDB } from "@/utils/Images";
 import { ChainedCommands } from "@tiptap/react";
 import React from "react";
 import { useDispatch } from "react-redux";
@@ -44,10 +44,10 @@ export default function Toolbar({
     const file = e.target.files;
     if (file) {
       const fileId = await saveImageIndexedDB(file[0]);
-      const imagaUrl = await getImageURLIndexedDB(fileId);
+      const imageUrl = await getImageURLIndexedDB(fileId);
       if (editor) {
         dispatch(addFile(fileId));
-        editor.chain().focus().setImage({ src: imagaUrl, key: fileId }).run();
+        editor.chain().focus().setImage({ src: imageUrl, key: fileId }).run();
       }
     }
   };
