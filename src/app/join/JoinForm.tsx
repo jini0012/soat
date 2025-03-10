@@ -42,6 +42,7 @@ export default function JoinForm({
   const [businessNum, setBusinessNum] = useState("");
   const [selectAccount, setSelectAccount] = useState("000");
   const [accountNum, setAccountNum] = useState("");
+  const [depositor, setDepositor] = useState("");
   const [isBusinessNumValid, setIsBusinessNumValid] = useState<boolean>(false);
   const [businessNumVerifyMsg, setBusinessNumVerifyMsg] = useState("");
   const isEmailInputValid = validations.email.safeParse(email).success;
@@ -94,6 +95,14 @@ export default function JoinForm({
           managerName,
           phoneNumber: userPhone,
           businessNum,
+          bankAccount: {
+            bankCode: selectAccount,
+            bankName: bankCodeList.find((bank) => bank.value === selectAccount)
+              ?.label,
+            depositor,
+            accountNum,
+            accountImage: previewAccountImage,
+          },
         }
       : {
           userType,
@@ -350,6 +359,14 @@ export default function JoinForm({
               placeholder="숫자 (‘-’ 문자 제외)"
               max={14}
             />
+            <JoinInput
+              label="예금주"
+              value={depositor}
+              onChange={setDepositor}
+              placeholder="10자 이내"
+              validation={validations.depositor}
+              max={10}
+            />
             <fieldset className="w-full relative">
               <legend className="text-sm sm:text-base">통장사본</legend>
               <label
@@ -472,6 +489,7 @@ export default function JoinForm({
                 !userPhone ||
                 selectAccount === "000" ||
                 !isAccountNumInputValid ||
+                !depositor ||
                 typeof previewAccountImage !== "string" ||
                 (isBusiness && !isBusinessNumValid) ||
                 !checkAgree ||
