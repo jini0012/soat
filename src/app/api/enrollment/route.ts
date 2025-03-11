@@ -4,6 +4,68 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]/route";
 import { v4 as uuidv4 } from "uuid";
 
+interface uploadedImages {
+  id: string;
+  url: string;
+  title: string;
+  type: string;
+}
+
+interface FilesData {
+  file: File;
+  id: string;
+  originalName: string;
+}
+const handleImageUpload = async (files: FilesData[], userId: string) => {
+  const uploadImages = [];
+
+  for (const fileData of files) {
+    const buffer = Buffer.from(await fileData.file.arrayBuffer());
+    const fileName = `${userId}/${fileData.id}_${fileData.originalName}`;
+    const filePath = `performances/${fileName}`;
+    //storage에 업로드
+    const bucket = adminStorage.bucket();
+    const fileRef = bucket.file(filePath);
+    //메타데이터 설정
+    const metadata = {
+      contentType: fileData.file.type,
+    };
+
+    //파일 업로드
+    await fileRef.save(buffer, {
+      metadata: metadata,
+    });
+
+    //파일을 공개적으로 엑세스 가능하게 설정
+    await fileRef.makePublic();
+
+    const publicUrl = `https://storage.googleapis.com/${bucket.name}/${filePath}`;
+
+    uploadImages.push({
+      id: fileData.id,
+      url: publicUrl,
+      title: fileData.originalName,
+      type: fileData.file.type,
+    });
+  }
+  return uploadImages;
+};
+
+const contentChangeBlobUrlToPublicUrl = (
+  content: string,
+  uploadedImages: uploadedImages[]
+): string => {
+  let newContent = content;
+  uploadedImages.forEach((image) => {
+    const regex = new RegExp(`data-key="${image.id}"[^>]*src="[^"]*"`, "g");
+    newContent = newContent.replace(
+      regex,
+      `data-key="${image.id}" src="${image.url}"`
+    );
+  });
+  return newContent;
+};
+
 export async function PUT(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
@@ -26,8 +88,28 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    const data = await request.json();
+    const formData = await request.formData();
+
+    const jsonData = formData.get("data");
+    if (!jsonData || typeof jsonData !== "string") {
+      return NextResponse.json(
+        { error: "잘못된 요청 형식입니다." },
+        { status: 400 }
+      );
+    }
+
+    const data = JSON.parse(jsonData);
+
     const bucket = adminStorage.bucket();
+
+    const files = formData.getAll("image") as File[];
+
+    const fileData = files.map((file) => {
+      const [fileId, ...fileNameParts] = file.name.split("_"); // 파일명에서 ID 추출
+      const fileName = fileNameParts.join("_"); // 원래 파일명 복원
+
+      return { file, id: fileId, originalName: fileName };
+    });
 
     // 포스터 이미지 처리
     let posterUrl = null;
@@ -61,54 +143,14 @@ export async function PUT(request: NextRequest) {
     }
 
     // 콘텐츠 내 이미지 처리
-    if (data.content && data.content.content) {
-      for (let i = 0; i < data.content.content.length; i++) {
-        const paragraph = data.content.content[i];
-        if (paragraph.content) {
-          for (let j = 0; j < paragraph.content.length; j++) {
-            const item = paragraph.content[j];
-            if (
-              item.type === "customImage" &&
-              item.attrs &&
-              item.attrs.src &&
-              item.attrs.src.startsWith("data:")
-            ) {
-              // MIME 타입 추출
-              const mimeType = item.attrs.src.split(";")[0].split(":")[1];
+    if (data.content && fileData.length > 0) {
+      const uploadImage = await handleImageUpload(fileData, userId);
+      const newContent = contentChangeBlobUrlToPublicUrl(
+        data.content,
+        uploadImage
+      );
 
-              // 파일 확장자 결정
-              let fileExtension = "png"; // 기본값
-              if (mimeType) {
-                if (mimeType === "image/jpeg" || mimeType === "image/jpg")
-                  fileExtension = "jpg";
-                else if (mimeType === "image/png") fileExtension = "png";
-                else if (mimeType === "image/gif") fileExtension = "gif";
-                else if (mimeType === "image/webp") fileExtension = "webp";
-              }
-
-              const contentImageFileName = `performances/${userId}/content/${uuidv4()}.${fileExtension}`;
-              const contentImageFile = bucket.file(contentImageFileName);
-
-              // base64 데이터에서 실제 바이너리 데이터 추출
-              const contentBase64Data = item.attrs.src.split(";base64,").pop();
-              const contentBuffer = Buffer.from(contentBase64Data, "base64");
-
-              await contentImageFile.save(contentBuffer, {
-                metadata: {
-                  contentType: mimeType || "image/png", // 명시적으로 MIME 타입 설정
-                },
-              });
-
-              // 파일 공개 URL 설정
-              await contentImageFile.makePublic();
-              const contentImageUrl = `https://storage.googleapis.com/${bucket.name}/${contentImageFileName}`;
-
-              // base64 데이터를 URL로 대체
-              data.content.content[i].content[j].attrs.src = contentImageUrl;
-            }
-          }
-        }
-      }
+      data.content = newContent;
     }
 
     const performanceRef = await adminDb.collection("performances").add({
