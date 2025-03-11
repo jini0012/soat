@@ -3,8 +3,12 @@ import React, { useState } from "react";
 import ShowDetailArea from "./ShowDetailArea";
 import ReviewArea from "./ReviewArea";
 import CautionArea from "./CautionArea";
-
-export default function ShowDetailSection() {
+interface ShowInfoProps {
+  performanceDataString: string;
+}
+export default function ShowDetailSection({
+  performanceDataString,
+}: ShowInfoProps) {
   const [isTapState, setTapState] = useState("SHOWDETAIL");
   return (
     <section>
@@ -53,7 +57,9 @@ export default function ShowDetailSection() {
         </li>
       </ul>
 
-      {isTapState === "SHOWDETAIL" && <ShowDetailArea />}
+      {isTapState === "SHOWDETAIL" && (
+        <ShowDetailArea performanceDataString={performanceDataString} />
+      )}
       {isTapState === "REVIEW" && <ReviewArea />}
       {isTapState === "CAUTION" && <CautionArea />}
     </section>
