@@ -18,7 +18,7 @@ export interface EnrollState {
   poster: ImageFile | null;
   performances: DailyPerformances;
   content: string;
-  files: (number | string)[];
+  files: string[];
   price: number;
   isDirty: boolean; //수정 상태를 관리하는 상태
   step: EnrollStep;
@@ -145,11 +145,11 @@ const enrollSlice = createSlice({
       }
       state.isDirty = true;
     },
-    addFile: (state, action: PayloadAction<string | number>) => {
+    addFile: (state, action: PayloadAction<string>) => {
       state.files.push(action.payload);
       state.isDirty = true;
     },
-    deleteFile: (state, action: PayloadAction<string | number>) => {
+    deleteFile: (state, action: PayloadAction<string>) => {
       state.files = state.files.filter((key) => key !== action.payload);
       state.isDirty = true;
     },

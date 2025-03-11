@@ -29,7 +29,7 @@ export const saveImage = async (item: ImageItem): Promise<IDBValidKey> => {
   return db.add("images", item);
 };
 
-export const getImage = async (id: number): Promise<ImageItem> => {
+export const getImage = async (id: string): Promise<ImageItem> => {
   const db = await initDB();
   return db.get("images", id);
 };
@@ -39,7 +39,7 @@ export const getAllImages = async (): Promise<ImageItem[]> => {
   return db.getAll("images");
 };
 
-export const deleteImage = async (id: number): Promise<void> => {
+export const deleteImage = async (id: string): Promise<void> => {
   const db = await initDB();
   return db.delete("images", id);
 };
