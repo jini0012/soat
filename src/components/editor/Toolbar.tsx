@@ -50,6 +50,7 @@ export default function Toolbar({
         editor.chain().focus().setImage({ src: imageUrl, key: fileId }).run();
       }
     }
+    e.target.value = "";
   };
 
   const handleUploadImageURL = () => {
