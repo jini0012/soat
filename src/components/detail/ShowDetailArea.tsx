@@ -1,17 +1,17 @@
 import React from "react";
+import { PerformanceData } from "@/app/api/performance/route";
 
-interface ShowInfoProps {
-  performanceDataString: string;
-}
-
-export default function ShowDetailArea({
-  performanceDataString,
-}: ShowInfoProps) {
-  const performanceData = JSON.parse(performanceDataString);
-
+export default function ShowDetailSection({
+  performanceData,
+}: {
+  performanceData: PerformanceData;
+}) {
   const content = performanceData.content || "";
 
   return (
-    <div className="px-[10px] mb-[50px]" dangerouslySetInnerHTML={{ __html: content }} />
+    <div
+      className="px-[10px] mb-[50px]"
+      dangerouslySetInnerHTML={{ __html: content }}
+    />
   );
 }
