@@ -15,9 +15,9 @@ export default function TheaterAdminUsersTable({
     [key in (typeof headers)[number]]: keyof NewTheaterAdmin;
   } = {
     이메일: "email",
-    이름: "name",
-    팀명: "team",
-    신청일: "requestDate",
+    이름: "managerName",
+    팀명: "teamName",
+    신청일: "createdAt",
   };
 
   const [selectedUser, setSelectedUser] = useState<NewTheaterAdmin | null>(
