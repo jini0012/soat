@@ -1,9 +1,10 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Modal from "./../Modal";
 import { Button } from "../controls/Button";
 import NaverMapModal from "./NaverMap";
 import { PerformanceData } from "@/app/api/performance/route";
+import { Share, Link } from "lucide-react";
 
 export default function ShowInfoSection({
   performanceData,
@@ -23,23 +24,47 @@ export default function ShowInfoSection({
   const category = performanceData.category || "";
   const posterUrl = performanceData.poster.url || "";
 
+  const handleShare = async () => {
+    const shareData = {
+      title: title,
+      text: "공연정보",
+      url: window.location.href,
+    };
+
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch (error) {
+        console.log("공유 취소 또는 실패:", error);
+        setModalMessage("공유를 취소했거나 실패했습니다.");
+      }
+    } else {
+      setModalMessage(
+        "이 브라우저에서는 공유 기능을 지원하지 않습니다. URL을 복사해주세요."
+      );
+    }
+  };
+
   const handleCopyUrl = () => {
     if (typeof window !== "undefined") {
       navigator.clipboard
         .writeText(window.location.href)
         .then(() => {
           setModalMessage("공연정보가 클립보드에 복사되었습니다!");
-          setIsModalOpen(true);
         })
         .catch(() => {
           setModalMessage("클립보드 복사에 실패했습니다.");
-          setIsModalOpen(true);
         });
     }
   };
 
   const handleMapButtonClick = () => {
     setIsMapModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setModalMessage("");
   };
 
   return (
@@ -66,7 +91,11 @@ export default function ShowInfoSection({
                   {startDate} ~ {endDate}
                 </p>
               </div>
-              <button onClick={handleCopyUrl}>
+              <button
+                onClick={() => {
+                  setIsModalOpen(true);
+                }}
+              >
                 <img
                   src="/images/icons/share-icon.svg"
                   alt="공유하기"
@@ -123,19 +152,31 @@ export default function ShowInfoSection({
       {/* 공유 모달 */}
       <Modal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        className="max-w-sm text-center py-8 mx-4 md:mx-0"
+        onClose={handleCloseModal}
+        className="max-w-sm text-center  mx-4 md:mx-0 flex flex-col items-center  "
       >
-        <div className="flex flex-col items-center">
-          <p className="text-lg">{modalMessage}</p>
-          <Button
-            highlight
-            className="mt-4 px-6 py-2"
-            onClick={() => setIsModalOpen(false)}
-          >
-            확인
-          </Button>
+        <h3 className="text-2xl font-bold mb-5">공연정보 공유하기</h3>
+        <div className="flex gap-6">
+          <div className="flex flex-col gap-2">
+            <Button
+              onClick={handleShare}
+              className="flex flex-col gap-2 items-center bg-flesh-500 px-3 rounded-full py-3 cursor-pointer "
+            >
+              <Share size={50} color="#FFFFFF" />
+            </Button>
+            <p>다른앱으로 공유</p>
+          </div>
+          <div className="flex flex-col gap-2">
+            <Button
+              className="flex flex-col gap-2 items-center bg-flesh-500 px-3 rounded-full py-3 cursor-pointer"
+              onClick={handleCopyUrl}
+            >
+              <Link size={50} color="#FFFFFF" />
+            </Button>
+            복사하기
+          </div>
         </div>
+        <p className="mt-4">{modalMessage}</p>
       </Modal>
 
       {/* 지도 모달 */}
