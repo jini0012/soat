@@ -44,7 +44,7 @@ export default async function PerformanceDetailPage({ params }: PageParams) {
       <Header />
       <main className="px-[20px] md:px-24">
         <ShowInfoSection performanceDataString={performanceDataString} />
-        <ShowDetailSection />
+        <ShowDetailSection performanceDataString={performanceDataString} />
       </main>
       <Footer />
     </>
