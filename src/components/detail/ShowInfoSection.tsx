@@ -24,7 +24,6 @@ export default function ShowInfoSection({
   const category = performanceData.category || "";
   const posterUrl = performanceData.poster.url || "";
 
-
   const handleShare = async () => {
     const shareData = {
       title: title,
@@ -154,14 +153,14 @@ export default function ShowInfoSection({
       <Modal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
-        className="max-w-sm text-center py-8 mx-4 md:mx-0 flex flex-col items-center gap-4"
+        className="max-w-sm text-center  mx-4 md:mx-0 flex flex-col items-center  "
       >
         <h3 className="text-2xl font-bold mb-5">공연정보 공유하기</h3>
         <div className="flex gap-6">
           <div className="flex flex-col gap-2">
             <Button
               onClick={handleShare}
-              className="flex flex-col gap-2 items-center bg-flesh-500 px-5 rounded-full py-5 cursor-pointer "
+              className="flex flex-col gap-2 items-center bg-flesh-500 px-3 rounded-full py-3 cursor-pointer "
             >
               <Share size={50} color="#FFFFFF" />
             </Button>
@@ -169,7 +168,7 @@ export default function ShowInfoSection({
           </div>
           <div className="flex flex-col gap-2">
             <Button
-              className="flex flex-col gap-2 items-center bg-flesh-500 px-5 rounded-full py-5 cursor-pointer"
+              className="flex flex-col gap-2 items-center bg-flesh-500 px-3 rounded-full py-3 cursor-pointer"
               onClick={handleCopyUrl}
             >
               <Link size={50} color="#FFFFFF" />
