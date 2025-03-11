@@ -9,8 +9,8 @@ export interface SellerUserData extends BaseUserData {
   managerName: string;
   phoneNumber: string;
   businessNum: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
   isApproval: boolean;
   bankAccount: {
     bankCode: string;
