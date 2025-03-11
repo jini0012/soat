@@ -45,7 +45,7 @@ export default function NewTheaterAdminForm({
                 { label: "휴대폰번호", value: user.phoneNumber },
                 {
                   label: "가입날짜",
-                  value: user.createdAt.toLocaleString("ko-KR"),
+                  value: user.createdAt,
                 },
                 {
                   label: "가입유형",
