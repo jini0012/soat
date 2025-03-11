@@ -18,6 +18,7 @@ export interface SellerUserData extends BaseUserData {
     depositor: string;
     accountNum: string;
     encryptedAccountImagePath: string;
+    originalImageType: string;
   };
 }
 
