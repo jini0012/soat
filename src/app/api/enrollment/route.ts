@@ -1,3 +1,4 @@
+import { sanitizeHTML } from "./../../../utils/sanitizer";
 import { NextResponse, NextRequest } from "next/server";
 import { adminDb, adminStorage } from "../firebaseAdmin";
 import { getServerSession } from "next-auth";
@@ -16,10 +17,21 @@ interface FilesData {
   id: string;
   originalName: string;
 }
+
+const allowedMimeTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+
+// MIME 타입 검증 함수
+const validateMimeType = (mimeType: string) => {
+  if (!allowedMimeTypes.includes(mimeType)) {
+    throw new Error(`허용되지 않는 파일 형식입니다: ${mimeType}`);
+  }
+};
+
 const handleImageUpload = async (files: FilesData[], userId: string) => {
   const uploadImages = [];
 
   for (const fileData of files) {
+    validateMimeType(fileData.file.type);
     const buffer = Buffer.from(await fileData.file.arrayBuffer());
     const fileName = `${userId}/${fileData.id}_${fileData.originalName}`;
     const filePath = `performances/${fileName}`;
@@ -123,6 +135,8 @@ export async function PUT(request: NextRequest) {
       const base64Data = data.poster.base64Data.split(";base64,").pop();
       const posterBuffer = Buffer.from(base64Data, "base64");
 
+      validateMimeType(data.poster.fileType);
+
       await posterFile.save(posterBuffer, {
         metadata: {
           contentType: data.poster.fileType,
@@ -142,17 +156,18 @@ export async function PUT(request: NextRequest) {
       };
     }
 
-    // 콘텐츠 내 이미지 처리
     if (data.content && fileData.length > 0) {
       const uploadImage = await handleImageUpload(fileData, userId);
       const newContent = contentChangeBlobUrlToPublicUrl(
         data.content,
         uploadImage
       );
-
-      data.content = newContent;
+      data.content = newContent; //이건 html 검증
     }
 
+    const santizeContent = sanitizeHTML(data.content);
+    data.content = santizeContent;
+    console.log(data.content);
     const performanceRef = await adminDb.collection("performances").add({
       ...data,
       sellerId: userId,
