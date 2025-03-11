@@ -2,6 +2,7 @@ import { useState } from "react";
 import { CloseButton, Button } from "../controls/Button";
 import { NewTheaterAdmin } from "@/types/admin";
 import Modal from "../Modal";
+import axios from "axios";
 
 export default function NewTheaterAdminForm({
   user,
@@ -15,6 +16,12 @@ export default function NewTheaterAdminForm({
     null
   ); // 승인/거절 상태 관리
 
+  const [decryptedAccountImage, setDecryptedAccountImage] =
+    useState<string>("");
+  const [decryptedErrorMsg, setDecryptedErrorMsg] = useState<string | null>(
+    null
+  );
+
   const handleApproval = () => {
     setIsApproved("approved");
     setIsApplyModalOpen(true);
@@ -23,6 +30,23 @@ export default function NewTheaterAdminForm({
   const handleRejection = () => {
     setIsApproved("rejected");
     setIsApplyModalOpen(true);
+  };
+
+  const handleAccountImageDecryption = async () => {
+    // 계좌 이미지 복호화
+    try {
+      const response = await axios.post("/api/admin/theater/approval/decrypt", {
+        accountImageUrl: user.bankAccount.encryptedAccountImagePath,
+        originalImageType: user.bankAccount.originalImageType,
+      });
+
+      setDecryptedAccountImage(response.data.base64Image);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error(error.response?.data.error);
+        setDecryptedErrorMsg(error.response?.data.error);
+      }
+    }
   };
 
   return (
@@ -63,6 +87,34 @@ export default function NewTheaterAdminForm({
                 </div>
               ))}
             </dl>
+
+            {/* 계좌 이미지 */}
+            <div className="flex items-center gap-1 mt-2">
+              <span className="w-[80px]">계좌 이미지</span>
+              {!decryptedAccountImage && (
+                <Button
+                  size="small"
+                  onClick={handleAccountImageDecryption}
+                  className="w-[60px]"
+                >
+                  보기
+                </Button>
+              )}
+            </div>
+            {decryptedAccountImage && (
+              <img
+                src={decryptedAccountImage}
+                alt="계좌 이미지"
+                className="w-full h-full object-contain mt-2"
+              />
+            )}
+
+            {/* 계좌 이미지 복호화 실패 시 */}
+            {!decryptedAccountImage && (
+              <p className="text-red-500 text-xs mt-1">{decryptedErrorMsg}</p>
+            )}
+
+            {/* 승인/거절 버튼 */}
             <div className="flex justify-end gap-1 mt-2">
               {/* 거절 버튼: 승인/거절 전 */}
               {isApproved === null && (
