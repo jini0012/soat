@@ -1,9 +1,10 @@
 import { getImage, saveImage } from "@/services/indexedDBService";
 import { ImageItem } from "@/types/file";
+import { v4 as uuidv4 } from "uuid";
 
-export const saveImageIndexedDB = async (file: File): Promise<number> => {
+export const saveImageIndexedDB = async (file: File): Promise<string> => {
   const newImageItem: ImageItem = {
-    id: Date.now(),
+    id: uuidv4(),
     title: file.name,
     imageData: null,
     imageType: file.type,
@@ -33,7 +34,7 @@ export const saveImageIndexedDB = async (file: File): Promise<number> => {
   });
 };
 
-export const getImageURLIndexedDB = async (id: number) => {
+export const getImageURLIndexedDB = async (id: string) => {
   try {
     const image = await getImage(id);
     if (image && image.imageData) {

@@ -30,7 +30,7 @@ import { useShowModal } from "@/hooks/useShowModal";
 import { TextInput } from "../controls/Inputs";
 import { Button } from "../controls/Button";
 import HtmlEditor from "./HtmlEditor";
-import { getImageURLIndexedDB } from "@/utils/images";
+import { getImageURLIndexedDB } from "@/utils/Images";
 import { deleteImage } from "@/services/indexedDBService";
 
 export default function Editor() {
@@ -73,7 +73,7 @@ export default function Editor() {
       );
       let html = content;
       for (const imgTag of imgTags) {
-        const imageKey = Number(imgTag[1]);
+        const imageKey = imgTag[1];
         try {
           const newImageURL = await getImageURLIndexedDB(imageKey);
           if (newImageURL) {
@@ -153,7 +153,7 @@ export default function Editor() {
       return;
     }
     deletedImages.forEach((key) => {
-      deleteImage(Number(key)); //indexDB제거
+      deleteImage(key); //indexDB제거
       dispatch(deleteFile(key)); //redux 제거
     });
   };

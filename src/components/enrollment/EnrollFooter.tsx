@@ -2,6 +2,7 @@
 import { Button } from "@/components/controls/Button";
 import { resetDirty, setStep } from "@/redux/slices/enrollSlice";
 import { RootState } from "@/redux/store";
+import { getImage } from "@/services/indexedDBService";
 import { EnrollStep } from "@/types/enrollment";
 import axios from "axios";
 import React from "react";
@@ -24,13 +25,40 @@ export default function EnrollFooter() {
 
   const enrollResult = useSelector((state: RootState) => state.enroll);
   const seatResult = useSelector((state: RootState) => state.seat);
-  const result = { ...enrollResult, seats: seatResult };
+
+  const imageFiles = enrollResult.files;
+
+  const getImageFileIndexedDB = async () => {
+    const files = await Promise.all(imageFiles.map((key) => getImage(key)));
+    return files;
+  };
 
   const handleSubmit = async () => {
-    console.log(result);
-
     try {
-      const response = await axios.put("/api/enrollment", result);
+      const imagefiles = await getImageFileIndexedDB();
+
+      const formData = new FormData();
+
+      imagefiles.forEach((file) => {
+        if (file && file.imageData) {
+          const newfile = new File(
+            [file.imageData],
+            `${file.id}_${file.title}`,
+            {
+              type: file.imageType,
+            }
+          );
+          formData.append(`image`, newfile);
+        }
+      });
+      const { files, ...rest } = { ...enrollResult, seats: seatResult };
+      const result = { ...rest };
+      formData.append("data", JSON.stringify(result));
+      const response = await axios.put("/api/enrollment", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       if (response.status === 201) {
         alert("공연 등록이 완료되었습니다.");

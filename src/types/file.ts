@@ -7,7 +7,7 @@ export interface ImageFile {
 }
 
 export interface ImageItem {
-  id: number;
+  id: string;
   title: string;
   imageData: Blob | File | ArrayBuffer | null;
   imageType: string;
