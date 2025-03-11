@@ -27,6 +27,12 @@ export async function getTheaterWaitingList() {
         decryptedTheater.bankAccount.accountNum = await crypto.decrypt(
           decryptedTheater.bankAccount.accountNum
         );
+        decryptedTheater.createdAt = new Date(
+          decryptedTheater.createdAt
+        ).toLocaleString("ko-KR");
+        decryptedTheater.updatedAt = new Date(
+          decryptedTheater.updatedAt
+        ).toLocaleString("ko-KR");
         return decryptedTheater;
       })
     );
