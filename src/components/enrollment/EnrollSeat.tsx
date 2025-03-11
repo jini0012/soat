@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import SeatRow from "./SeatRow";
-import ControlRowButton from "./ControlRowButton";
+import SeatRow from "../seats/SeatRow";
+import ControlRowButton from "../seats/ControlRowButton";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { useDispatch } from "react-redux";

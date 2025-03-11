@@ -4,6 +4,7 @@ import { TextInput, Checkbox } from "@/components/controls/Inputs";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { signIn, signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 enum UserType {
   TICKETUSER = "TICKETUSER",
@@ -19,6 +20,8 @@ interface LineStyles {
 }
 
 export default function LoginContent() {
+  const router = useRouter();
+
   const [userType, setUserType] = useState<UserType>(UserType.TICKETUSER);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -58,10 +61,10 @@ export default function LoginContent() {
 
   const { status } = useSession();
 
-  // 로그인 상태일 경우 로그아웃
+  // 로그인 상태일 경우 메인 페이지로 이동
   useEffect(() => {
     if (status === "authenticated") {
-      signOut();
+      router.push("/");
     }
   }, [status]);
 
@@ -83,10 +86,17 @@ export default function LoginContent() {
       redirect: false,
     });
 
-    if (result?.error) {
-      setError(result.error);
+    console.log("result", result);
+
+    if (result?.ok) {
+      console.log("로그인 성공");
+      router.push("/");
     } else {
-      window.location.href = "/";
+      if (result?.error) {
+        setError(result.error);
+      } else {
+        setError("로그인에 실패했습니다.");
+      }
     }
   }
 

@@ -1,5 +1,6 @@
 // lib/performance.ts
 import { adminDb } from "@/app/api/firebaseAdmin";
+import { PerformanceData } from "@/app/api/performance/route";
 
 export async function getPerformanceById(performId: string) {
   try {
@@ -12,16 +13,9 @@ export async function getPerformanceById(performId: string) {
       return null;
     }
 
-    const performData = performDoc.data();
+    const performData = performDoc.data() as PerformanceData;
 
-    // 공연 정보에서 민감 정보 제외
-    // 주의! 데이터에 민감 정보가 추가될 경우 여기에도 추가해야 함
-    const filteredPerformData = {
-      ...performData,
-      account: undefined,
-    };
-
-    return filteredPerformData;
+    return performData;
   } catch (error) {
     console.error(`Error fetching performance with ID ${performId}:`, error);
     return null;

@@ -27,7 +27,7 @@ body {
 }
 
 @layer base {
-  a {
+  a:not(:has(*)) {
     @apply text-blue-500;
   }
   :root {

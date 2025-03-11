@@ -5,3 +5,12 @@ export interface ImageFile {
   fileType: string;
   base64Data: string;
 }
+
+export interface ImageItem {
+  id: string;
+  title: string;
+  imageData: Blob | File | ArrayBuffer | null;
+  imageType: string;
+  tumbnail?: Blob;
+  uploadedAt: number;
+}

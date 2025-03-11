@@ -1,13 +1,8 @@
 "use client";
-import React from "react";
-import {
-  useEditor,
-  EditorContent,
-  Editor as TsEditor,
-  JSONContent,
-} from "@tiptap/react";
+import React, { useEffect, useState } from "react";
+import { useEditor, EditorContent, Editor as TsEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { ToolbarButtonsConfig } from "@/types/editor";
+import { EditMode, ToolbarButtonsConfig } from "@/types/editor";
 import {
   Bold,
   Italic,
@@ -21,42 +16,89 @@ import {
   Heading4,
   Code2,
   Image as ImageIcon,
+  ImageUp,
 } from "lucide-react";
 import Toolbar from "./Toolbar";
 import { useDispatch } from "react-redux";
-import { deleteFile, setContent } from "@/redux/slices/enrollSlice";
+import { addFile, deleteFile, setContent } from "@/redux/slices/enrollSlice";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import CustomImage from "./CustomImage";
 import { useDebounce } from "@/hooks/useDebounce";
+import Modal from "../Modal";
+import { useShowModal } from "@/hooks/useShowModal";
+import { TextInput } from "../controls/Inputs";
+import { Button } from "../controls/Button";
+import HtmlEditor from "./HtmlEditor";
+import { getImageURLIndexedDB } from "@/utils/Images";
+import { deleteImage } from "@/services/indexedDBService";
 
 export default function Editor() {
+  const [editMode, setEditMode] = useState<EditMode>("WYSIWYG");
+  const [imageURL, setImageURL] = useState<string>("");
+  const isPersisted = useSelector((state: RootState) => state.enroll._persist);
   const content = useSelector((state: RootState) => state.enroll.content);
   const files = useSelector((state: RootState) => state.enroll.files);
+  const { showModal, handleShowModal } = useShowModal();
+  const isRehydrated = isPersisted?.rehydrated;
   const dispatch = useDispatch();
 
-  const editor = useEditor({
-    extensions: [
-      StarterKit,
-      CustomImage.configure({
-        inline: true,
-        allowBase64: true,
-      }),
-    ],
-    content: content || "",
-    editorProps: {
-      attributes: { class: "focus:outline-none" },
+  const editor = useEditor(
+    {
+      extensions: [
+        StarterKit,
+        CustomImage.configure({
+          inline: true,
+          allowBase64: true,
+        }),
+      ],
+      content: content || "",
+      editorProps: {
+        attributes: { class: "focus:outline-none" },
+      },
+      immediatelyRender: false,
+      onUpdate: ({ editor }) => {
+        onDeleteImage(editor);
+        const htmlString = editor.getHTML();
+        debounceUpdate(htmlString);
+      },
     },
-    immediatelyRender: false,
-    onUpdate: ({ editor }) => {
-      onDeleteImage(editor);
-      const json = editor.getJSON();
-      debounceUpdate(json);
-    },
-  });
+    [isRehydrated, editMode]
+  );
 
-  const debounceUpdate = useDebounce((json: JSONContent) => {
-    dispatch(setContent(json));
+  useEffect(() => {
+    const replaceImageURL = async (): Promise<string> => {
+      const imgTags = Array.from(
+        content.matchAll(/<img[^>]*data-key="([^"]*)"[^>]*>/g)
+      );
+      let html = content;
+      for (const imgTag of imgTags) {
+        const imageKey = imgTag[1];
+        try {
+          const newImageURL = await getImageURLIndexedDB(imageKey);
+          if (newImageURL) {
+            html = html.replace(
+              new RegExp(`<img[^>]*data-key="${imageKey}"[^>]*>`, "g"),
+              `<img data-key="${imageKey}" src="${newImageURL}" />`
+            );
+          }
+        } catch (error) {
+          console.error("이미지 불러오기를 실패했습니다", error);
+        }
+      }
+      return html;
+    };
+
+    if (isRehydrated) {
+      replaceImageURL().then((newContent) => {
+        dispatch(setContent(newContent));
+        editor?.commands.setContent(newContent);
+      });
+    }
+  }, [isRehydrated, editor]);
+
+  const debounceUpdate = useDebounce((HtmlString: string) => {
+    dispatch(setContent(HtmlString));
   }, 300);
 
   const headingButtons: ToolbarButtonsConfig[] = [
@@ -75,15 +117,21 @@ export default function Editor() {
     { type: "Blockquote", label: "인용", icon: Quote },
   ];
 
-  const codeBlock: ToolbarButtonsConfig = {
-    type: "HTMLCode",
-    label: "HTML 입력",
+  const HTMLEditModeButton: ToolbarButtonsConfig = {
+    type: "ToggleHTMLMode",
+    label: "HTML 모드 변경",
     icon: Code2,
   };
 
   const inputImage: ToolbarButtonsConfig = {
-    type: "Image",
-    label: "이미지 추가",
+    type: "ImageUpload",
+    label: "이미지 파일 업로드",
+    icon: ImageUp,
+  };
+
+  const urlImage: ToolbarButtonsConfig = {
+    type: "ImageURL",
+    label: "이미지 URL로 추가",
     icon: ImageIcon,
   };
 
@@ -98,22 +146,44 @@ export default function Editor() {
   const onDeleteImage = (editor: TsEditor) => {
     const currentImages = getImageSrcList(editor);
     const deletedImages = files.filter(
-      (file) => !currentImages.includes(String(file.fileKey))
+      (key) => !currentImages.includes(String(key))
     );
 
     if (deletedImages.length === 0) {
       return;
     }
-    deletedImages.forEach((image) =>
-      dispatch(deleteFile(image.fileKey as number))
-    );
+    deletedImages.forEach((key) => {
+      deleteImage(key); //indexDB제거
+      dispatch(deleteFile(key)); //redux 제거
+    });
   };
 
   const handleOnClickEidtor = () => {
     if (!editor) {
       return;
     }
-    editor?.chain().focus("end");
+    editor.chain().focus("end");
+  };
+
+  const hanldeUploadURLImage = () => {
+    if (!editor || imageURL === "") {
+      handleShowModal(false);
+      return;
+    }
+
+    dispatch(addFile(imageURL));
+    editor.chain().focus().setImage({ src: imageURL }).run();
+    handleShowModal(false);
+  };
+
+  const handleEditorMode = () => {
+    setEditMode((prev) => {
+      if (prev === "WYSIWYG") {
+        return "HTML";
+      } else {
+        return "WYSIWYG";
+      }
+    });
   };
 
   return (
@@ -122,14 +192,37 @@ export default function Editor() {
         editor={editor}
         headingButtons={headingButtons}
         formattingButtons={formattingButtons}
-        codeBlockButton={codeBlock}
-        imageInput={inputImage}
+        HTMLEditModeButton={HTMLEditModeButton}
+        imageUpload={inputImage}
+        imageURL={urlImage}
+        handleImageURLUploadModal={handleShowModal}
+        handleEditMode={handleEditorMode}
       />
-      <EditorContent
-        onClick={handleOnClickEidtor}
-        className=" w-full prose border min-h-[600px]"
-        editor={editor}
-      />
+      <>
+        <EditorContent
+          onClick={handleOnClickEidtor}
+          className={`w-full prose min-h-[600px] border-2 px-4 py-2 bg-background ${
+            editMode === "HTML" && "hidden"
+          }`}
+          editor={editor}
+        />
+        {editMode === "HTML" && <HtmlEditor />}
+      </>
+
+      <Modal isOpen={showModal} onClose={() => handleShowModal(false)}>
+        <article>
+          <h2>이미지 URL을 입력하세요.</h2>
+          <TextInput type="text" value={imageURL} onChange={setImageURL} />
+          <div className="flex mt-4 gap-4 justify-end">
+            <Button type="button" onClick={() => handleShowModal(false)}>
+              취소
+            </Button>
+            <Button type="button" highlight onClick={hanldeUploadURLImage}>
+              추가
+            </Button>
+          </div>
+        </article>
+      </Modal>
     </div>
   );
 }

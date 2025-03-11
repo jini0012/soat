@@ -77,6 +77,7 @@ export interface SelectProps extends SelectInputProps {
 }
 
 export interface TextAreaProps extends BaseProps {
+  ref?: React.RefObject<HTMLTextAreaElement>;
   label?: string;
   value: string;
   onChange: (value: string) => void;
@@ -85,4 +86,5 @@ export interface TextAreaProps extends BaseProps {
   resize?: boolean;
   rows?: number;
   max?: number;
+  onInput?: (event: React.FormEvent<HTMLTextAreaElement>) => void;
 }

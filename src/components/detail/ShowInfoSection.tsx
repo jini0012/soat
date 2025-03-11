@@ -3,19 +3,16 @@ import React, { useState } from "react";
 import Modal from "./../Modal";
 import { Button } from "../controls/Button";
 import NaverMapModal from "./NaverMap";
-
-interface ShowInfoProps {
-  performanceDataString: string;
-}
+import { PerformanceData } from "@/app/api/performance/route";
 
 export default function ShowInfoSection({
-  performanceDataString,
-}: ShowInfoProps) {
+  performanceData,
+}: {
+  performanceData: PerformanceData;
+}) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [isMapModalOpen, setIsMapModalOpen] = useState(false);
-
-  const performanceData = JSON.parse(performanceDataString);
 
   const title = performanceData.title || "";
   const startDate = performanceData.bookingEndDate || "";

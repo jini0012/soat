@@ -6,6 +6,7 @@ import { Checkbox } from "@/components/controls/Inputs";
 import Modal from "../Modal";
 import { CloseButton } from "@/components/controls/Button";
 import { validations } from "@/utils/validations";
+import axios from "axios";
 
 export default function UserInfoUpdate() {
   const [isUpdateType, setIsUpdateType] = useState<string>("password");
@@ -18,6 +19,28 @@ export default function UserInfoUpdate() {
 
   const isNewPasswordValid =
     validations.password.safeParse(newPassword).success;
+
+  async function handleUpdatePassword(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const formData = {
+      currentPassword: password,
+      newPassword: newPassword,
+    };
+    try {
+      const response = await axios.patch("/api/account/password", formData);
+      if (response.status === 200) {
+        setIsOpenModal(true);
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 401) {
+          alert("현재 비밀번호가 일치하지 않습니다.");
+        } else {
+          alert("비밀번호 변경에 실패했습니다.");
+        }
+      }
+    }
+  }
 
   return (
     <>
@@ -56,14 +79,12 @@ export default function UserInfoUpdate() {
       </ul>
       <form
         className="w-full bg-white sm:max-w-[525px] flex flex-col border rounded-xl border-gray-300 px-5 py-[30px] gap-[10px] relative sm:gap-5 -mt-[10px]"
-        onSubmit={(e) => {
-          e.preventDefault();
-          setIsOpenModal(true);
-        }}
+        onSubmit={handleUpdatePassword}
       >
         <div className="bg-white w-1 h-4 absolute top-0 left-[49.5%] z-[100]"></div>
         <JoinInput
           label="현재 비밀번호"
+          type="password"
           value={password}
           onChange={setPassword}
         />
@@ -71,6 +92,7 @@ export default function UserInfoUpdate() {
           <>
             <JoinInput
               label="새 비밀번호"
+              type="password"
               value={newPassword}
               onChange={setNewPassword}
               placeholder="8~24자의 영문, 숫자, 특수문자"
@@ -78,6 +100,7 @@ export default function UserInfoUpdate() {
             />
             <JoinInput
               label="비밀번호 확인"
+              type="password"
               value={newPasswordConfirm}
               onChange={setNewPasswordConfirm}
               validation={validations.passwordConfirm(newPassword)}

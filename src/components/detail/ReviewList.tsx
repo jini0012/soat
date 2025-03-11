@@ -56,7 +56,7 @@ export default function ReviewList() {
     } else if (isReviewAlign === "EMPATHY") {
       setReviews([...demoData].sort((a, b) => b.likeCount - a.likeCount));
     }
-  });
+  }, [isReviewAlign]);
   return (
     <div className="mt-[50px]">
       <ul className="flex gap-[20px] justify-self-end mb-8">
