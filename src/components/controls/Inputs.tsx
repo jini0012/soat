@@ -160,6 +160,7 @@ export function JoinInput({
             aria-label={label}
             disabled={disabled}
             maxLength={max}
+            autoComplete="off"
           />
           {children}
         </label>
