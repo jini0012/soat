@@ -151,6 +151,7 @@ export function JoinInput({
           <input
             type={type}
             placeholder={placeholder}
+            value={value}
             onChange={handleOnChange}
             onBlur={handleOnBlur}
             className={`focus:outline-none w-full placeholder:text-sm sm:placeholder:text-base ${
