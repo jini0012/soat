@@ -27,6 +27,15 @@ export default function UserInfoUpdate() {
     }
   }, [password]);
 
+  function handleUpdateTypeChange(type: "password" | "accountDelete") {
+    setIsUpdateType(type);
+    setPassword("");
+    if (type === "password") {
+      setNewPassword("");
+      setNewPasswordConfirm("");
+    }
+  }
+
   async function handleUpdatePassword(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const formData = {
@@ -63,7 +72,7 @@ export default function UserInfoUpdate() {
                 ? "bg-white border-gray-300 relative z-20"
                 : "bg-gray-100 border-gray-200"
             }`}
-            onClick={() => setIsUpdateType("password")}
+            onClick={() => handleUpdateTypeChange("password")}
             type="button"
           >
             비밀번호 변경
@@ -77,7 +86,7 @@ export default function UserInfoUpdate() {
                 ? "bg-white border-gray-300 relative z-20"
                 : "bg-gray-100 border-gray-200 "
             }`}
-            onClick={() => setIsUpdateType("accountDelete")}
+            onClick={() => handleUpdateTypeChange("accountDelete")}
             type="button"
           >
             회원 탈퇴
