@@ -43,6 +43,7 @@ export default function Header() {
                 src="/images/icons/logo-temp.svg"
                 alt="soat"
                 className="w-[93px]"
+                onClick={() => setSearchValue("")}
               />
             </Link>
           </h1>
