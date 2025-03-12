@@ -1,19 +1,19 @@
 "use client";
-import { useNavigateWarning } from "@/hooks/useNavigateWarning";
 import { EnrollInitialState } from "@/redux/slices/enrollSlice";
-import { enrollPersistConfig, persistor, RootState } from "@/redux/store";
+import { enrollPersistConfig, persistor } from "@/redux/store";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+
 import { getStoredState } from "redux-persist";
 import Modal from "../Modal";
 import { Button } from "../controls/Button";
 import { useShowModal } from "@/hooks/useShowModal";
 
-interface EnrollWrapperProps {
+interface EnrollRehydrationProps {
   children: React.ReactNode;
 }
-export default function EnrollWrapper({ children }: EnrollWrapperProps) {
-  const isDirty = useSelector((state: RootState) => state.enroll.isDirty);
+export default function EnrollRehydration({
+  children,
+}: EnrollRehydrationProps) {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { showModal, handleShowModal } = useShowModal();
 
@@ -60,10 +60,7 @@ export default function EnrollWrapper({ children }: EnrollWrapperProps) {
     checkPersistedState();
   }, []);
 
-  useNavigateWarning(isDirty);
-
   if (isLoading) {
-    console.log("로딩중 왜 안뜨냐");
     return <div>Loading...</div>;
   }
   return (
