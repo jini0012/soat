@@ -301,7 +301,7 @@ export default function JoinForm({
           label="인증번호"
           value={verifyNum}
           onChange={setVerifyNum}
-          disabled={isEmailValid}
+          disabled={!isSendEmail || isEmailValid}
           validation={validations.emailVerifyNum}
           message={
             isEmailValid ? "이메일 인증이 완료되었습니다." : emailVerifyMsg

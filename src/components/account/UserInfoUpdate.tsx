@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "../controls/Button";
 import { JoinInput } from "@/components/controls/Inputs";
 import { Checkbox } from "@/components/controls/Inputs";
@@ -16,9 +16,25 @@ export default function UserInfoUpdate() {
   const [isAccountDeleteAgree, setIsAccountDeleteAgree] =
     useState<boolean>(false);
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
+  const [isPasswordError, setIsPasswordError] = useState<string>("");
 
   const isNewPasswordValid =
     validations.password.safeParse(newPassword).success;
+
+  useEffect(() => {
+    if (!!isPasswordError && !!password) {
+      setIsPasswordError("");
+    }
+  }, [password]);
+
+  function handleUpdateTypeChange(type: "password" | "accountDelete") {
+    setIsUpdateType(type);
+    setPassword("");
+    if (type === "password") {
+      setNewPassword("");
+      setNewPasswordConfirm("");
+    }
+  }
 
   async function handleUpdatePassword(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -34,7 +50,7 @@ export default function UserInfoUpdate() {
     } catch (error) {
       if (axios.isAxiosError(error)) {
         if (error.response?.status === 401) {
-          alert("현재 비밀번호가 일치하지 않습니다.");
+          setIsPasswordError("현재 비밀번호가 일치하지 않습니다.");
         } else {
           alert("비밀번호 변경에 실패했습니다.");
         }
@@ -56,7 +72,7 @@ export default function UserInfoUpdate() {
                 ? "bg-white border-gray-300 relative z-20"
                 : "bg-gray-100 border-gray-200"
             }`}
-            onClick={() => setIsUpdateType("password")}
+            onClick={() => handleUpdateTypeChange("password")}
             type="button"
           >
             비밀번호 변경
@@ -70,7 +86,7 @@ export default function UserInfoUpdate() {
                 ? "bg-white border-gray-300 relative z-20"
                 : "bg-gray-100 border-gray-200 "
             }`}
-            onClick={() => setIsUpdateType("accountDelete")}
+            onClick={() => handleUpdateTypeChange("accountDelete")}
             type="button"
           >
             회원 탈퇴
@@ -87,6 +103,7 @@ export default function UserInfoUpdate() {
           type="password"
           value={password}
           onChange={setPassword}
+          message={isPasswordError}
         />
         {isUpdateType === "password" ? (
           <>

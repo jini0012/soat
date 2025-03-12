@@ -114,7 +114,7 @@ export function JoinInput({
   const [verifyMessage, setVerifyMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    if (message) {
+    if (message !== null && message !== undefined) {
       setError(null);
       setVerifyMessage(message);
     }
@@ -125,6 +125,7 @@ export function JoinInput({
       const { success, error } = validation.safeParse(value);
       if (!success) {
         setError(error.errors[0].message);
+        setVerifyMessage(null);
       } else {
         setError(null);
       }
@@ -160,6 +161,7 @@ export function JoinInput({
             aria-label={label}
             disabled={disabled}
             maxLength={max}
+            autoComplete="off"
           />
           {children}
         </label>
