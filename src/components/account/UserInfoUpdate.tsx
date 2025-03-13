@@ -1,8 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { Button } from "../controls/Button";
-import { JoinInput } from "@/components/controls/Inputs";
-import { Checkbox } from "@/components/controls/Inputs";
+import { JoinInput, Checkbox } from "@/components/controls/Inputs";
 import Modal from "../Modal";
 import { CloseButton } from "@/components/controls/Button";
 import { validations } from "@/utils/validations";
