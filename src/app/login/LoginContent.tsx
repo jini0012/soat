@@ -59,11 +59,11 @@ export default function LoginContent() {
 
   const isFormValid = email !== "" && password !== "";
 
-  const { status } = useSession();
+  const { data: session, status } = useSession();
 
-  // 로그인 상태일 경우 메인 페이지로 이동
+  // 로그인 상태일 경우(탈퇴 회원 아닌경우) 메인 페이지로 이동
   useEffect(() => {
-    if (status === "authenticated") {
+    if (status === "authenticated" && !session?.user?.isDeleteUser) {
       router.push("/");
     }
   }, [status]);
