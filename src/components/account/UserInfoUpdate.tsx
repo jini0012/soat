@@ -58,6 +58,30 @@ export default function UserInfoUpdate() {
     }
   }
 
+  async function handleUserDelete(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const formData = {
+      currentPassword: password,
+    };
+    try {
+      const response = await axios.delete("/api/account/delete", {
+        data: formData,
+      });
+
+      if (response.status === 200) {
+        setIsOpenModal(true);
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 401) {
+          setIsPasswordError("현재 비밀번호가 일치하지 않습니다.");
+        } else {
+          alert("회원 탈퇴에 실패했습니다.");
+        }
+      }
+    }
+  }
+
   return (
     <>
       <h2 className="text-xl font-bold mb-3 sm:text-3xl sm:mb-6">
@@ -95,7 +119,9 @@ export default function UserInfoUpdate() {
       </ul>
       <form
         className="w-full bg-white sm:max-w-[525px] flex flex-col border rounded-xl border-gray-300 px-5 py-[30px] gap-[10px] relative sm:gap-5 -mt-[10px]"
-        onSubmit={handleUpdatePassword}
+        onSubmit={
+          isUpdateType === "password" ? handleUpdatePassword : handleUserDelete
+        }
       >
         <div className="bg-white w-1 h-4 absolute top-0 left-[49.5%] z-[100]"></div>
         <JoinInput
