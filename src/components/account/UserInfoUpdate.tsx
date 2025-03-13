@@ -6,8 +6,11 @@ import Modal from "../Modal";
 import { CloseButton } from "@/components/controls/Button";
 import { validations } from "@/utils/validations";
 import axios from "axios";
+import { signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function UserInfoUpdate() {
+  const router = useRouter();
   const [isUpdateType, setIsUpdateType] = useState<string>("password");
   const [password, setPassword] = useState<string>("");
   const [newPassword, setNewPassword] = useState<string>("");
@@ -32,6 +35,14 @@ export default function UserInfoUpdate() {
     if (type === "password") {
       setNewPassword("");
       setNewPasswordConfirm("");
+    }
+  }
+
+  function handleModalClose() {
+    setIsOpenModal(false);
+    if (isUpdateType === "accountDelete") {
+      signOut({ redirect: false });
+      router.push("/");
     }
   }
 
@@ -205,12 +216,12 @@ export default function UserInfoUpdate() {
 
       <Modal
         isOpen={isOpenModal}
-        onClose={() => setIsOpenModal(false)}
+        onClose={() => handleModalClose()}
         className="max-w-[300px] flex flex-col justify-center items-center relative h-[210px] gap-5"
       >
         <>
           <CloseButton
-            onClick={() => setIsOpenModal(false)}
+            onClick={() => handleModalClose()}
             className="absolute top-4 right-4"
           />
           <p className="text-base">
@@ -219,9 +230,8 @@ export default function UserInfoUpdate() {
               : "회원 탈퇴가 완료되었습니다."}
           </p>
           <Button
-            href="/"
             highlight
-            onClick={() => setIsOpenModal(false)}
+            onClick={() => handleModalClose()}
             size="full"
             className="max-w-20 flex justify-center text-xs font-normal px-[28.5px] py-[7.5px]"
           >
