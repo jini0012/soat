@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { SearchInput } from "../controls/Inputs";
 import Link from "next/link";
 import { Menu, X, Ticket, House } from "lucide-react";
@@ -9,6 +9,13 @@ export default function Header() {
   const [searchValue, setSearchValue] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { data: session, status } = useSession();
+
+  useEffect(() => {
+    // 회원 탈퇴 회원인경우 로그아웃 적용
+    if (session?.user?.isDeleteUser) {
+      signOut();
+    }
+  }, [session]);
 
   const isLoggedIn = status === "authenticated";
   const userType =

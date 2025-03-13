@@ -220,7 +220,6 @@ export default function JoinForm({
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    console.log(formData);
     try {
       const response = await axios.post("/api/auth/signup", formData);
 
@@ -401,7 +400,7 @@ export default function JoinForm({
               <legend className="text-sm sm:text-base">통장사본</legend>
               <label
                 htmlFor="accountImage"
-                className="border-2 rounded-md w-full p-2 inline-block flex justify-end cursor-pointer"
+                className="border-2 rounded-md w-full p-2 flex justify-end cursor-pointer"
               >
                 {previewAccountImage && (
                   <img

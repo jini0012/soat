@@ -1,7 +1,15 @@
-import NextAuth, { NextAuthOptions } from "next-auth";
+import NextAuth, { NextAuthOptions, User } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { adminDb } from "../../firebaseAdmin";
 import { compare } from "bcryptjs";
+
+declare module "next-auth" {
+  interface User {
+    isDeleteUser?: boolean;
+    teamName?: string;
+    username?: string;
+  }
+}
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -45,6 +53,7 @@ export const authOptions: NextAuthOptions = {
           id: userSnapshot.docs[0].id,
           email: userData.email,
           userType: credentials.userType as "seller" | "buyer",
+          isDeleteUser: userData.isDeleteUser || false,
           ...(credentials.userType === "seller"
             ? { teamName: userData.teamName }
             : { username: userData.username }),
@@ -57,6 +66,7 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.userType = user.userType;
         token.id = user.id;
+        token.isDeleteUser = user.isDeleteUser;
         token.userType === "seller"
           ? (token.teamName = user.teamName)
           : (token.username = user.username);
@@ -67,6 +77,7 @@ export const authOptions: NextAuthOptions = {
       if (session.user) {
         session.user.id = token.id as string;
         session.user.userType = token.userType as "buyer" | "seller";
+        session.user.isDeleteUser = token.isDeleteUser as boolean;
         session.user.userType === "seller"
           ? (session.user.teamName = token.teamName as string)
           : (session.user.username = token.username as string);
