@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { SearchInput } from "../controls/Inputs";
 import Link from "next/link";
 import { Menu, X, Ticket, House } from "lucide-react";
@@ -9,6 +9,13 @@ export default function Header() {
   const [searchValue, setSearchValue] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { data: session, status } = useSession();
+
+  useEffect(() => {
+    // 회원 탈퇴 회원인경우 로그아웃 적용
+    if (session?.user?.isDeleteUser) {
+      signOut();
+    }
+  }, [session]);
 
   const isLoggedIn = status === "authenticated";
   const userType =
@@ -43,6 +50,7 @@ export default function Header() {
                 src="/images/icons/logo-temp.svg"
                 alt="soat"
                 className="w-[93px]"
+                onClick={() => setSearchValue("")}
               />
             </Link>
           </h1>
@@ -102,13 +110,13 @@ export default function Header() {
             <>
               {/* 로그인되지 않은 상태 */}
               <li className="cursor-pointer">
-                <Link href="./login" className="text-black flex gap-[5px]">
+                <Link href="/login" className="text-black flex gap-[5px]">
                   <img src="/images/icons/mypage-login-icon.svg" alt="로그인" />
                   로그인
                 </Link>
               </li>
               <li className="cursor-pointer">
-                <Link href="./join" className="text-black flex gap-[5px]">
+                <Link href="/join" className="text-black flex gap-[5px]">
                   <img src="/images/icons/join-icon.svg" alt="회원가입" />
                   회원가입
                 </Link>
@@ -198,7 +206,7 @@ export default function Header() {
                   {/* 로그인되지 않은 상태 */}
                   <li className="cursor-pointer">
                     <Link
-                      href="./login"
+                      href="/login"
                       className="text-black flex gap-[5px] items-center p-2 hover:bg-gray-100 rounded"
                       onClick={toggleMenu}
                     >
@@ -211,7 +219,7 @@ export default function Header() {
                   </li>
                   <li className="cursor-pointer">
                     <Link
-                      href="./join"
+                      href="/join"
                       className="text-black flex gap-[5px] items-center p-2 hover:bg-gray-100 rounded"
                       onClick={toggleMenu}
                     >

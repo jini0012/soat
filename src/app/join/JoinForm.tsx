@@ -74,6 +74,36 @@ export default function JoinForm({
     };
   }, [isSendEmail, isEmailValid]);
 
+  function handleUserTypeChange(selectType: "buyer" | "seller") {
+    setUserType(selectType);
+    setEmail("");
+    setIsSendEmail(false);
+    setIsEmailValid(false);
+    setVerifyNum("");
+    setEmailSendMsg("");
+    setEmailVerifyMsg("");
+    setPassword("");
+    setPasswordConfirm("");
+    setUserPhone("");
+    setCheckAgree(false);
+    setCheckIntermediary(false);
+    if (selectType === "seller") {
+      setTeamName("");
+      setManagerName("");
+      setIsBusiness(false);
+      setBusinessNum("");
+      setSelectAccount("000");
+      setAccountNum("");
+      setDepositor("");
+      setIsBusinessNumValid(false);
+      setBusinessNumVerifyMsg("");
+      setPreviewAccountImage(null);
+    } else {
+      setCheckAge(false);
+      setUserName("");
+    }
+  }
+
   const handleAccountImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -190,7 +220,6 @@ export default function JoinForm({
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    console.log(formData);
     try {
       const response = await axios.post("/api/auth/signup", formData);
 
@@ -214,7 +243,7 @@ export default function JoinForm({
                 ? "bg-white border-gray-300 relative z-20"
                 : "bg-gray-100 border-gray-200"
             }`}
-            onClick={() => setUserType("buyer")}
+            onClick={() => handleUserTypeChange("buyer")}
             type="button"
           >
             예매회원
@@ -228,7 +257,7 @@ export default function JoinForm({
                 ? "bg-white border-gray-300 relative z-20"
                 : "bg-gray-100 border-gray-200"
             }`}
-            onClick={() => setUserType("seller")}
+            onClick={() => handleUserTypeChange("seller")}
             type="button"
           >
             공연 관리자
@@ -271,7 +300,7 @@ export default function JoinForm({
           label="인증번호"
           value={verifyNum}
           onChange={setVerifyNum}
-          disabled={isEmailValid}
+          disabled={!isSendEmail || isEmailValid}
           validation={validations.emailVerifyNum}
           message={
             isEmailValid ? "이메일 인증이 완료되었습니다." : emailVerifyMsg
@@ -371,7 +400,7 @@ export default function JoinForm({
               <legend className="text-sm sm:text-base">통장사본</legend>
               <label
                 htmlFor="accountImage"
-                className="border-2 rounded-md w-full p-2 inline-block flex justify-end cursor-pointer"
+                className="border-2 rounded-md w-full p-2 flex justify-end cursor-pointer"
               >
                 {previewAccountImage && (
                   <img

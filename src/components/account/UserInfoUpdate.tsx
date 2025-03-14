@@ -1,14 +1,16 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "../controls/Button";
-import { JoinInput } from "@/components/controls/Inputs";
-import { Checkbox } from "@/components/controls/Inputs";
+import { JoinInput, Checkbox } from "@/components/controls/Inputs";
 import Modal from "../Modal";
 import { CloseButton } from "@/components/controls/Button";
 import { validations } from "@/utils/validations";
 import axios from "axios";
+import { signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function UserInfoUpdate() {
+  const router = useRouter();
   const [isUpdateType, setIsUpdateType] = useState<string>("password");
   const [password, setPassword] = useState<string>("");
   const [newPassword, setNewPassword] = useState<string>("");
@@ -16,9 +18,33 @@ export default function UserInfoUpdate() {
   const [isAccountDeleteAgree, setIsAccountDeleteAgree] =
     useState<boolean>(false);
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
+  const [isPasswordError, setIsPasswordError] = useState<string>("");
 
   const isNewPasswordValid =
     validations.password.safeParse(newPassword).success;
+
+  useEffect(() => {
+    if (!!isPasswordError && !!password) {
+      setIsPasswordError("");
+    }
+  }, [password]);
+
+  function handleUpdateTypeChange(type: "password" | "accountDelete") {
+    setIsUpdateType(type);
+    setPassword("");
+    if (type === "password") {
+      setNewPassword("");
+      setNewPasswordConfirm("");
+    }
+  }
+
+  function handleModalClose() {
+    setIsOpenModal(false);
+    if (isUpdateType === "accountDelete") {
+      signOut({ redirect: false });
+      router.push("/");
+    }
+  }
 
   async function handleUpdatePassword(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -34,9 +60,33 @@ export default function UserInfoUpdate() {
     } catch (error) {
       if (axios.isAxiosError(error)) {
         if (error.response?.status === 401) {
-          alert("현재 비밀번호가 일치하지 않습니다.");
+          setIsPasswordError("현재 비밀번호가 일치하지 않습니다.");
         } else {
           alert("비밀번호 변경에 실패했습니다.");
+        }
+      }
+    }
+  }
+
+  async function handleUserDelete(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const formData = {
+      currentPassword: password,
+    };
+    try {
+      const response = await axios.delete("/api/account/delete", {
+        data: formData,
+      });
+
+      if (response.status === 200) {
+        setIsOpenModal(true);
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 401) {
+          setIsPasswordError("현재 비밀번호가 일치하지 않습니다.");
+        } else {
+          alert("회원 탈퇴에 실패했습니다.");
         }
       }
     }
@@ -56,7 +106,7 @@ export default function UserInfoUpdate() {
                 ? "bg-white border-gray-300 relative z-20"
                 : "bg-gray-100 border-gray-200"
             }`}
-            onClick={() => setIsUpdateType("password")}
+            onClick={() => handleUpdateTypeChange("password")}
             type="button"
           >
             비밀번호 변경
@@ -70,7 +120,7 @@ export default function UserInfoUpdate() {
                 ? "bg-white border-gray-300 relative z-20"
                 : "bg-gray-100 border-gray-200 "
             }`}
-            onClick={() => setIsUpdateType("accountDelete")}
+            onClick={() => handleUpdateTypeChange("accountDelete")}
             type="button"
           >
             회원 탈퇴
@@ -79,7 +129,9 @@ export default function UserInfoUpdate() {
       </ul>
       <form
         className="w-full bg-white sm:max-w-[525px] flex flex-col border rounded-xl border-gray-300 px-5 py-[30px] gap-[10px] relative sm:gap-5 -mt-[10px]"
-        onSubmit={handleUpdatePassword}
+        onSubmit={
+          isUpdateType === "password" ? handleUpdatePassword : handleUserDelete
+        }
       >
         <div className="bg-white w-1 h-4 absolute top-0 left-[49.5%] z-[100]"></div>
         <JoinInput
@@ -87,6 +139,7 @@ export default function UserInfoUpdate() {
           type="password"
           value={password}
           onChange={setPassword}
+          message={isPasswordError}
         />
         {isUpdateType === "password" ? (
           <>
@@ -163,12 +216,12 @@ export default function UserInfoUpdate() {
 
       <Modal
         isOpen={isOpenModal}
-        onClose={() => setIsOpenModal(false)}
+        onClose={() => handleModalClose()}
         className="max-w-[300px] flex flex-col justify-center items-center relative h-[210px] gap-5"
       >
         <>
           <CloseButton
-            onClick={() => setIsOpenModal(false)}
+            onClick={() => handleModalClose()}
             className="absolute top-4 right-4"
           />
           <p className="text-base">
@@ -177,9 +230,8 @@ export default function UserInfoUpdate() {
               : "회원 탈퇴가 완료되었습니다."}
           </p>
           <Button
-            href="/"
             highlight
-            onClick={() => setIsOpenModal(false)}
+            onClick={() => handleModalClose()}
             size="full"
             className="max-w-20 flex justify-center text-xs font-normal px-[28.5px] py-[7.5px]"
           >

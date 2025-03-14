@@ -4,12 +4,26 @@ interface BaseUserData {
   password: string;
 }
 
-interface SellerUserData extends BaseUserData {
+export interface SellerUserData extends BaseUserData {
   teamName: string;
+  managerName: string;
+  phoneNumber: string;
+  businessNum: string;
+  createdAt: string;
+  updatedAt: string;
+  isApproval: boolean;
+  bankAccount: {
+    bankCode: string;
+    bankName: string;
+    depositor: string;
+    accountNum: string;
+    encryptedAccountImagePath: string;
+    originalImageType: string;
+  };
 }
 
-interface BuyerUserData extends BaseUserData {
+export interface BuyerUserData extends BaseUserData {
   username: string;
 }
 
-type UserData = SellerUserData | BuyerUserData;
+export type UserData = SellerUserData | BuyerUserData;

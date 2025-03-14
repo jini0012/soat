@@ -2,6 +2,7 @@ import { useState } from "react";
 import { CloseButton, Button } from "../controls/Button";
 import { NewTheaterAdmin } from "@/types/admin";
 import Modal from "../Modal";
+import axios from "axios";
 
 export default function NewTheaterAdminForm({
   user,
@@ -15,6 +16,12 @@ export default function NewTheaterAdminForm({
     null
   ); // 승인/거절 상태 관리
 
+  const [decryptedAccountImage, setDecryptedAccountImage] =
+    useState<string>("");
+  const [decryptedErrorMsg, setDecryptedErrorMsg] = useState<string | null>(
+    null
+  );
+
   const handleApproval = () => {
     setIsApproved("approved");
     setIsApplyModalOpen(true);
@@ -25,13 +32,30 @@ export default function NewTheaterAdminForm({
     setIsApplyModalOpen(true);
   };
 
+  const handleAccountImageDecryption = async () => {
+    // 계좌 이미지 복호화
+    try {
+      const response = await axios.post("/api/admin/theater/approval/decrypt", {
+        accountImageUrl: user.bankAccount.encryptedAccountImagePath,
+        originalImageType: user.bankAccount.originalImageType,
+      });
+
+      setDecryptedAccountImage(response.data.base64Image);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error(error.response?.data.error);
+        setDecryptedErrorMsg(error.response?.data.error);
+      }
+    }
+  };
+
   return (
     <>
       <div className="fixed inset-0 bg-black bg-opacity-50 z-[999] flex justify-center items-center">
         <div className="relative bg-white p-6 rounded-lg w-[330px] max-w-lg z-[9999]">
           <div className="flex justify-between items-center">
             <h2 className="font-semibold text-center flex-1 text-lg">
-              <span>{user.name}</span>님의 회원정보
+              <span>{user.managerName}</span>님의 회원정보
             </h2>
             <CloseButton onClick={onClose} className="text-gray-500" />
           </div>
@@ -40,14 +64,22 @@ export default function NewTheaterAdminForm({
             <h3 className="sr-only">회원정보</h3>
             <dl className="flex flex-wrap gap-x-1 gap-y-1">
               {[
-                { label: "이름", value: user.name },
+                { label: "이름", value: user.managerName },
                 { label: "이메일", value: user.email },
-                { label: "휴대폰번호", value: "-" },
-                { label: "회원유형", value: "-" },
-                { label: "가입날짜", value: "-" },
-                { label: "가입유형", value: "-" },
-                { label: "사업자등록번호", value: "-" },
-                { label: "팀명", value: user.team },
+                { label: "휴대폰번호", value: user.phoneNumber },
+                {
+                  label: "가입날짜",
+                  value: user.createdAt,
+                },
+                {
+                  label: "가입유형",
+                  value: user.businessNum === "" ? "비사업자" : "사업자",
+                },
+                { label: "사업자등록번호", value: user.businessNum },
+                { label: "팀명", value: user.teamName },
+                { label: "은행명", value: user.bankAccount.bankName },
+                { label: "계좌번호", value: user.bankAccount.accountNum },
+                { label: "예금주", value: user.bankAccount.depositor },
               ].map(({ label, value }, index) => (
                 <div className="flex w-full items-center" key={index}>
                   <dt className="mr-2 w-[80px]">{label}</dt>
@@ -55,6 +87,34 @@ export default function NewTheaterAdminForm({
                 </div>
               ))}
             </dl>
+
+            {/* 계좌 이미지 */}
+            <div className="flex items-center gap-1 mt-2">
+              <span className="w-[80px]">계좌 이미지</span>
+              {!decryptedAccountImage && (
+                <Button
+                  size="small"
+                  onClick={handleAccountImageDecryption}
+                  className="w-[60px]"
+                >
+                  보기
+                </Button>
+              )}
+            </div>
+            {decryptedAccountImage && (
+              <img
+                src={decryptedAccountImage}
+                alt="계좌 이미지"
+                className="w-full h-full object-contain mt-2"
+              />
+            )}
+
+            {/* 계좌 이미지 복호화 실패 시 */}
+            {!decryptedAccountImage && (
+              <p className="text-red-500 text-xs mt-1">{decryptedErrorMsg}</p>
+            )}
+
+            {/* 승인/거절 버튼 */}
             <div className="flex justify-end gap-1 mt-2">
               {/* 거절 버튼: 승인/거절 전 */}
               {isApproved === null && (

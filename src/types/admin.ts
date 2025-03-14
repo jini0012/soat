@@ -1,3 +1,5 @@
+import { SellerUserData } from "./users";
+
 export interface GeneralUser {
   email: string;
   name: string;
@@ -11,12 +13,7 @@ export interface TheaterAdminUser {
   joinType: string;
 }
 
-export interface NewTheaterAdmin {
-  email: string;
-  name: string;
-  team: string;
-  requestDate: string;
-}
+export interface NewTheaterAdmin extends SellerUserData {}
 
 export interface Performance {
   title: string;
