@@ -10,7 +10,7 @@ export default function ShowDetailSection({
 
   return (
     <div
-      className="px-[10px] mb-[50px]"
+      className="px-[10px] mb-[50px] prose"
       dangerouslySetInnerHTML={{ __html: content }}
     />
   );
