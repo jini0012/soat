@@ -3,7 +3,7 @@ import { Button } from "@/components/controls/Button";
 import { TextInput, Checkbox } from "@/components/controls/Inputs";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { signIn, signOut, useSession, getSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 enum UserType {
@@ -89,16 +89,8 @@ export default function LoginContent() {
 
     console.log("result", result);
     if (result?.ok) {
-      const session = await getSession();
-      // 회원 탈퇴 회원인경우 로그아웃 적용
-      if (!!session?.user?.isDeleteUser) {
-        await signOut({ redirect: false });
-        setError("로그인에 실패했습니다.");
-        return;
-      } else {
-        console.log("로그인 성공");
-        router.push("/");
-      }
+      console.log("로그인 성공");
+      router.push("/");
     } else {
       if (result?.error) {
         setError(result.error);
