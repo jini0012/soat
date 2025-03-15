@@ -42,6 +42,11 @@ export const authOptions: NextAuthOptions = {
         }
 
         const userData = userSnapshot.docs[0].data();
+
+        if (!userData.password) {
+          throw new Error("로그인에 실패했습니다.");
+        }
+
         const isValid = await compare(credentials.password, userData.password);
 
         if (!isValid) {

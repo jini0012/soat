@@ -64,11 +64,28 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    // 회원 탈퇴시 소프트 삭제 처리
-    await adminDb.collection(collectionName).doc(userDoc.id).update({
-      isDeleteUser: true,
-      updatedAt: new Date().toISOString(),
-    });
+    const docRef = adminDb.collection(collectionName).doc(userDoc.id);
+
+    const docSnapshot = await docRef.get();
+    if (docSnapshot.exists) {
+      const existingData = docSnapshot.data();
+
+      // 기존 필드createdAt 를 유지하고 나머지 필드 제거
+      const newData = {
+        createdAt: existingData?.createdAt,
+        email: existingData?.email,
+        isDeleteUser: true,
+        updatedAt: new Date().toISOString(),
+      };
+
+      // 회원 탈퇴 적용
+      await docRef.set(newData);
+    } else {
+      return NextResponse.json(
+        { error: "사용자를 찾을 수 없습니다." },
+        { status: 404 }
+      );
+    }
 
     return NextResponse.json(
       { message: "회원탈퇴가 성공적으로 처리되었습니다." },
