@@ -10,8 +10,8 @@ export default function GeneralUsersTable({ data }: { data: GeneralUser[] }) {
 
   const fieldMapping: Record<(typeof headers)[number], keyof GeneralUser> = {
     이메일: "email",
-    이름: "name",
-    가입날짜: "joinDate",
+    이름: "username",
+    가입날짜: "createdAt",
   };
 
   const [selectedUser, setSelectedUser] = useState<GeneralUser | null>(null);
