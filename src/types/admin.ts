@@ -2,14 +2,15 @@ import { SellerUserData } from "./users";
 
 export interface GeneralUser {
   email: string;
-  name: string;
-  joinDate: string;
+  username: string;
+  createdAt: string;
+  phoneNumber: string;
 }
 
 export interface TheaterAdminUser {
   email: string;
-  name: string;
-  joinDate: string;
+  username: string;
+  createdAt: string;
   joinType: string;
 }
 
