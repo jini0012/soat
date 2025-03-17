@@ -33,7 +33,7 @@ export default function GeneralUserForm({
           <div className="bg-white w-[330px] h-[70%] max-h-[560px] p-4 rounded shadow-lg z-50">
             <div className="relative flex justify-center w-full">
               <h2 className="font-semibold text-center">
-                <span>{user.name}</span>님의 회원정보
+                <span>{user.username}</span>님의 회원정보
               </h2>
               <CloseButton
                 onClick={() => {
@@ -48,11 +48,11 @@ export default function GeneralUserForm({
               <h3 className="sr-only">회원정보</h3>
               <dl className="flex flex-wrap gap-x-1 gap-y-1">
                 {[
-                  { label: "이름", value: user.name },
+                  { label: "이름", value: user.username },
                   { label: "이메일", value: user.email },
-                  { label: "휴대폰번호", value: "-" },
-                  { label: "회원유형", value: "-" },
-                  { label: "가입날짜", value: user.joinDate },
+                  { label: "휴대폰번호", value: user.phoneNumber },
+                  { label: "회원유형", value: "일반회원" },
+                  { label: "가입날짜", value: user.createdAt },
                 ].map(({ label, value }, index) => (
                   <div className="flex w-full items-center" key={index}>
                     <dt className="mr-2 w-[80px]">{label}</dt> <dd>{value}</dd>
