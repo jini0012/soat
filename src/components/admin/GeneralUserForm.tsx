@@ -12,6 +12,7 @@ export default function GeneralUserForm({
   onRadioChange,
   onClose,
   onApply,
+  handleAddAdmin,
 }: {
   user: GeneralUser;
   userRadioOptions: { value: string; label: string }[];
@@ -19,10 +20,13 @@ export default function GeneralUserForm({
   onRadioChange: (value: string) => void;
   onClose: () => void;
   onApply: () => void;
+  handleAddAdmin: () => void;
 }) {
   const [isFormOpen, setIsFormOpen] = useState(true); //회원정보 모달 상태 관리
   const [isModalOpen, setIsModalOpen] = useState(false); //변경여부 모달 상태 관리
   const [isApplyModalOpen, setIsApplyModalOpen] = useState(false); //변경사항 저장 확인 모달 상태 관리
+
+  const [isAdminModalOpen, setIsAdminModalOpen] = useState(false); //관리자 계정 변경 모달 상태 관리
 
   return (
     <>
@@ -83,15 +87,27 @@ export default function GeneralUserForm({
               <p className="text-xs text-gray-500 font-light mt-2 mb-4">
                 (현재 상태 : <span>{userRadioState}</span>)
               </p>
-              <Button
-                highlight
-                size="small"
-                onClick={() => {
-                  setIsModalOpen(true); // 모달 열기
-                }}
-              >
-                상태 변경 적용
-              </Button>
+              <ul className="flex justify-between gap-2">
+                <li>
+                  <Button
+                    highlight
+                    size="small"
+                    onClick={() => {
+                      setIsModalOpen(true); // 모달 열기
+                    }}
+                  >
+                    상태 변경 적용
+                  </Button>
+                </li>
+                <li>
+                  <Button
+                    size="small"
+                    onClick={() => setIsAdminModalOpen(true)}
+                  >
+                    관리자 계정으로 변경
+                  </Button>
+                </li>
+              </ul>
             </section>
           </div>
         </div>
@@ -146,6 +162,39 @@ export default function GeneralUserForm({
             >
               닫기
             </Button>
+          </div>
+        </Modal>
+      )}
+
+      {/* 관리자 계정 변경 모달 */}
+      {isAdminModalOpen && (
+        <Modal
+          isOpen={isAdminModalOpen}
+          onClose={() => setIsAdminModalOpen(false)}
+          className="flex flex-col justify-center items-center"
+        >
+          <div className="z-[1000]">
+            <p className="text-xs">관리자 계정으로 변경하시겠습니까?</p>
+            <div className="flex justify-center gap-2">
+              <Button
+                size="small"
+                onClick={() => setIsAdminModalOpen(false)}
+                className="mt-2 w-[60px]"
+              >
+                아니오
+              </Button>
+              <Button
+                highlight
+                size="small"
+                onClick={() => {
+                  setIsAdminModalOpen(false);
+                  handleAddAdmin();
+                }}
+                className="mt-2 w-[60px]"
+              >
+                예
+              </Button>
+            </div>
           </div>
         </Modal>
       )}
