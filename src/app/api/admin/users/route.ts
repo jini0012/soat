@@ -4,7 +4,10 @@ import { adminDb, adminStorage } from "@/app/api/firebaseAdmin";
 export async function buyerUsersList() {
   try {
     const buyerUsers = await adminDb.collection("buyerUsers").get();
-    const buyerUsersData = buyerUsers.docs.map((doc) => doc.data());
+    const buyerUsersData = buyerUsers.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
 
     const sensoredBuyerUsersData = buyerUsersData.map((buyerUser) => {
       return {
