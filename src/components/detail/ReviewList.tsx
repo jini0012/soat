@@ -1,77 +1,142 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import DetailPost from "./DetailPost";
+import { useParams } from "next/navigation";
 
-const demoData = [
-  {
-    id: "review-001",
-    ratings: 5,
-    date: "2021-10-10",
-    author: "집나온쿼카",
-    content: "사장님이 맛있고 음식이 친절해요!",
-    likeCount: 12,
-    isLiked: false,
-  },
-  {
-    id: "review-002",
-    ratings: 4,
-    date: "2022-10-10",
-    author: "스테이크러버지니",
-    content:
-      "사장님 요리보단 바이올린만 하셔야 할듯....오히려 브로맨스가 제일 재밌었음 주인님 케미 미쳐요!",
-    likeCount: 23,
-    isLiked: false,
-  },
-  {
-    id: "review-003",
-    ratings: 4,
-    date: "2024-10-10",
-    author: "카리나는신이에요!",
-    content: "귤에붙어있는 하얀거 이름은 귤락입니다!",
-    likeCount: 23,
-    isLiked: false,
-  },
-  {
-    id: "review-004",
-    ratings: 5,
-    date: "2025-10-10",
-    author: "이멤버리멤버",
-    content: "쏘앳 좋아요!",
-    likeCount: 1632,
-    isLiked: true,
-  },
-];
+// API로부터 가져올 리뷰 데이터 타입 정의
+interface ReviewData {
+  id: string;
+  ratings: number;
+  date: string;
+  username: string;
+  content: string;
+  likeCount: number;
+  isLiked?: boolean;
+  isUserReview?: boolean;
+}
 
 export default function ReviewList() {
-  const [reviews, setReviews] = useState(demoData);
-  const [isReviewAlign, setReviewAlign] = useState("LASTEST");
+  const params = useParams();
+  const performId = params.performId;
 
+  const [reviews, setReviews] = useState<ReviewData[]>([]);
+  const [isReviewAlign, setReviewAlign] = useState("LASTEST");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  // 리뷰 데이터 가져오기
   useEffect(() => {
+    async function fetchReviews() {
+      if (!performId) return;
+
+      setLoading(true);
+      setError("");
+
+      try {
+        const response = await fetch(`/api/reviews?performanceId=${performId}`);
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || "리뷰를 불러오는데 실패했습니다.");
+        }
+
+        const data = await response.json();
+        setReviews(data.reviews || []);
+      } catch (err) {
+        console.error("리뷰 로딩 중 오류:", err);
+        setError("리뷰를 불러오는 중 오류가 발생했습니다.");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchReviews();
+  }, [performId]);
+
+  // 정렬 기능
+  useEffect(() => {
+    if (reviews.length === 0) return;
+
+    const sortedReviews = [...reviews];
+
     if (isReviewAlign === "LASTEST") {
-      setReviews(
-        [...demoData].sort((a, b) => new Date(b.date) - new Date(a.date))
+      sortedReviews.sort(
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
       );
     } else if (isReviewAlign === "RATING") {
-      setReviews([...demoData].sort((a, b) => b.ratings - a.ratings));
+      sortedReviews.sort((a, b) => b.ratings - a.ratings);
     } else if (isReviewAlign === "EMPATHY") {
-      setReviews([...demoData].sort((a, b) => b.likeCount - a.likeCount));
+      sortedReviews.sort((a, b) => b.likeCount - a.likeCount);
     }
+
+    setReviews(sortedReviews);
   }, [isReviewAlign]);
+
+  // 좋아요 처리 핸들러
+  const handleLike = async (reviewId: string) => {
+    try {
+      // 현재 리뷰 찾기
+      const reviewIndex = reviews.findIndex((r) => r.id === reviewId);
+      if (reviewIndex === -1) return;
+
+      const review = reviews[reviewIndex];
+      const newIsLiked = !review.isLiked;
+
+      // 낙관적 업데이트 (UI 먼저 변경)
+      const updatedReviews = [...reviews];
+      updatedReviews[reviewIndex] = {
+        ...review,
+        isLiked: newIsLiked,
+        likeCount: newIsLiked
+          ? review.likeCount + 1
+          : Math.max(0, review.likeCount - 1),
+      };
+
+      setReviews(updatedReviews);
+
+      // API 호출
+      const response = await fetch("/api/reviews", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          reviewId: reviewId,
+          action: newIsLiked ? "like" : "unlike",
+        }),
+      });
+
+      // 실패 시 원래 상태로 복구
+      if (!response.ok) {
+        setReviews(reviews); // 원래 상태로 복원
+      }
+    } catch (error) {
+      console.error("좋아요 처리 오류:", error);
+    }
+  };
+
+  // 로딩 중 표시
+  if (loading) {
+    return <div className="text-center py-10">리뷰를 불러오는 중...</div>;
+  }
+
+  // 에러 표시
+  if (error) {
+    return <div className="text-center py-10 text-red-500">{error}</div>;
+  }
+
+  // 리뷰가 없는 경우
+  if (reviews.length === 0) {
+    return (
+      <div className="text-center py-10 text-gray-500">
+        아직 작성된 리뷰가 없습니다.
+      </div>
+    );
+  }
+
   return (
     <div className="mt-[50px]">
       <ul className="flex gap-[20px] justify-self-end mb-8">
-        <li
-          className={`text-lg cursor-pointer ${
-            isReviewAlign === "LASTEST"
-              ? "text-black font-bold"
-              : "text-gray-500"
-          }`}
-          onClick={() => {
-            setReviewAlign("LASTEST");
-          }}
-        >
-          평점순
-        </li>
         <li
           className={`text-lg cursor-pointer ${
             isReviewAlign === "RATING"
@@ -82,7 +147,7 @@ export default function ReviewList() {
             setReviewAlign("RATING");
           }}
         >
-          공감순
+          평점순
         </li>
         <li
           className={`text-lg cursor-pointer ${
@@ -94,6 +159,18 @@ export default function ReviewList() {
             setReviewAlign("EMPATHY");
           }}
         >
+          공감순
+        </li>
+        <li
+          className={`text-lg cursor-pointer ${
+            isReviewAlign === "LASTEST"
+              ? "text-black font-bold"
+              : "text-gray-500"
+          }`}
+          onClick={() => {
+            setReviewAlign("LASTEST");
+          }}
+        >
           최신글순
         </li>
       </ul>
@@ -102,13 +179,15 @@ export default function ReviewList() {
         {reviews.map((data) => (
           <DetailPost
             id={data.id}
-            key={data.date + data.author}
+            key={data.id}
             ratings={data.ratings}
             date={data.date}
-            author={data.author}
+            author={data.username}
             content={data.content}
             likeCount={data.likeCount}
-            isLiked={data.isLiked}
+            isLiked={data.isLiked || false}
+            isUserReview={data.isUserReview || false}
+            onLike={() => handleLike(data.id)}
           />
         ))}
       </section>
