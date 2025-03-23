@@ -9,7 +9,7 @@ export default function DetailPost({
   content,
   likeCount = 0,
   isLiked = false,
-  onLike, // onLikeToggle 대신 onLike로 변경
+  onLike,
 }: {
   id: string;
   ratings: number;
@@ -18,7 +18,7 @@ export default function DetailPost({
   content: string;
   likeCount?: number;
   isLiked?: boolean;
-  onLike?: (id: string) => void; // 여기도 onLike로 변경
+  onLike?: (id: string) => void;
 }) {
   return (
     <article className="w-full rounded-md border-2 flex flex-col pt-8 pb-12 px-11">
