@@ -9,7 +9,7 @@ export default function DetailPost({
   content,
   likeCount = 0,
   isLiked = false,
-  onLikeToggle,
+  onLike, // onLikeToggle 대신 onLike로 변경
 }: {
   id: string;
   ratings: number;
@@ -18,7 +18,7 @@ export default function DetailPost({
   content: string;
   likeCount?: number;
   isLiked?: boolean;
-  onLikeToggle?: (id: string) => void;
+  onLike?: (id: string) => void; // 여기도 onLike로 변경
 }) {
   return (
     <article className="w-full rounded-md border-2 flex flex-col pt-8 pb-12 px-11">
@@ -29,7 +29,7 @@ export default function DetailPost({
       <div className="flex justify-between items-center">
         <p className="font-bold text-lg">{author}</p>
         <button
-          onClick={() => onLikeToggle && onLikeToggle(id)}
+          onClick={() => onLike && onLike(id)} // onLikeToggle 대신 onLike로 변경
           className="flex items-center gap-2 text-gray-600 hover:text-flesh-500"
           aria-label={isLiked ? "공감" : "공감취소"}
         >
