@@ -12,7 +12,7 @@ interface ReviewData {
   content: string;
   likeCount: number;
   isLiked?: boolean;
-  isUserReview?: boolean;
+  isUserReview?: boolean; // 현재 사용자가 작성한 리뷰인지
 }
 
 export default function ReviewList() {
@@ -23,33 +23,37 @@ export default function ReviewList() {
   const [isReviewAlign, setReviewAlign] = useState("LASTEST");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [deleteStatus, setDeleteStatus] = useState<{
+    loading: boolean;
+    error: string;
+  }>({ loading: false, error: "" });
 
   // 리뷰 데이터 가져오기
-  useEffect(() => {
-    async function fetchReviews() {
-      if (!performId) return;
+  const fetchReviews = async () => {
+    if (!performId) return;
 
-      setLoading(true);
-      setError("");
+    setLoading(true);
+    setError("");
 
-      try {
-        const response = await fetch(`/api/reviews?performanceId=${performId}`);
+    try {
+      const response = await fetch(`/api/reviews?performanceId=${performId}`);
 
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.error || "리뷰를 불러오는데 실패했습니다.");
-        }
-
-        const data = await response.json();
-        setReviews(data.reviews || []);
-      } catch (err) {
-        console.error("리뷰 로딩 중 오류:", err);
-        setError("리뷰를 불러오는 중 오류가 발생했습니다.");
-      } finally {
-        setLoading(false);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "리뷰를 불러오는데 실패했습니다.");
       }
-    }
 
+      const data = await response.json();
+      setReviews(data.reviews || []);
+    } catch (err) {
+      console.error("리뷰 로딩 중 오류:", err);
+      setError("리뷰를 불러오는 중 오류가 발생했습니다.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchReviews();
   }, [performId]);
 
@@ -117,8 +121,63 @@ export default function ReviewList() {
     }
   };
 
+  // 리뷰 삭제 핸들러
+  const handleDelete = async (reviewId: string) => {
+    if (!confirm("리뷰를 삭제하시겠습니까?")) {
+      return;
+    }
+
+    setDeleteStatus({ loading: true, error: "" });
+
+    try {
+      const response = await fetch(`/api/reviews?reviewId=${reviewId}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "리뷰 삭제에 실패했습니다.");
+      }
+
+      // 삭제 성공 시 리뷰 목록 갱신
+      fetchReviews();
+      setDeleteStatus({ loading: false, error: "" });
+    } catch (error) {
+      console.error("리뷰 삭제 오류:", error);
+      setDeleteStatus({
+        loading: false,
+        error: error instanceof Error ? error.message : "리뷰 삭제 오류",
+      });
+    }
+  };
+
+  // 로딩 중 표시
+  if (loading) {
+    return <div className="text-center py-10">리뷰를 불러오는 중...</div>;
+  }
+
+  // 에러 표시
+  if (error) {
+    return <div className="text-center py-10 text-red-500">{error}</div>;
+  }
+
+  // 리뷰가 없는 경우
+  if (reviews.length === 0) {
+    return (
+      <div className="text-center py-10 text-gray-500">
+        아직 작성된 리뷰가 없습니다.
+      </div>
+    );
+  }
+
   return (
     <div className="mt-[50px]">
+      {deleteStatus.error && (
+        <div className="bg-red-100 text-red-700 p-3 mb-4 rounded">
+          {deleteStatus.error}
+        </div>
+      )}
+
       <ul className="flex gap-[20px] justify-self-end mb-8">
         <li
           className={`text-lg cursor-pointer ${
@@ -160,17 +219,29 @@ export default function ReviewList() {
       <section className="flex flex-col gap-y-3 mb-20">
         <h2 className="sr-only">한줄평 목록</h2>
         {reviews.map((data) => (
-          <DetailPost
-            id={data.id}
-            key={data.id}
-            ratings={data.ratings}
-            date={data.date}
-            author={data.username}
-            content={data.content}
-            likeCount={data.likeCount}
-            isLiked={data.isLiked || false}
-            onLike={handleLike} // 속성 이름을 onLike로 변경
-          />
+          <div key={data.id} className="relative">
+            <DetailPost
+              id={data.id}
+              ratings={data.ratings}
+              date={data.date}
+              author={data.username}
+              content={data.content}
+              likeCount={data.likeCount}
+              isLiked={data.isLiked || false}
+              onLike={handleLike}
+            />
+            {/* 삭제 버튼 - 본인이 작성한 리뷰에만 표시 */}
+            {data.isUserReview && (
+              <button
+                onClick={() => handleDelete(data.id)}
+                className="absolute bottom-3 right-10 p-2 text-gray-500 hover:text-red-500"
+                aria-label="리뷰 삭제"
+                disabled={deleteStatus.loading}
+              >
+                삭제
+              </button>
+            )}
+          </div>
         ))}
       </section>
     </div>
