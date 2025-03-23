@@ -148,6 +148,21 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // 중복 리뷰 확인 - 같은 사용자가 같은 공연에 이미 리뷰를 작성했는지 확인
+    const existingReviewQuery = await adminDb
+      .collection("reviews")
+      .where("performanceId", "==", performanceId)
+      .where("userId", "==", userId)
+      .get();
+
+    // 이미 리뷰가 존재하는 경우
+    if (!existingReviewQuery.empty) {
+      return NextResponse.json(
+        { error: "이미 이 공연에 대한 리뷰를 작성하셨습니다." },
+        { status: 409 } // 409 Conflict
+      );
+    }
+
     // 사용자 정보 조회
     const userData = await getUserData(userId, userType);
 
@@ -231,7 +246,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// PUT 함수 - 리뷰 좋아요 기능 (배열 방식으로 수정)
+// PUT 함수 - 리뷰 좋아요 기능
 export async function PUT(request: NextRequest) {
   try {
     // 현재 세션 확인
@@ -303,6 +318,111 @@ export async function PUT(request: NextRequest) {
     console.error("리뷰 좋아요 처리 오류:", error);
     return NextResponse.json(
       { error: "좋아요 처리 중 오류가 발생했습니다." },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  try {
+    // 현재 세션 확인
+    const session = await getServerSession(authOptions);
+
+    // 로그인되지 않은 경우
+    if (!session || !session.user) {
+      return NextResponse.json(
+        { error: "로그인이 필요합니다." },
+        { status: 401 }
+      );
+    }
+
+    const userId = session.user.id;
+    const { searchParams } = new URL(request.url);
+    const reviewId = searchParams.get("reviewId");
+
+    if (!reviewId) {
+      return NextResponse.json(
+        { error: "리뷰 ID가 필요합니다." },
+        { status: 400 }
+      );
+    }
+
+    // 리뷰 문서 확인
+    const reviewRef = adminDb.collection("reviews").doc(reviewId);
+    const reviewDoc = await reviewRef.get();
+
+    if (!reviewDoc.exists) {
+      return NextResponse.json(
+        { error: "존재하지 않는 리뷰입니다." },
+        { status: 404 }
+      );
+    }
+
+    const reviewData = reviewDoc.data();
+
+    // 작성자 확인 - 자신이 작성한 리뷰만 삭제 가능
+    if (reviewData.userId !== userId) {
+      return NextResponse.json(
+        { error: "자신이 작성한 리뷰만 삭제할 수 있습니다." },
+        { status: 403 }
+      );
+    }
+
+    const performanceId = reviewData.performanceId;
+    const ratings = reviewData.ratings;
+
+    // 공연 문서 참조
+    const performRef = adminDb.collection("performances").doc(performanceId);
+
+    // 트랜잭션으로 리뷰 삭제 및 공연 평점 업데이트
+    await adminDb.runTransaction(async (transaction) => {
+      // 공연 문서 가져오기
+      const performDoc = await transaction.get(performRef);
+
+      if (performDoc.exists) {
+        const performData = performDoc.data();
+        const currentRatingSum = performData.ratingSum || 0;
+        const currentRatingCount = performData.ratingCount || 0;
+
+        // 해당 리뷰 평점을 제외한 새로운 합계와 개수 계산
+        const newRatingCount = currentRatingCount - 1;
+        const newRatingSum = currentRatingSum - ratings;
+
+        // 리뷰가 없는 경우를 처리
+        if (newRatingCount <= 0) {
+          transaction.update(performRef, {
+            ratingSum: 0,
+            ratingCount: 0,
+            averageRating: 0,
+            updatedAt: FieldValue.serverTimestamp(),
+          });
+        } else {
+          // 새 평균 계산
+          const newAverageRating = parseFloat(
+            (newRatingSum / newRatingCount).toFixed(1)
+          );
+
+          transaction.update(performRef, {
+            ratingSum: newRatingSum,
+            ratingCount: newRatingCount,
+            averageRating: newAverageRating,
+            updatedAt: FieldValue.serverTimestamp(),
+          });
+        }
+      }
+
+      // 리뷰 문서 삭제
+      transaction.delete(reviewRef);
+    });
+
+    return NextResponse.json({
+      success: true,
+      message: "리뷰가 성공적으로 삭제되었습니다.",
+    });
+  } catch (error) {
+    console.error("리뷰 삭제 오류:", error);
+    return NextResponse.json(
+      { error: "리뷰 삭제 중 오류가 발생했습니다." },
       { status: 500 }
     );
   }
