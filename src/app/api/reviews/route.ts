@@ -4,7 +4,7 @@ import { authOptions } from "../auth/[...nextauth]/route";
 import { adminDb } from "../firebaseAdmin";
 import { FieldValue } from "firebase-admin/firestore";
 
-// 리뷰 데이터 타입 정의
+// 리뷰 데이터 타입 정의 (likedBy 배열 추가)
 export interface ReviewData {
   id: string;
   performanceId: string;
@@ -14,6 +14,7 @@ export interface ReviewData {
   date: string;
   content: string;
   likeCount: number;
+  likedBy: string[]; // 좋아요한 사용자 ID 배열
   createdAt: any;
   updatedAt: any;
 }
@@ -57,9 +58,12 @@ export async function GET(request: NextRequest) {
     // 리뷰 데이터 변환
     const reviews = reviewsSnapshot.docs.map((doc) => {
       const data = doc.data();
+      const likedBy = data.likedBy || [];
 
       // 로그인한 사용자가 작성한 리뷰인지 확인
       const isUserReview = userId === data.userId;
+      // 사용자가 좋아요 눌렀는지 확인 (배열에 포함되어 있는지)
+      const isLiked = userId ? likedBy.includes(userId) : false;
 
       return {
         id: doc.id,
@@ -70,6 +74,8 @@ export async function GET(request: NextRequest) {
         date: data.date,
         content: data.content,
         likeCount: data.likeCount || 0,
+        isUserReview,
+        isLiked,
       };
     });
 
@@ -165,7 +171,7 @@ export async function POST(request: NextRequest) {
     // 리뷰 ID 생성
     const reviewId = `review-${Date.now()}-${userId.substring(0, 6)}`;
 
-    // 리뷰 데이터 생성
+    // 리뷰 데이터 생성 (빈 likedBy 배열 포함)
     const reviewData: ReviewData = {
       id: reviewId,
       performanceId,
@@ -175,6 +181,7 @@ export async function POST(request: NextRequest) {
       date: today,
       content,
       likeCount: 0,
+      likedBy: [], // 빈 배열로 초기화
       createdAt: timestamp,
       updatedAt: timestamp,
     };
@@ -224,7 +231,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// PUT 함수 - 리뷰 좋아요 기능
+// PUT 함수 - 리뷰 좋아요 기능 (배열 방식으로 수정)
 export async function PUT(request: NextRequest) {
   try {
     // 현재 세션 확인
@@ -251,62 +258,46 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    // 리뷰 문서 확인
+    // 리뷰 문서 참조
     const reviewRef = adminDb.collection("reviews").doc(reviewId);
-    const reviewDoc = await reviewRef.get();
 
-    if (!reviewDoc.exists) {
-      return NextResponse.json(
-        { error: "존재하지 않는 리뷰입니다." },
-        { status: 404 }
-      );
-    }
+    // 트랜잭션 사용하여 atomic 업데이트
+    await adminDb.runTransaction(async (transaction) => {
+      const reviewDoc = await transaction.get(reviewRef);
 
-    const reviewData = reviewDoc.data();
-    const performanceId = reviewData.performanceId;
+      if (!reviewDoc.exists) {
+        throw new Error("존재하지 않는 리뷰입니다.");
+      }
 
-    // 좋아요 문서 ID 생성 (userId_reviewId 형식)
-    const likeId = `${userId}_${reviewId}`;
-    const likeRef = adminDb.collection("reviewLikes").doc(likeId);
-    const likeDoc = await likeRef.get();
+      const reviewData = reviewDoc.data();
+      const likedBy = reviewData.likedBy || [];
+      const timestamp = FieldValue.serverTimestamp();
 
-    // 타임스탬프
-    const timestamp = FieldValue.serverTimestamp();
+      // 이미 좋아요를 누른 사용자인지 확인
+      const userIndex = likedBy.indexOf(userId);
 
-    // 좋아요 처리
-    if (action === "like" && !likeDoc.exists) {
-      // 좋아요 추가
-      await likeRef.set({
-        userId,
-        reviewId,
-        performanceId,
-        createdAt: timestamp,
-      });
+      if (action === "like" && userIndex === -1) {
+        // 좋아요 추가
+        likedBy.push(userId);
+        transaction.update(reviewRef, {
+          likedBy: likedBy,
+          likeCount: reviewData.likeCount + 1,
+          updatedAt: timestamp,
+        });
+      } else if (action === "unlike" && userIndex !== -1) {
+        // 좋아요 제거
+        likedBy.splice(userIndex, 1);
+        transaction.update(reviewRef, {
+          likedBy: likedBy,
+          likeCount: Math.max(0, reviewData.likeCount - 1),
+          updatedAt: timestamp,
+        });
+      }
+    });
 
-      // 좋아요 수 증가
-      await reviewRef.update({
-        likeCount: FieldValue.increment(1),
-        updatedAt: timestamp,
-      });
-
-      return NextResponse.json({ success: true, action: "like" });
-    } else if (action === "unlike" && likeDoc.exists) {
-      // 좋아요 삭제
-      await likeRef.delete();
-
-      // 좋아요 수 감소 (0 이하로 내려가지 않도록)
-      await reviewRef.update({
-        likeCount: FieldValue.increment(-1),
-        updatedAt: timestamp,
-      });
-
-      return NextResponse.json({ success: true, action: "unlike" });
-    }
-
-    // 이미 처리된 상태거나 잘못된 액션
     return NextResponse.json({
-      success: false,
-      message: "잘못된 요청입니다.",
+      success: true,
+      action: action,
     });
   } catch (error) {
     console.error("리뷰 좋아요 처리 오류:", error);
