@@ -427,3 +427,117 @@ export async function DELETE(request: NextRequest) {
     );
   }
 }
+
+// PATCH 함수 - 리뷰 수정 기능
+export async function PATCH(request: NextRequest) {
+  try {
+    // 현재 세션 확인
+    const session = await getServerSession(authOptions);
+
+    // 로그인되지 않은 경우
+    if (!session || !session.user) {
+      return NextResponse.json(
+        { error: "로그인이 필요합니다." },
+        { status: 401 }
+      );
+    }
+
+    const userId = session.user.id;
+
+    // 요청 본문 파싱
+    const body = await request.json();
+    const { reviewId, content, ratings } = body;
+
+    if (!reviewId || !content || !ratings) {
+      return NextResponse.json(
+        { error: "필수 정보가 누락되었습니다. (reviewId, content, ratings)" },
+        { status: 400 }
+      );
+    }
+
+    // 평점 범위 확인 (1-5)
+    if (ratings < 1 || ratings > 5) {
+      return NextResponse.json(
+        { error: "평점은 1에서 5 사이의 값이어야 합니다." },
+        { status: 400 }
+      );
+    }
+
+    // 리뷰 문서 확인
+    const reviewRef = adminDb.collection("reviews").doc(reviewId);
+    const reviewDoc = await reviewRef.get();
+
+    if (!reviewDoc.exists) {
+      return NextResponse.json(
+        { error: "존재하지 않는 리뷰입니다." },
+        { status: 404 }
+      );
+    }
+
+    const reviewData = reviewDoc.data();
+
+    // 작성자 확인 - 자신이 작성한 리뷰만 수정 가능
+    if (reviewData.userId !== userId) {
+      return NextResponse.json(
+        { error: "자신이 작성한 리뷰만 수정할 수 있습니다." },
+        { status: 403 }
+      );
+    }
+
+    const performanceId = reviewData.performanceId;
+    const oldRatings = reviewData.ratings;
+
+    // 공연 문서 참조
+    const performRef = adminDb.collection("performances").doc(performanceId);
+
+    // 타임스탬프
+    const timestamp = FieldValue.serverTimestamp();
+
+    // 트랜잭션으로 리뷰 수정 및 공연 평점 업데이트
+    await adminDb.runTransaction(async (transaction) => {
+      // 공연 문서 가져오기
+      const performDoc = await transaction.get(performRef);
+
+      if (performDoc.exists) {
+        const performData = performDoc.data();
+        const currentRatingSum = performData.ratingSum || 0;
+
+        // 평점이 변경된 경우에만 공연 평점 업데이트
+        if (oldRatings !== ratings) {
+          // 이전 평점을 빼고 새 평점을 더함
+          const newRatingSum = currentRatingSum - oldRatings + ratings;
+
+          // 평균 재계산
+          const ratingCount = performData.ratingCount || 0;
+          const newAverageRating = parseFloat(
+            (newRatingSum / ratingCount).toFixed(1)
+          );
+
+          transaction.update(performRef, {
+            ratingSum: newRatingSum,
+            averageRating: newAverageRating,
+            updatedAt: timestamp,
+          });
+        }
+      }
+
+      // 리뷰 문서 업데이트
+      transaction.update(reviewRef, {
+        content: content,
+        ratings: ratings,
+        updatedAt: timestamp,
+      });
+    });
+
+    return NextResponse.json({
+      success: true,
+      message: "리뷰가 성공적으로 수정되었습니다.",
+    });
+  } catch (error) {
+    console.error("리뷰 수정 오류:", error);
+    return NextResponse.json(
+      { error: "리뷰 수정 중 오류가 발생했습니다." },
+      { status: 500 }
+    );
+  }
+}

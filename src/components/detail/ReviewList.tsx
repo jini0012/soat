@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from "react";
 import DetailPost from "./DetailPost";
 import { useParams } from "next/navigation";
+import { Edit2, Trash2, X, Check } from "lucide-react"; // 아이콘 추가
+import { Star } from "lucide-react";
 
 // API로부터 가져올 리뷰 데이터 타입 정의
 interface ReviewData {
@@ -13,6 +15,13 @@ interface ReviewData {
   likeCount: number;
   isLiked?: boolean;
   isUserReview?: boolean; // 현재 사용자가 작성한 리뷰인지
+}
+
+// 수정 중인 리뷰 정보를 위한 인터페이스
+interface EditingReview {
+  id: string;
+  content: string;
+  ratings: number;
 }
 
 export default function ReviewList() {
@@ -27,6 +36,13 @@ export default function ReviewList() {
     loading: boolean;
     error: string;
   }>({ loading: false, error: "" });
+
+  // 수정 상태 관리
+  const [editingReview, setEditingReview] = useState<EditingReview | null>(
+    null
+  );
+  const [editLoading, setEditLoading] = useState(false);
+  const [editError, setEditError] = useState("");
 
   // 리뷰 데이터 가져오기
   const fetchReviews = async () => {
@@ -151,6 +167,83 @@ export default function ReviewList() {
     }
   };
 
+  // 수정 모드 전환 핸들러
+  const handleEdit = (review: ReviewData) => {
+    setEditingReview({
+      id: review.id,
+      content: review.content,
+      ratings: review.ratings,
+    });
+  };
+
+  // 수정 취소 핸들러
+  const handleCancelEdit = () => {
+    setEditingReview(null);
+    setEditError("");
+  };
+
+  // 수정된 내용 변경 핸들러
+  const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    if (!editingReview) return;
+
+    setEditingReview({
+      ...editingReview,
+      content: e.target.value,
+    });
+  };
+
+  // 수정된 평점 변경 핸들러
+  const handleRatingChange = (rating: number) => {
+    if (!editingReview) return;
+
+    setEditingReview({
+      ...editingReview,
+      ratings: rating,
+    });
+  };
+
+  // 수정 저장 핸들러
+  const handleSaveEdit = async () => {
+    if (!editingReview) return;
+
+    // 내용이 비어있는지 확인
+    if (!editingReview.content.trim()) {
+      setEditError("리뷰 내용을 입력해주세요.");
+      return;
+    }
+
+    setEditLoading(true);
+    setEditError("");
+
+    try {
+      const response = await fetch(`/api/reviews`, {
+        method: "PATCH", // PATCH 메소드로 변경
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          reviewId: editingReview.id,
+          content: editingReview.content,
+          ratings: editingReview.ratings,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "리뷰 수정에 실패했습니다.");
+      }
+
+      // 수정 성공 시 리뷰 목록 갱신
+      fetchReviews();
+      setEditingReview(null);
+    } catch (error) {
+      console.error("리뷰 수정 오류:", error);
+      setEditError(error instanceof Error ? error.message : "리뷰 수정 오류");
+    } finally {
+      setEditLoading(false);
+    }
+  };
+
   // 로딩 중 표시
   if (loading) {
     return <div className="text-center py-10">리뷰를 불러오는 중...</div>;
@@ -175,6 +268,12 @@ export default function ReviewList() {
       {deleteStatus.error && (
         <div className="bg-red-100 text-red-700 p-3 mb-4 rounded">
           {deleteStatus.error}
+        </div>
+      )}
+
+      {editError && (
+        <div className="bg-red-100 text-red-700 p-3 mb-4 rounded">
+          {editError}
         </div>
       )}
 
@@ -220,26 +319,98 @@ export default function ReviewList() {
         <h2 className="sr-only">한줄평 목록</h2>
         {reviews.map((data) => (
           <div key={data.id} className="relative">
-            <DetailPost
-              id={data.id}
-              ratings={data.ratings}
-              date={data.date}
-              author={data.username}
-              content={data.content}
-              likeCount={data.likeCount}
-              isLiked={data.isLiked || false}
-              onLike={handleLike}
-            />
-            {/* 삭제 버튼 - 본인이 작성한 리뷰에만 표시 */}
-            {data.isUserReview && (
-              <button
-                onClick={() => handleDelete(data.id)}
-                className="absolute bottom-3 right-10 p-2 text-gray-500 hover:text-red-500"
-                aria-label="리뷰 삭제"
-                disabled={deleteStatus.loading}
-              >
-                삭제
-              </button>
+            {editingReview && editingReview.id === data.id ? (
+              <div className="w-full rounded-md border-2 flex flex-col pt-8 pb-12 px-11 relative">
+                <div className="w-full flex flex-wrap justify-between items-center mb-8">
+                  {/* 별점 수정 기능 - 여기에 StarRating 컴포넌트를 수정 가능하도록 구현 */}
+                  <div>
+                    <p className="mb-2 font-medium">평점 수정:</p>
+                    <div className="flex items-center">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <button
+                          key={star}
+                          type="button"
+                          onClick={() => handleRatingChange(star)}
+                          className="p-0 bg-transparent border-none cursor-pointer"
+                          aria-label={`${star}점 선택`}
+                        >
+                          {star <= editingReview.ratings ? (
+                            <Star className="w-5 h-5 fill-flesh-600 stroke-flesh-600" />
+                          ) : (
+                            <Star className="w-5 h-5 fill-white stroke-[#767676]" />
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <time dateTime={data.date}>{data.date}</time>
+                </div>
+                <div className="flex justify-between items-center">
+                  <p className="font-bold text-lg">{data.username}</p>
+                </div>
+                <textarea
+                  className="w-full mt-4 p-2 border rounded-md min-h-[100px] focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  value={editingReview.content}
+                  onChange={handleContentChange}
+                  placeholder="리뷰 내용을 입력하세요"
+                />
+                <div className="absolute bottom-3 right-3 flex items-center gap-2">
+                  <button
+                    onClick={handleCancelEdit}
+                    className="p-2 text-gray-500 hover:text-black flex items-center gap-1"
+                    aria-label="수정 취소"
+                    disabled={editLoading}
+                  >
+                    <X size={16} />
+                    <span>취소</span>
+                  </button>
+                  <button
+                    onClick={handleSaveEdit}
+                    className="p-2 text-blue-500 hover:text-blue-700 flex items-center gap-1"
+                    aria-label="수정 저장"
+                    disabled={editLoading}
+                  >
+                    <Check size={16} />
+                    <span>{editLoading ? "저장 중..." : "저장"}</span>
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <>
+                <DetailPost
+                  id={data.id}
+                  ratings={data.ratings}
+                  date={data.date}
+                  author={data.username}
+                  content={data.content}
+                  likeCount={data.likeCount}
+                  isLiked={data.isLiked || false}
+                  onLike={handleLike}
+                />
+                {/* 수정/삭제 버튼 - 본인이 작성한 리뷰에만 표시 */}
+                {data.isUserReview && (
+                  <div className="absolute bottom-3 right-3 flex items-center gap-2">
+                    <button
+                      onClick={() => handleEdit(data)}
+                      className="p-2 text-gray-500 hover:text-blue-500 flex items-center gap-1"
+                      aria-label="리뷰 수정"
+                      disabled={deleteStatus.loading}
+                    >
+                      <Edit2 size={16} />
+                      <span>수정</span>
+                    </button>
+                    <button
+                      onClick={() => handleDelete(data.id)}
+                      className="p-2 text-gray-500 hover:text-red-500 flex items-center gap-1"
+                      aria-label="리뷰 삭제"
+                      disabled={deleteStatus.loading}
+                    >
+                      <Trash2 size={16} />
+                      <span>삭제</span>
+                    </button>
+                  </div>
+                )}
+              </>
             )}
           </div>
         ))}
