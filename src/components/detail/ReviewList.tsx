@@ -106,33 +106,16 @@ export default function ReviewList() {
         }),
       });
 
-      // 실패 시 원래 상태로 복구
       if (!response.ok) {
         setReviews(reviews); // 원래 상태로 복원
+        console.error("좋아요 처리 실패");
+        return;
       }
     } catch (error) {
       console.error("좋아요 처리 오류:", error);
+      setReviews(reviews); // 오류 시 원래 상태로 복원
     }
   };
-
-  // 로딩 중 표시
-  if (loading) {
-    return <div className="text-center py-10">리뷰를 불러오는 중...</div>;
-  }
-
-  // 에러 표시
-  if (error) {
-    return <div className="text-center py-10 text-red-500">{error}</div>;
-  }
-
-  // 리뷰가 없는 경우
-  if (reviews.length === 0) {
-    return (
-      <div className="text-center py-10 text-gray-500">
-        아직 작성된 리뷰가 없습니다.
-      </div>
-    );
-  }
 
   return (
     <div className="mt-[50px]">
@@ -186,8 +169,7 @@ export default function ReviewList() {
             content={data.content}
             likeCount={data.likeCount}
             isLiked={data.isLiked || false}
-            isUserReview={data.isUserReview || false}
-            onLike={() => handleLike(data.id)}
+            onLike={handleLike} // 속성 이름을 onLike로 변경
           />
         ))}
       </section>
