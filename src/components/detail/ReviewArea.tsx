@@ -61,9 +61,7 @@ export default function ReviewArea() {
       // 성공 시 폼 초기화
       setReview("");
       setRating(0);
-
-      // 페이지 새로고침하여 리뷰 목록 업데이트
-      router.refresh();
+      window.location.reload();
 
       alert("리뷰가 성공적으로 등록되었습니다.");
     } catch (err) {
