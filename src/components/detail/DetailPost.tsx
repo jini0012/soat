@@ -20,7 +20,6 @@ export default function DetailPost({
   isLiked?: boolean;
   isUserReview?: boolean;
   onLike?: (id: string) => void;
-  onDelete?: (id: string) => void;
 }) {
   return (
     <article className="w-full rounded-md border-2 flex flex-col pt-8 pb-20 px-11 relative">
