@@ -10,8 +10,8 @@ export default function GeneralUsersTable({ data }: { data: GeneralUser[] }) {
 
   const fieldMapping: Record<(typeof headers)[number], keyof GeneralUser> = {
     이메일: "email",
-    이름: "name",
-    가입날짜: "joinDate",
+    이름: "username",
+    가입날짜: "createdAt",
   };
 
   const [selectedUser, setSelectedUser] = useState<GeneralUser | null>(null);
@@ -74,6 +74,16 @@ export default function GeneralUsersTable({ data }: { data: GeneralUser[] }) {
     }
   };
 
+  const handleAddAdmin = () => {
+    console.log("관리자 추가");
+
+    if (selectedUser) {
+      console.log(selectedUser.id);
+    } else {
+      console.log("선택된 사용자가 없습니다.");
+    }
+  };
+
   return (
     <>
       <table className="w-full table-fixed border-collapse">
@@ -107,6 +117,7 @@ export default function GeneralUsersTable({ data }: { data: GeneralUser[] }) {
           onRadioChange={handleRadioChange}
           onClose={handleClose}
           onApply={handleApplyStatus}
+          handleAddAdmin={handleAddAdmin}
         />
       )}
     </>
