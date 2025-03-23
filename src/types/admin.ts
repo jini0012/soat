@@ -1,6 +1,7 @@
 import { SellerUserData } from "./users";
 
 export interface GeneralUser {
+  id: string;
   email: string;
   username: string;
   createdAt: string;

@@ -4,11 +4,13 @@ import { SearchInput } from "../controls/Inputs";
 import Link from "next/link";
 import { Menu, X, Ticket, House } from "lucide-react";
 import { useSession, signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function Header() {
   const [searchValue, setSearchValue] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { data: session, status } = useSession();
+  const router = useRouter();
 
   useEffect(() => {
     // 회원 탈퇴 회원인경우 로그아웃 적용
@@ -23,9 +25,11 @@ export default function Header() {
   const isBuyer = userType === "buyer";
   const isSeller = userType === "seller";
 
-  const handleSearch = () => {
-    console.log("검색이되었습니다! ");
-    // 추후 api 호출 hook 추가예정
+  const handleSearch = async () => {
+    if (!searchValue.trim()) return alert("검색된 내용이 없습니다.");
+    else {
+      router.push(`/search?title=${searchValue}`);
+    }
   };
 
   const toggleMenu = () => {

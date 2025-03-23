@@ -9,6 +9,7 @@ import { buyerUsersList } from "../api/admin/users/route";
 
 export interface GeneralUser {
   email: string;
+  id: string;
   username: string;
   phoneNumber: string;
   createdAt: string;

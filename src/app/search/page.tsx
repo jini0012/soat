@@ -8,6 +8,10 @@ import SearchOptionSection from "@/components/search/SearchOptionSection";
 import DesktopSearchOptionSection from "@/components/search/DesktopSearchOptionSection";
 import Header from "@/components/home/Header";
 import Footer from "@/components/home/Footer";
+import { PerformanceData } from "../api/performance/route";
+import axios from "axios";
+import { useSearchParams } from "next/navigation";
+import Loading from "@/components/Loading";
 
 const mockData = [
   {
@@ -114,8 +118,37 @@ export default function SearchPage() {
   const [selectedStatusFilters, setSelectedStatusFilters] = useState<string[]>(
     []
   );
-
   const [isMobile, setIsMobile] = useState(false);
+  const [searchDataList, setSearchDataList] = useState<PerformanceData[]>([]);
+  const searchParams = useSearchParams();
+  const title = searchParams.get("title");
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    setSearchDataList([]); // 검색 결과 초기화
+    // url params에 title 값이 없는 경우 fetchData() 미실행
+    if (!title || title.trim() === "") {
+      return;
+    }
+    // title 검색 결과를 setSearchDataList 에 저장
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("/api/performance/search", {
+          params: { title },
+        });
+        if (response.status === 200) {
+          setSearchDataList(response.data);
+        }
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          console.error("검색 요청 실패:", error.response?.data.message);
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchData();
+  }, [title]);
 
   useEffect(() => {
     setIsMobile(window.innerWidth <= 768);
@@ -130,16 +163,16 @@ export default function SearchPage() {
 
   // 정렬 로직
   const sortedData = useMemo(() => {
-    const sorted = [...mockData];
+    const sorted = searchDataList;
     if (selectedSortOption === "최근날짜순") {
-      sorted.sort((a, b) => (a.date > b.date ? -1 : 1));
+      sorted.sort((a, b) => (a.bookingStartDate > b.bookingStartDate ? -1 : 1));
     } else if (selectedSortOption === "한줄평순") {
-      sorted.sort((a, b) => b.commentCount - a.commentCount);
+      sorted.sort((a, b) => b.price - a.price);
     } else if (selectedSortOption === "낮은가격순") {
       sorted.sort((a, b) => a.price - b.price);
     }
     return sorted;
-  }, [selectedSortOption]);
+  }, [searchDataList, selectedSortOption]);
 
   // filteredData 계산 로직
   const filteredData = useMemo(() => {
@@ -152,13 +185,12 @@ export default function SearchPage() {
       // 판매상태 필터 적용 (선택된 필터가 없으면 모두 통과)
       const matchesStatus =
         selectedStatusFilters.length === 0 ||
-        selectedStatusFilters.includes(item.saleStatus);
+        new Date() > new Date(item.bookingEndDate);
 
       // 두 조건을 모두 만족해야 함
       return matchesCategory && matchesStatus;
     });
   }, [sortedData, selectedCategoryFilters, selectedStatusFilters]);
-
   const itemsPerPage = 5;
   // 필터링된 데이터에 맞는 총 페이지 수
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
@@ -231,7 +263,7 @@ export default function SearchPage() {
       <Header />
       <main className="px-4 md:px-[140px] relative min-h-[100vh]">
         <p className="font-medium">
-          <span className="text-flesh-500">&quot;쏘앳&quot;</span> 검색
+          <span className="text-flesh-500">&quot;{title}&quot;</span> 검색
           결과입니다.
         </p>
 
@@ -271,15 +303,23 @@ export default function SearchPage() {
         </section>
 
         {/* 검색 결과 목록 */}
-        <section>
-          <ul>
-            {(isMobile ? displayedDataForMobile : displayedDataForDesktop).map(
-              (item) => (
-                <SearchResultItem key={item.id} {...item} />
-              )
-            )}
-          </ul>
-        </section>
+
+        {isLoading ? (
+          <Loading />
+        ) : filteredData.length === 0 ? (
+          <p>검색 결과가 없습니다.</p> // 검색 결과가 없을 때 메시지
+        ) : (
+          <section>
+            <ul>
+              {(isMobile
+                ? displayedDataForMobile
+                : displayedDataForDesktop
+              ).map((item) => (
+                <SearchResultItem key={item.id} item={item} />
+              ))}
+            </ul>
+          </section>
+        )}
 
         {/* 모바일: 더보기 버튼 */}
         {visibleItems < filteredData.length && isMobile && (
