@@ -81,7 +81,7 @@ export default function SearchPage() {
     if (selectedSortOption === "최근날짜순") {
       sorted.sort((a, b) => (a.bookingStartDate > b.bookingStartDate ? -1 : 1));
     } else if (selectedSortOption === "한줄평순") {
-      sorted.sort((a, b) => b.price - a.price);
+      sorted.sort((a, b) => b.ratingCount - a.ratingCount);
     } else if (selectedSortOption === "낮은가격순") {
       sorted.sort((a, b) => a.price - b.price);
     }
