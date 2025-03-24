@@ -28,6 +28,8 @@ export async function GET(request: Request) {
         "price",
         "address",
         "detailAddress",
+        "ratingSum",
+        "ratingCount",
       ],
       hitsPerPage: 10,
     });
