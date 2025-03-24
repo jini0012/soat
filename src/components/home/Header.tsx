@@ -26,8 +26,10 @@ export default function Header() {
   const isSeller = userType === "seller";
 
   const handleSearch = async () => {
-    if (!searchValue.trim()) return alert("검색된 내용이 없습니다.");
-    else {
+    if (!searchValue.trim()) {
+      setSearchValue("");
+      return alert("검색된 내용이 없습니다.");
+    } else {
       router.push(`/search?title=${searchValue}`);
     }
   };
