@@ -10,7 +10,7 @@ export default function SearchResultItem({ item }: { item: Item }) {
     bookingEndDate,
     price,
     sellerTeam,
-    ratingSum,
+    ratingCount,
   } = item;
   const saleStatus =
     new Date() < new Date(bookingStartDate)
@@ -64,7 +64,9 @@ export default function SearchResultItem({ item }: { item: Item }) {
 
             {/* 날짜 & 예매가 (데스크탑에서 가로 정렬) */}
             <div className="text-xs text-gray-400 font-light md:flex md:items-center md:justify-between md:mb-[4px]">
-              <div className="md:flex-1 md:text-sm">{bookingEndDate}</div>
+              <div className="md:flex-1 md:text-sm">
+                {bookingStartDate} ~ {bookingEndDate}
+              </div>
               <p className="hidden md:block text-flesh-600 font-semibold md:text-base ">
                 예매가
                 <span className="text-black"> {price.toLocaleString()}원</span>
@@ -78,7 +80,7 @@ export default function SearchResultItem({ item }: { item: Item }) {
       saleStatus === "판매예정" || saleStatus === "판매종료" ? "invisible" : ""
     }`}
             >
-              한줄평({ratingSum})
+              한줄평({ratingCount})
             </p>
 
             {/* 예매 버튼 */}

@@ -15,7 +15,7 @@ import Loading from "@/components/Loading";
 
 export interface Item extends PerformanceData {
   objectID: string;
-  ratingSum: number;
+  ratingCount: number;
 }
 
 export default function SearchPage() {
