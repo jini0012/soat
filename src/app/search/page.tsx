@@ -13,6 +13,11 @@ import axios from "axios";
 import { useSearchParams } from "next/navigation";
 import Loading from "@/components/Loading";
 
+export interface Item extends PerformanceData {
+  objectID: string;
+  ratingSum: number;
+}
+
 export default function SearchPage() {
   const [isOpenSearchOption, setIsOpenSearchOption] = useState(false);
   const [filterType, setFilterType] = useState<
@@ -28,7 +33,7 @@ export default function SearchPage() {
     []
   );
   const [isMobile, setIsMobile] = useState(false);
-  const [searchDataList, setSearchDataList] = useState<PerformanceData[]>([]);
+  const [searchDataList, setSearchDataList] = useState<Item[]>([]);
   const searchParams = useSearchParams();
   const title = searchParams.get("title");
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -224,7 +229,7 @@ export default function SearchPage() {
                 ? displayedDataForMobile
                 : displayedDataForDesktop
               ).map((item) => (
-                <SearchResultItem key={item.id} item={item} />
+                <SearchResultItem key={item.objectID} item={item} />
               ))}
             </ul>
           </section>

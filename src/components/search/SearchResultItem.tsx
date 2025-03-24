@@ -1,12 +1,9 @@
 import Link from "next/link";
-import { PerformanceData } from "@/app/api/performance/route";
-interface Item extends PerformanceData {
-  ratingSum: number;
-}
+import { Item } from "@/app/search/page";
 
 export default function SearchResultItem({ item }: { item: Item }) {
   const {
-    id,
+    objectID,
     poster,
     title,
     bookingStartDate,
@@ -25,7 +22,7 @@ export default function SearchResultItem({ item }: { item: Item }) {
 
   return (
     <li>
-      <Link href={`/detail/${id}`}>
+      <Link href={`/detail/${objectID}`}>
         <article className="py-[20px] flex items-center border-b border-b-gray-300 md:gap-4">
           {/* 공연 포스터 */}
           <img
