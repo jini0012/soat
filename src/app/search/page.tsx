@@ -77,7 +77,7 @@ export default function SearchPage() {
 
   // 정렬 로직
   const sortedData = useMemo(() => {
-    const sorted = searchDataList;
+    const sorted = [...searchDataList];
     if (selectedSortOption === "최근날짜순") {
       sorted.sort((a, b) => (a.bookingStartDate > b.bookingStartDate ? -1 : 1));
     } else if (selectedSortOption === "한줄평순") {
