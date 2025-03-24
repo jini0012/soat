@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { adminDb } from "@/app/api/firebaseAdmin";
+import { postsIndex } from "@/lib/algolia";
 import { PerformanceData } from "@/app/api/performance/route";
 
 export async function GET(request: Request) {
@@ -14,25 +14,32 @@ export async function GET(request: Request) {
   }
 
   try {
-    const performancesRef = adminDb.collection("performances");
+    const { hits } = await postsIndex.search<PerformanceData>(title, {
+      attributesToRetrieve: [
+        "title",
+        "content",
+        "sellerTeam",
+        "category",
+        "createdAt",
+        "poster",
+        "updatedAt",
+        "bookingStartDate",
+        "bookingEndDate",
+        "price",
+        "address",
+        "detailAddress",
+      ],
+      hitsPerPage: 10,
+    });
 
-    const snapshot = await performancesRef
-      .where("title", ">=", title)
-      .where("title", "<=", title + "\uf8ff")
-      .get();
-
-    if (snapshot.empty) {
+    if (hits.length === 0) {
       return NextResponse.json(
         { message: "검색 결과가 없습니다." },
         { status: 404 }
       );
     }
 
-    const performances: PerformanceData[] = snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    })) as PerformanceData[];
-    return NextResponse.json(performances);
+    return NextResponse.json(hits);
   } catch (error) {
     console.error("검색 오류 :", error);
     return NextResponse.json(
