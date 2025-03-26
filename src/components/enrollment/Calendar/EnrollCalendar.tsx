@@ -125,17 +125,19 @@ export default function EnrollCalendar() {
             종료 날짜
           </li>
         </ul>
-        <Button
-          type="button"
-          className="ml-auto text-xs"
-          onClick={handleToggleRangeButton}
-          highlight={isRange}
-        >
-          범위 선택
-        </Button>
-        <Button className="ml-auto" type="button" onClick={handleAddButton}>
-          추가
-        </Button>
+        <div className="flex ml-auto items-center gap-8">
+          <Button
+            type="button"
+            className="h-full"
+            onClick={handleToggleRangeButton}
+            highlight={isRange}
+          >
+            범위 선택
+          </Button>
+          <Button className="ml-auto" type="button" onClick={handleAddButton}>
+            추가
+          </Button>
+        </div>
       </div>
       {selectedEvent && (
         <PerformanceInfo

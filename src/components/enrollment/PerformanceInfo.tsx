@@ -27,24 +27,26 @@ export default function PerformanceInfo({
           <p className="flex flex-col">
             공연 시간 : {performance.time}
             {performance.casting.length !== 0 && (
-              <span className="text-ellipsis">
-                캐스팅 : {`${performance.casting}`}
+              <span className="text-ellipsis break-keep">
+                {`캐스팅 : ${performance.casting}`}
               </span>
             )}
           </p>
 
-          <button
-            className="ml-auto"
-            type="button"
-            onClick={() => onEdit(performance.time, performance.casting, idx)}
-          >
-            <Edit aria-label="수정" />
-          </button>
-          <CloseButton
-            type="button"
-            className="ml-auto"
-            onClick={() => handleDel(idx)}
-          />
+          <div className="flex gap-4 ml-auto items-center">
+            <button
+              className="ml-auto"
+              type="button"
+              onClick={() => onEdit(performance.time, performance.casting, idx)}
+            >
+              <Edit aria-label="수정" />
+            </button>
+            <CloseButton
+              type="button"
+              className="ml-auto"
+              onClick={() => handleDel(idx)}
+            />
+          </div>
         </div>
       ))}
     </section>

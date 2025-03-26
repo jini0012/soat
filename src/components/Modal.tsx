@@ -19,7 +19,7 @@ export default function Modal({
 
   return ReactDOM.createPortal(
     <div
-      className="fixed top-0 left-0 w-full h-full bg-black/50 z-50 flex justify-center items-center"
+      className="fixed top-0 left-0 w-full h-full bg-black/50 z-50 flex justify-center items-center px-10"
       onClick={onClose}
     >
       <section
