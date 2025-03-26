@@ -109,7 +109,9 @@ export default function ShowInfoSection({
           <ul className="space-y-4 md:space-y-6">
             <li>
               <p className="flex items-center gap-2 text-lg md:text-2xl text-neutral-700">
-                <span className="font-semibold">장소 :</span>
+                <span className="font-semibold whitespace-nowrap self-start">
+                  장소 :
+                </span>
                 {locationAddress}&nbsp;
                 {locationName}
                 <button
