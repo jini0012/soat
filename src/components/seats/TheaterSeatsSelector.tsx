@@ -19,17 +19,19 @@ function TheaterSeatSelector({
   occupiedSeats = [],
   onSeatToggle,
 }: TheaterSeatSelectorProps): JSX.Element {
+  console.log(layoutData);
+
   // 특정 열이 모든 행에서 통로인지 확인하는 함수
   const isColumnAllAisles = useCallback(
     (columnIndex: number): boolean => {
       // 모든 행을 확인
-      const allRows = Object.keys(layoutData.rowConfigs);
+      const allRows = Object.keys(layoutData.rowsConfigs);
 
       // 해당 열이 존재하는지 확인 (일부 행은 더 짧을 수 있음)
       const rowsWithColumn = allRows.filter((row) => {
         const totalPositions =
-          layoutData.rowConfigs[row].seats +
-          layoutData.rowConfigs[row].aisles.length;
+          layoutData.rowsConfigs[row].seats +
+          layoutData.rowsConfigs[row].aisles.length;
         return columnIndex < totalPositions;
       });
 
@@ -40,7 +42,7 @@ function TheaterSeatSelector({
 
       // 해당 열이 존재하는 모든 행에서 통로인지 확인
       return rowsWithColumn.every((row) =>
-        layoutData.rowConfigs[row].aisles.includes(columnIndex)
+        layoutData.rowsConfigs[row].aisles.includes(columnIndex)
       );
     },
     [layoutData]
@@ -49,7 +51,7 @@ function TheaterSeatSelector({
   // 좌석 번호 생성 (통로 고려)
   const getSeatNumber = useCallback(
     (rowLetter: string, physicalIndex: number): string => {
-      const rowConfig = layoutData.rowConfigs[rowLetter];
+      const rowConfig = layoutData.rowsConfigs[rowLetter];
       const aisles = new Set(rowConfig.aisles);
 
       // 해당 위치의 실제 좌석 번호 계산
@@ -105,8 +107,9 @@ function TheaterSeatSelector({
             무대
           </div>
           {Array.from({ length: layoutData.rows }).map((_, rowIndex) => {
+            console.log("rowIndex", rowIndex);
             const rowLetter = String.fromCharCode(65 + rowIndex);
-            const rowConfig = layoutData.rowConfigs[rowLetter];
+            const rowConfig = layoutData.rowsConfigs[rowLetter];
             const totalPositions = rowConfig.seats + rowConfig.aisles.length;
 
             return (

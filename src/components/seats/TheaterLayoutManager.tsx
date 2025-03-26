@@ -20,7 +20,7 @@ interface RowConfigs {
 // 저장될 좌석 배치 데이터 형식
 export interface TheaterLayoutData {
   rows: number;
-  rowConfigs: {
+  rowsConfigs: {
     [key: string]: {
       seats: number;
       aisles: number[];
@@ -167,7 +167,7 @@ function TheaterLayoutManager(): JSX.Element {
   function handleSave(): void {
     const layoutData: TheaterLayoutData = {
       rows: rows,
-      rowConfigs: Object.fromEntries(
+      rowsConfigs: Object.fromEntries(
         Object.entries(rowConfigs).map(([row, config]) => [
           row,
           {
