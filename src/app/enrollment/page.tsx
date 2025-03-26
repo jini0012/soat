@@ -1,6 +1,5 @@
 import React from "react";
 import Link from "next/link";
-import EnrollWrapper from "@/components/enrollment/EnrollWrapper";
 import EnrollFooter from "@/components/enrollment/EnrollFooter";
 import EnrollMains from "@/components/enrollment/EnrollMains";
 
@@ -13,9 +12,7 @@ export default function EnrollmentPage() {
         </Link>
       </header>
       <EnrollMains />
-      <EnrollWrapper>
-        <EnrollFooter />
-      </EnrollWrapper>
+      <EnrollFooter />
     </>
   );
 }

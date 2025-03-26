@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RowConfigs } from "@/types/seat";
+import { EnrollSeats } from "@/types/seat";
 
 const seatLabels = [
   "A",
@@ -30,10 +30,7 @@ const seatLabels = [
   "Z",
 ]; //고정된 값으로 재랜더링 필요 x
 
-interface SeatState {
-  rows: number;
-  rowsConfigs: RowConfigs;
-  totalSeats: number;
+interface SeatState extends EnrollSeats {
   isDirty: boolean;
   isAllAisle: number[];
 }
