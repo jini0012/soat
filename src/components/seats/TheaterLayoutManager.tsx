@@ -31,6 +31,14 @@ export interface TheaterLayoutData {
   lastModified: string;
 }
 
+export interface OccupiedSeat {
+  seatId: string;
+  occupantId: string;
+  occupiedAt: Date;
+  status: "processing" | "pending" | "booked";
+  reservationId: string;
+}
+
 function TheaterLayoutManager(): JSX.Element {
   const [rows, setRows] = useState<number>(5);
   const [rowConfigs, setRowConfigs] = useState<RowConfigs>(() => {

@@ -2,14 +2,15 @@
 
 import React, { useCallback } from "react";
 import { Button } from "@/components/ui/button";
-import type { TheaterLayoutData } from "./TheaterLayoutManager";
+import type { OccupiedSeat, TheaterLayoutData } from "./TheaterLayoutManager";
 
-interface TheaterSeatSelectorProps {
+export interface TheaterSeatSelectorProps {
   layoutData: TheaterLayoutData;
   maxSelectableSeats?: number;
-  selectedSeats: Set<string>; // 외부에서 관리되는 선택된 좌석 상태
-  occupiedSeats?: string[];
-  onSeatToggle: (seatId: string) => void; // 좌석 선택/해제 핸들러
+  selectedSeats: Set<string>;
+  occupiedSeats: OccupiedSeat[];
+  onSeatToggle: (seatId: string) => void;
+  userId?: string; // 현재 사용자 ID 추가
 }
 
 function TheaterSeatSelector({
@@ -18,6 +19,7 @@ function TheaterSeatSelector({
   selectedSeats,
   occupiedSeats = [],
   onSeatToggle,
+  userId,
 }: TheaterSeatSelectorProps): JSX.Element {
   // 특정 열이 모든 행에서 통로인지 확인하는 함수
   const isColumnAllAisles = useCallback(
@@ -70,13 +72,36 @@ function TheaterSeatSelector({
 
   // 좌석 상태에 따른 스타일 결정
   const getSeatStyle = (seatId: string) => {
-    if (occupiedSeats.includes(seatId)) {
+    const isOccupied = occupiedSeats.some((seat) => seat.seatId === seatId);
+    const isMySeat =
+      isOccupied &&
+      occupiedSeats.some(
+        (seat) => seat.seatId === seatId && seat.occupantId === userId
+      );
+
+    if (isOccupied && !isMySeat) {
       return "bg-gray-300 text-gray-500 cursor-not-allowed";
+    }
+    if (isMySeat) {
+      return "bg-flesh-500 text-white hover:bg-flesh-600 hover:text-white";
     }
     if (selectedSeats.has(seatId)) {
       return "bg-flesh-500 text-white hover:bg-flesh-600 hover:text-white";
     }
     return "bg-white hover:bg-gray-100";
+  };
+
+  // 좌석이 선택 가능한지 확인
+  const isSeatDisabled = (seatId: string) => {
+    const isOccupied = occupiedSeats.some((seat) => seat.seatId === seatId);
+    const isMySeat =
+      isOccupied &&
+      occupiedSeats.some(
+        (seat) => seat.seatId === seatId && seat.occupantId === userId
+      );
+
+    // 다른 사람이 점유한 좌석만 비활성화
+    return isOccupied && !isMySeat;
   };
 
   return (
@@ -134,7 +159,7 @@ function TheaterSeatSelector({
                             seatId
                           )}`}
                           onClick={() => onSeatToggle(seatId)}
-                          disabled={occupiedSeats.includes(seatId)}
+                          disabled={isSeatDisabled(seatId)}
                         >
                           {seatId}
                         </Button>

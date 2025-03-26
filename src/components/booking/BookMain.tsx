@@ -20,10 +20,10 @@ export default function BookMain({
   const [captchaToken, setCaptchaToken] = useState("");
   const [layoutData, setLayoutData] = useState({} as TheaterLayoutData);
   const [selectedSeats, setSelectedSeats] = useState<Set<string>>(new Set());
+  const [selectedDay, setSelectedDay] = useState("");
 
   useEffect(() => {
     // 테스트용 레이아웃 데이터
-    console.log(performanceData.seats);
     setLayoutData(performanceData.seats);
   }, []);
 
@@ -38,10 +38,14 @@ export default function BookMain({
       )}
       {process === "seat" && (
         <SeatSelection
+          performanceId={showId}
           setProcess={setProcess}
+          performanceDates={performanceData.performances}
           layoutData={layoutData}
           selectedSeats={selectedSeats}
           setSelectedSeats={setSelectedSeats}
+          selectedDay={selectedDay}
+          setSelectedDay={setSelectedDay}
         />
       )}
       {process === "purchaserInfo" && <PurchaserInfo setProcess={setProcess} />}
