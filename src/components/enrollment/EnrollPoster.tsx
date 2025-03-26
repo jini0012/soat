@@ -3,10 +3,13 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { setPoster } from "@/redux/slices/enrollSlice";
 import { Plus } from "lucide-react";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 export default function EnrollPoster() {
   const [fileName, setFileName] = useState<string>("");
-  const [previewPoster, setPreviewPoster] = useState<string | null>(null);
+  const poster = useSelector((state: RootState) => state.enroll.poster);
+  const previewPoster = poster?.base64Data;
   const dispatch = useDispatch();
 
   const imageToBase64 = (file: File): Promise<string> => {
@@ -26,7 +29,6 @@ export default function EnrollPoster() {
 
     if (file) {
       const base64File = await imageToBase64(file);
-      setPreviewPoster(base64File); // Blob URL을 미리보기로 설정
       setFileName(file.name);
       dispatch(
         setPoster({

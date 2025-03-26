@@ -13,96 +13,10 @@ import axios from "axios";
 import { useSearchParams } from "next/navigation";
 import Loading from "@/components/Loading";
 
-const mockData = [
-  {
-    id: 1,
-    imgUrl: "/images/derme.jpg",
-    title: "G-Dragon 콘서트",
-    venue: "서울 올림픽 경기장",
-    date: "2025.03.20",
-    commentCount: 10,
-    price: 13000,
-    category: "콘서트",
-    saleStatus: "판매종료",
-  },
-  {
-    id: 2,
-    imgUrl: "/images/derme.jpg",
-    title: "라이온 킹 뮤지컬",
-    venue: "예술의 전당 오페라극장",
-    date: "2025.03.21",
-    commentCount: 0,
-    price: 15000,
-    category: "뮤지컬",
-    saleStatus: "판매예정",
-  },
-  {
-    id: 3,
-    imgUrl: "/images/derme.jpg",
-    title: "햄릿 연극",
-    venue: "국립극장 달오름극장",
-    date: "2025.03.22",
-    commentCount: 0,
-    price: 82000,
-    category: "연극",
-    saleStatus: "판매예정",
-  },
-  {
-    id: 4,
-    imgUrl: "/images/derme.jpg",
-    title: "반 고흐 전시회",
-    venue: "DDP 디자인 전시관",
-    date: "2025.03.23",
-    commentCount: 15,
-    price: 21000,
-    category: "전시/행사",
-    saleStatus: "판매중",
-  },
-  {
-    id: 5,
-    imgUrl: "/images/derme.jpg",
-    title: "아이유 팬미팅",
-    venue: "코엑스 컨벤션 센터",
-    date: "2025.03.24",
-    commentCount: 8,
-    price: 37000,
-    category: "팬미팅",
-    saleStatus: "판매중",
-  },
-  {
-    id: 6,
-    imgUrl: "/images/derme.jpg",
-    title: "레미제라블 뮤지컬",
-    venue: "샤롯데씨어터",
-    date: "2025.03.25",
-    commentCount: 12,
-    price: 42000,
-    category: "뮤지컬",
-    saleStatus: "판매종료",
-  },
-  {
-    id: 7,
-    imgUrl: "/images/derme.jpg",
-    title: "Coldplay 콘서트",
-    venue: "인천 아시아드 주경기장",
-    date: "2025.03.26",
-    commentCount: 19,
-    price: 74000,
-    category: "콘서트",
-    saleStatus: "판매종료",
-  },
-  {
-    id: 8,
-    imgUrl: "/images/derme.jpg",
-    title: "백남준 아트 전시회",
-    venue: "국립현대미술관 서울관",
-    date: "2025.03.27",
-    commentCount: 7,
-    price: 15000,
-    category: "전시/행사",
-    saleStatus: "판매중",
-  },
-];
+export interface Item extends PerformanceData {
+  objectID: string;
+  ratingCount: number;
+}
 
 export default function SearchPage() {
   const [isOpenSearchOption, setIsOpenSearchOption] = useState(false);
@@ -119,7 +33,7 @@ export default function SearchPage() {
     []
   );
   const [isMobile, setIsMobile] = useState(false);
-  const [searchDataList, setSearchDataList] = useState<PerformanceData[]>([]);
+  const [searchDataList, setSearchDataList] = useState<Item[]>([]);
   const searchParams = useSearchParams();
   const title = searchParams.get("title");
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -163,11 +77,11 @@ export default function SearchPage() {
 
   // 정렬 로직
   const sortedData = useMemo(() => {
-    const sorted = searchDataList;
+    const sorted = [...searchDataList];
     if (selectedSortOption === "최근날짜순") {
       sorted.sort((a, b) => (a.bookingStartDate > b.bookingStartDate ? -1 : 1));
     } else if (selectedSortOption === "한줄평순") {
-      sorted.sort((a, b) => b.price - a.price);
+      sorted.sort((a, b) => b.ratingCount - a.ratingCount);
     } else if (selectedSortOption === "낮은가격순") {
       sorted.sort((a, b) => a.price - b.price);
     }
@@ -315,7 +229,7 @@ export default function SearchPage() {
                 ? displayedDataForMobile
                 : displayedDataForDesktop
               ).map((item) => (
-                <SearchResultItem key={item.id} item={item} />
+                <SearchResultItem key={item.objectID} item={item} />
               ))}
             </ul>
           </section>

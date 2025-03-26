@@ -73,7 +73,6 @@ export async function DELETE(request: NextRequest) {
       // 기존 필드createdAt 를 유지하고 나머지 필드 제거
       const newData = {
         createdAt: existingData?.createdAt,
-        email: existingData?.email,
         isDeleteUser: true,
         updatedAt: new Date().toISOString(),
       };

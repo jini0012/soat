@@ -7,6 +7,6 @@ export type RowConfigs = Record<string, RowConfig>;
 
 export interface EnrollSeats {
   rows: number;
-  RowConfigs: RowConfigs;
-  totalSeatsNumber: number;
+  rowsConfigs: RowConfigs;
+  totalSeats: number;
 }
