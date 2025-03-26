@@ -127,7 +127,7 @@ export default function ShowInfoSection({
             <li>
               <p className="flex items-center gap-2 text-lg md:text-2xl text-neutral-700">
                 <span className="font-semibold">예매가 :</span>
-                {price}원
+                {price.toLocaleString()}원
               </p>
             </li>
             <li>
