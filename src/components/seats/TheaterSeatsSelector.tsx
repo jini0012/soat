@@ -70,7 +70,14 @@ function TheaterSeatSelector({
 
   // 좌석 상태에 따른 스타일 결정
   const getSeatStyle = (seatId: string) => {
-    if (occupiedSeats.includes(seatId)) {
+    const isOccupied = occupiedSeats.some((seat) => seat.seatId === seatId);
+    const isMySeat =
+      isOccupied &&
+      occupiedSeats.some(
+        (seat) => seat.seatId === seatId && seat.occupantId === userId
+      );
+
+    if (isOccupied && !isMySeat) {
       return "bg-gray-300 text-gray-500 cursor-not-allowed";
     }
     if (isMySeat) {
