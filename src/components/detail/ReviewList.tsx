@@ -349,7 +349,7 @@ export default function ReviewList() {
                   <p className="font-bold text-lg">{data.username}</p>
                 </div>
                 <textarea
-                  className="w-full mt-4 p-2 border rounded-md min-h-[100px] focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full mt-4 p-2 border rounded-md min-h-[100px] focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
                   value={editingReview.content}
                   onChange={handleContentChange}
                   placeholder="리뷰 내용을 입력하세요"
