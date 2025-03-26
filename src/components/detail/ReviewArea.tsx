@@ -5,7 +5,6 @@ import ReviewList from "./ReviewList";
 import { Button } from "../controls/Button";
 import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";
-import { useRouter } from "next/navigation";
 
 export default function ReviewArea() {
   const [isReview, setReview] = useState("");
@@ -22,7 +21,6 @@ export default function ReviewArea() {
 
   const params = useParams();
   const performId = params.performId;
-  const router = useRouter();
 
   // 리뷰 작성 함수
   const handleSubmitReview = async () => {
