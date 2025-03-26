@@ -73,6 +73,9 @@ function TheaterSeatSelector({
     if (occupiedSeats.includes(seatId)) {
       return "bg-gray-300 text-gray-500 cursor-not-allowed";
     }
+    if (isMySeat) {
+      return "bg-flesh-500 text-white hover:bg-flesh-600 hover:text-white";
+    }
     if (selectedSeats.has(seatId)) {
       return "bg-flesh-500 text-white hover:bg-flesh-600 hover:text-white";
     }
