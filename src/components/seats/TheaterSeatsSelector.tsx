@@ -2,14 +2,15 @@
 
 import React, { useCallback } from "react";
 import { Button } from "@/components/ui/button";
-import type { TheaterLayoutData } from "./TheaterLayoutManager";
+import type { OccupiedSeat, TheaterLayoutData } from "./TheaterLayoutManager";
 
-interface TheaterSeatSelectorProps {
+export interface TheaterSeatSelectorProps {
   layoutData: TheaterLayoutData;
   maxSelectableSeats?: number;
-  selectedSeats: Set<string>; // 외부에서 관리되는 선택된 좌석 상태
-  occupiedSeats?: string[];
-  onSeatToggle: (seatId: string) => void; // 좌석 선택/해제 핸들러
+  selectedSeats: Set<string>;
+  occupiedSeats: OccupiedSeat[];
+  onSeatToggle: (seatId: string) => void;
+  userId?: string; // 현재 사용자 ID 추가
 }
 
 function TheaterSeatSelector({
@@ -18,6 +19,7 @@ function TheaterSeatSelector({
   selectedSeats,
   occupiedSeats = [],
   onSeatToggle,
+  userId,
 }: TheaterSeatSelectorProps): JSX.Element {
   // 특정 열이 모든 행에서 통로인지 확인하는 함수
   const isColumnAllAisles = useCallback(
