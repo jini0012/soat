@@ -15,14 +15,14 @@ import seatReducer from "./slices/seatSlice";
 export const enrollPersistConfig = {
   key: "enroll", // enroll 상태의 키
   storage, // localStorage 사용
-  throttle: 500,
+  throttle: 300,
   blacklist: ["isDirty", "step"],
 };
 
 const seatPersistConfig = {
   key: "seats",
   storage,
-  throttle: 500,
+  throttle: 300,
   blacklist: ["isDirty"],
 };
 
