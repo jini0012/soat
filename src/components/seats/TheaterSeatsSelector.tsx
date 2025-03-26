@@ -19,8 +19,6 @@ function TheaterSeatSelector({
   occupiedSeats = [],
   onSeatToggle,
 }: TheaterSeatSelectorProps): JSX.Element {
-  console.log(layoutData);
-
   // 특정 열이 모든 행에서 통로인지 확인하는 함수
   const isColumnAllAisles = useCallback(
     (columnIndex: number): boolean => {
@@ -107,7 +105,6 @@ function TheaterSeatSelector({
             무대
           </div>
           {Array.from({ length: layoutData.rows }).map((_, rowIndex) => {
-            console.log("rowIndex", rowIndex);
             const rowLetter = String.fromCharCode(65 + rowIndex);
             const rowConfig = layoutData.rowsConfigs[rowLetter];
             const totalPositions = rowConfig.seats + rowConfig.aisles.length;
