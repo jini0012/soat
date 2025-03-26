@@ -82,6 +82,19 @@ function TheaterSeatSelector({
     return "bg-white hover:bg-gray-100";
   };
 
+  // 좌석이 선택 가능한지 확인
+  const isSeatDisabled = (seatId: string) => {
+    const isOccupied = occupiedSeats.some((seat) => seat.seatId === seatId);
+    const isMySeat =
+      isOccupied &&
+      occupiedSeats.some(
+        (seat) => seat.seatId === seatId && seat.occupantId === userId
+      );
+
+    // 다른 사람이 점유한 좌석만 비활성화
+    return isOccupied && !isMySeat;
+  };
+
   return (
     <div className="space-y-6 p-4">
       {/* 좌석 상태 안내 */}
@@ -137,7 +150,7 @@ function TheaterSeatSelector({
                             seatId
                           )}`}
                           onClick={() => onSeatToggle(seatId)}
-                          disabled={occupiedSeats.includes(seatId)}
+                          disabled={isSeatDisabled(seatId)}
                         >
                           {seatId}
                         </Button>
