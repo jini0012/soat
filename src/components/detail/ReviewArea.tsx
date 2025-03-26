@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import TextArea from "../controls/TextArea";
 import { Star } from "lucide-react";
 import ReviewList from "./ReviewList";
@@ -21,6 +21,13 @@ export default function ReviewArea() {
 
   const params = useParams();
   const performId = params.performId;
+
+  // 한줄평 중복 작성시 오류문구 초기화
+  useEffect(() => {
+    if (error !== "") {
+      setError("");
+    }
+  }, [isReview]);
 
   // 리뷰 작성 함수
   const handleSubmitReview = async () => {
