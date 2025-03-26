@@ -141,7 +141,7 @@ export default function ReviewArea() {
           </div>
         </li>
       </ul>
-      <ReviewList />
+      <ReviewList session={session?.user?.email || ""} />
     </>
   );
 }

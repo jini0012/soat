@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import DetailPost from "./DetailPost";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { Edit2, Trash2, X, Check } from "lucide-react"; // 아이콘 추가
 import { Star } from "lucide-react";
 
@@ -24,9 +24,10 @@ interface EditingReview {
   ratings: number;
 }
 
-export default function ReviewList() {
+export default function ReviewList({ session }: { session: string }) {
   const params = useParams();
   const performId = params.performId;
+  const router = useRouter();
 
   const [reviews, setReviews] = useState<ReviewData[]>([]);
   const [isReviewAlign, setReviewAlign] = useState("LASTEST");
@@ -94,6 +95,14 @@ export default function ReviewList() {
 
   // 좋아요 처리 핸들러
   const handleLike = async (reviewId: string) => {
+    if (!session) {
+      const wantsToLogin = confirm(
+        "로그인 후 좋아요 기능을 이용할 수 있습니다. 로그인 하시겠습니까?"
+      );
+      if (wantsToLogin) return router.push("/login");
+      return;
+    }
+
     try {
       // 현재 리뷰 찾기
       const reviewIndex = reviews.findIndex((r) => r.id === reviewId);
