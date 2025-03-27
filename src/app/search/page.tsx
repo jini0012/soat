@@ -211,6 +211,8 @@ export default function SearchPage() {
         <DesktopSearchOptionSection
           onApply={(filter, type) => handleFilterSelection(filter, type)}
           onClick={resetFilters}
+          category={category || ""}
+          title={title || ""}
         />
         {/* 검색 정보 */}
         <section className="border-b border-b-gray-300 py-1 flex items-center justify-between">
