@@ -25,6 +25,9 @@ export default function ShowInfoSection({
   const price = performanceData.price || "";
   const category = performanceData.category || "";
   const posterUrl = performanceData.poster.url || "";
+  const isBookingEnabled =
+    new Date() < new Date(performanceData.bookingStartDate) ||
+    new Date() > new Date(performanceData.bookingEndDate);
 
   const handleShare = async () => {
     const shareData = {
@@ -142,16 +145,16 @@ export default function ShowInfoSection({
             </li>
           </ul>
         </div>
-
+        <p className={`text-flesh-500  ${isBookingEnabled ? "" : "hidden"}`}>
+          예매 가능 기간({startDate} ~ {endDate})이 아닙니다.
+        </p>
         {/* 예매 버튼 */}
         <Button
           highlight
           size="full"
           className="text-white px-6 md:px-20 py-3 md:py-4 rounded-lg text-xl md:text-2xl mt-8 md:mt-0"
           onClick={() => goToReservation()}
-          disabled={
-            new Date() < new Date(startDate) || new Date() > new Date(endDate)
-          }
+          disabled={isBookingEnabled}
         >
           예매하기
         </Button>
