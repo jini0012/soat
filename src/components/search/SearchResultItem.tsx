@@ -12,7 +12,11 @@ export default function SearchResultItem({ item }: { item: Item }) {
     price,
     sellerTeam,
     ratingCount,
+    performances,
   } = item;
+  const performanceDates = Object.keys(performances);
+  const startDate = performanceDates[0];
+  const endDate = performanceDates[performanceDates.length - 1];
   const saleStatus =
     new Date() < new Date(bookingStartDate)
       ? "판매예정"
@@ -67,7 +71,7 @@ export default function SearchResultItem({ item }: { item: Item }) {
             {/* 날짜 & 예매가 (데스크탑에서 가로 정렬) */}
             <div className="text-xs text-gray-400 font-light md:flex md:items-center md:justify-between md:mb-[4px]">
               <div className="md:flex-1 md:text-sm">
-                {bookingStartDate} ~ {bookingEndDate}
+                {startDate} ~ {endDate}
               </div>
               <p className="hidden md:block text-flesh-600 font-semibold md:text-base ">
                 예매가
@@ -82,7 +86,7 @@ export default function SearchResultItem({ item }: { item: Item }) {
       saleStatus === "판매예정" || saleStatus === "판매종료" ? "invisible" : ""
     }`}
             >
-              한줄평({ratingCount})
+              한줄평({ratingCount || 0})
             </p>
 
             {/* 예매 버튼 */}
