@@ -149,6 +149,9 @@ export default function ShowInfoSection({
           size="full"
           className="text-white px-6 md:px-20 py-3 md:py-4 rounded-lg text-xl md:text-2xl mt-8 md:mt-0"
           onClick={() => goToReservation()}
+          disabled={
+            new Date() < new Date(startDate) || new Date() > new Date(endDate)
+          }
         >
           예매하기
         </Button>
