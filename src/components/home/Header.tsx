@@ -26,11 +26,23 @@ export default function Header() {
   const isSeller = userType === "seller";
 
   const handleSearch = async () => {
-    if (!searchValue.trim()) {
+    const search: string = searchValue.trim();
+    const category: string[] = [
+      "콘서트",
+      "뮤지컬",
+      "연극",
+      "전시/행사",
+      "전시",
+      "행사",
+      "팬미팅",
+    ];
+    if (!search) {
       setSearchValue("");
       return alert("검색된 내용이 없습니다.");
+    } else if (category.includes(search)) {
+      router.push(`/search?category=${search}`);
     } else {
-      router.push(`/search?title=${searchValue}`);
+      router.push(`/search?title=${search}`);
     }
   };
 
