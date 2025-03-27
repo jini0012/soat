@@ -18,8 +18,9 @@ export default function ShowInfoSection({
   const goToReservation = useReservationHandler(performanceData.id || "");
 
   const title = performanceData.title || "";
-  const startDate = performanceData.bookingStartDate || "";
-  const endDate = performanceData.bookingEndDate || "";
+  const performanceDates = Object.keys(performanceData.performances);
+  const startDate = performanceDates[0];
+  const endDate = performanceDates[performanceDates.length - 1];
   const locationName = performanceData.detailAddress || "";
   const locationAddress = performanceData.address || "";
   const price = performanceData.price || "";
@@ -145,8 +146,13 @@ export default function ShowInfoSection({
             </li>
           </ul>
         </div>
-        <p className={`text-flesh-500  ${isBookingEnabled ? "" : "hidden"}`}>
-          예매 가능 기간({startDate} ~ {endDate})이 아닙니다.
+        <p className={isBookingEnabled ? "text-flesh-500" : "text-gray-500"}>
+          예매 기간
+          {isBookingEnabled
+            ? `(${performanceData.bookingStartDate} ~
+          ${performanceData.bookingEndDate})이 아닙니다.`
+            : ` : ${performanceData.bookingStartDate} ~
+          ${performanceData.bookingEndDate}`}
         </p>
         {/* 예매 버튼 */}
         <Button
