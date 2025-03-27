@@ -36,7 +36,7 @@ function datesButton({
   setSelectedDay: (date: string) => void;
 }) {
   return (
-    <li>
+    <li key={date}>
       <Button
         size="small"
         highlight={highlight}
@@ -246,13 +246,13 @@ export default function SeatSelection({
         <ul className="flex gap-x-3">
           {Object.keys(performanceDates)
             .sort()
-            .map((e, index) =>
-              datesButton({
+            .map((e, index) => {
+              return datesButton({
                 date: e,
                 highlight: selectedDay ? selectedDay === e : index === 0,
                 setSelectedDay,
-              })
-            )}
+              });
+            })}
         </ul>
 
         {/* 시간대 선택 UI */}
