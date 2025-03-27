@@ -36,6 +36,7 @@ export default async function PerformanceDetailPage({ params }: PageParams) {
     createdAt: performanceData.createdAt.toDate().toISOString(),
     updatedAt: performanceData.updatedAt.toDate().toISOString(),
     content: sanitizeHTML(performanceData.content),
+    id: performId,
   } as PerformanceData;
 
   return (
