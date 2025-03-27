@@ -4,6 +4,8 @@ import DetailPost from "./DetailPost";
 import { useParams, useRouter } from "next/navigation";
 import { Edit2, Trash2, X, Check } from "lucide-react"; // 아이콘 추가
 import { Star } from "lucide-react";
+import Modal from "../Modal";
+import { Button, CloseButton } from "../controls/Button";
 
 // API로부터 가져올 리뷰 데이터 타입 정의
 interface ReviewData {
@@ -37,6 +39,7 @@ export default function ReviewList({ session }: { session: string }) {
     loading: boolean;
     error: string;
   }>({ loading: false, error: "" });
+  const [wantsToLogin, setWantsToLogin] = useState<boolean>(false);
 
   // 수정 상태 관리
   const [editingReview, setEditingReview] = useState<EditingReview | null>(
@@ -93,13 +96,15 @@ export default function ReviewList({ session }: { session: string }) {
     setReviews(sortedReviews);
   }, [isReviewAlign]);
 
+  // 비회원 로그인 안내 모달 종료 핸들러
+  const handleModalClose = () => {
+    setWantsToLogin(false);
+  };
+
   // 좋아요 처리 핸들러
   const handleLike = async (reviewId: string) => {
     if (!session) {
-      const wantsToLogin = confirm(
-        "로그인 후 좋아요 기능을 이용할 수 있습니다. 로그인 하시겠습니까?"
-      );
-      if (wantsToLogin) return router.push("/login");
+      setWantsToLogin(true);
       return;
     }
 
@@ -424,6 +429,33 @@ export default function ReviewList({ session }: { session: string }) {
           </div>
         ))}
       </section>
+      <Modal
+        isOpen={wantsToLogin}
+        onClose={handleModalClose}
+        className="flex flex-col justify-center items-center relative gap-4 py-10"
+      >
+        <>
+          <CloseButton
+            onClick={() => handleModalClose()}
+            className="absolute top-4 right-4"
+          />
+          <p className="text-center">
+            로그인 후 좋아요 기능을 이용할 수 있습니다.
+            <br />
+            로그인 하시겠습니까?
+          </p>
+          <ul className="flex text-sm gap-1">
+            <li>
+              <Button onClick={() => router.push("/login")}>예</Button>
+            </li>
+            <li>
+              <Button highlight onClick={() => handleModalClose()}>
+                아니오
+              </Button>
+            </li>
+          </ul>
+        </>
+      </Modal>
     </div>
   );
 }
