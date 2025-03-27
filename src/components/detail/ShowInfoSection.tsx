@@ -18,8 +18,8 @@ export default function ShowInfoSection({
   const goToReservation = useReservationHandler(performanceData.id || "");
 
   const title = performanceData.title || "";
-  const startDate = performanceData.bookingEndDate || "";
-  const endDate = performanceData.bookingStartDate || "";
+  const startDate = performanceData.bookingStartDate || "";
+  const endDate = performanceData.bookingEndDate || "";
   const locationName = performanceData.detailAddress || "";
   const locationAddress = performanceData.address || "";
   const price = performanceData.price || "";
