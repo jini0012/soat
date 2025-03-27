@@ -59,6 +59,7 @@ export default function SearchPage() {
   };
 
   useEffect(() => {
+    setIsLoading(true);
     setSearchDataList([]); // 검색 결과 초기화
     // url params에 title 또는 category 값이 없는 경우 fetchData() 미실행
     if (
