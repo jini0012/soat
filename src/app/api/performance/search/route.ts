@@ -36,6 +36,7 @@ export async function GET(request: Request) {
         "detailAddress",
         "ratingSum",
         "ratingCount",
+        "performances",
       ],
       hitsPerPage: 10,
     });
