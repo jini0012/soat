@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Item } from "@/app/search/page";
+import useReservationHandler from "@/hooks/useReservationHandler";
 
 export default function SearchResultItem({ item }: { item: Item }) {
   const {
@@ -19,6 +20,7 @@ export default function SearchResultItem({ item }: { item: Item }) {
       ? "판매중"
       : "판매종료";
   const isSalePending = saleStatus === "판매예정";
+  const goToReservation = useReservationHandler(objectID);
 
   return (
     <li>
@@ -93,6 +95,10 @@ export default function SearchResultItem({ item }: { item: Item }) {
                   : "bg-flesh-500 active:bg-flesh-600"
               }`}
               disabled={isSalePending || saleStatus === "판매종료"}
+              onClick={(e) => {
+                e.preventDefault();
+                goToReservation();
+              }}
             >
               예매하기
             </button>

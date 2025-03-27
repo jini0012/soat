@@ -5,6 +5,7 @@ import { Button } from "../controls/Button";
 import NaverMapModal from "./NaverMap";
 import { PerformanceData } from "@/app/api/performance/route";
 import { Share, Link } from "lucide-react";
+import useReservationHandler from "@/hooks/useReservationHandler";
 
 export default function ShowInfoSection({
   performanceData,
@@ -14,6 +15,7 @@ export default function ShowInfoSection({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [isMapModalOpen, setIsMapModalOpen] = useState(false);
+  const goToReservation = useReservationHandler(performanceData.id || "");
 
   const title = performanceData.title || "";
   const startDate = performanceData.bookingEndDate || "";
@@ -146,6 +148,7 @@ export default function ShowInfoSection({
           highlight
           size="full"
           className="text-white px-6 md:px-20 py-3 md:py-4 rounded-lg text-xl md:text-2xl mt-8 md:mt-0"
+          onClick={() => goToReservation()}
         >
           예매하기
         </Button>
