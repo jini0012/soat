@@ -3,6 +3,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { adminDb } from "@/app/api/firebaseAdmin";
 import { DailyPerformances } from "@/types/enrollment"; // 타입 import
+import { TheaterLayoutData } from "@/components/seats/TheaterLayoutManager";
 
 // API 응답에 사용할 타입 정의
 export interface PerformanceData {
@@ -27,6 +28,7 @@ export interface PerformanceData {
   sellerTeam: string;
   createdAt: any;
   updatedAt: any;
+  seats: TheaterLayoutData;
   // 기타 필요한 필드들
 }
 

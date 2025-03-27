@@ -36,33 +36,40 @@ export default function SearchPage() {
   const [searchDataList, setSearchDataList] = useState<Item[]>([]);
   const searchParams = useSearchParams();
   const title = searchParams.get("title");
+  const category = searchParams.get("category");
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
+  // title 검색 결과를 setSearchDataList 에 저장
+  const fetchData = async () => {
+    try {
+      const response = await axios.get("/api/performance/search", {
+        params: { title, category },
+      });
+
+      if (response.status === 200) {
+        setSearchDataList(response.data);
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error("검색 요청 실패:", error.response?.data.message);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
+    setIsLoading(true);
     setSearchDataList([]); // 검색 결과 초기화
-    // url params에 title 값이 없는 경우 fetchData() 미실행
-    if (!title || title.trim() === "") {
+    // url params에 title 또는 category 값이 없는 경우 fetchData() 미실행
+    if (
+      (!title || title.trim() === "") &&
+      (!category || category.trim() === "")
+    ) {
       return;
     }
-    // title 검색 결과를 setSearchDataList 에 저장
-    const fetchData = async () => {
-      try {
-        const response = await axios.get("/api/performance/search", {
-          params: { title },
-        });
-        if (response.status === 200) {
-          setSearchDataList(response.data);
-        }
-      } catch (error) {
-        if (axios.isAxiosError(error)) {
-          console.error("검색 요청 실패:", error.response?.data.message);
-        }
-      } finally {
-        setIsLoading(false);
-      }
-    };
     fetchData();
-  }, [title]);
+  }, [title, category]);
 
   useEffect(() => {
     setIsMobile(window.innerWidth <= 768);
@@ -177,8 +184,10 @@ export default function SearchPage() {
       <Header />
       <main className="px-4 md:px-[140px] relative min-h-[100vh]">
         <p className="font-medium">
-          <span className="text-flesh-500">&quot;{title}&quot;</span> 검색
-          결과입니다.
+          <span className="text-flesh-500">
+            &quot;{title || category}&quot;
+          </span>{" "}
+          검색 결과입니다.
         </p>
 
         {/* 모바일 검색 필터 */}
@@ -203,6 +212,8 @@ export default function SearchPage() {
         <DesktopSearchOptionSection
           onApply={(filter, type) => handleFilterSelection(filter, type)}
           onClick={resetFilters}
+          category={category || ""}
+          title={title || ""}
         />
         {/* 검색 정보 */}
         <section className="border-b border-b-gray-300 py-1 flex items-center justify-between">

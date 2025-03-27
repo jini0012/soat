@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import TextArea from "../controls/TextArea";
 import { Star } from "lucide-react";
 import ReviewList from "./ReviewList";
 import { Button } from "../controls/Button";
 import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";
-import { useRouter } from "next/navigation";
 
 export default function ReviewArea() {
   const [isReview, setReview] = useState("");
@@ -22,7 +21,13 @@ export default function ReviewArea() {
 
   const params = useParams();
   const performId = params.performId;
-  const router = useRouter();
+
+  // 한줄평 중복 작성시 오류문구 초기화
+  useEffect(() => {
+    if (error !== "") {
+      setError("");
+    }
+  }, [isReview]);
 
   // 리뷰 작성 함수
   const handleSubmitReview = async () => {
@@ -143,7 +148,7 @@ export default function ReviewArea() {
           </div>
         </li>
       </ul>
-      <ReviewList />
+      <ReviewList session={session?.user?.email || ""} />
     </>
   );
 }

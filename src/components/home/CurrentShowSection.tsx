@@ -102,7 +102,7 @@ export default function CurrentShowSection({
           </p>
           <p className="text-sm md:text-base mt-auto">
             <span className="text-flesh-600 font-bold">예매가</span> :{" "}
-            {show.price.toLocaleString()}
+            {show.price.toLocaleString() + "원"}
           </p>
         </div>
       </div>
