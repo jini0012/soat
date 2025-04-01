@@ -6,6 +6,7 @@ import { Edit2, Trash2, X, Check } from "lucide-react"; // 아이콘 추가
 import { Star } from "lucide-react";
 import Modal from "../Modal";
 import { Button, CloseButton } from "../controls/Button";
+import { useShowModal } from "@/hooks/useShowModal";
 
 // API로부터 가져올 리뷰 데이터 타입 정의
 interface ReviewData {
@@ -39,7 +40,7 @@ export default function ReviewList({ session }: { session: string }) {
     loading: boolean;
     error: string;
   }>({ loading: false, error: "" });
-  const [wantsToLogin, setWantsToLogin] = useState<boolean>(false);
+  const { showModal, handleShowModal } = useShowModal();
 
   // 수정 상태 관리
   const [editingReview, setEditingReview] = useState<EditingReview | null>(
@@ -98,13 +99,13 @@ export default function ReviewList({ session }: { session: string }) {
 
   // 비회원 로그인 안내 모달 종료 핸들러
   const handleModalClose = () => {
-    setWantsToLogin(false);
+    handleShowModal(false);
   };
 
   // 좋아요 처리 핸들러
   const handleLike = async (reviewId: string) => {
     if (!session) {
-      setWantsToLogin(true);
+      handleShowModal(true);
       return;
     }
 
@@ -430,7 +431,7 @@ export default function ReviewList({ session }: { session: string }) {
         ))}
       </section>
       <Modal
-        isOpen={wantsToLogin}
+        isOpen={showModal}
         onClose={handleModalClose}
         className="flex flex-col justify-center items-center relative gap-4 py-10"
       >
@@ -446,10 +447,19 @@ export default function ReviewList({ session }: { session: string }) {
           </p>
           <ul className="flex text-sm gap-1">
             <li>
-              <Button onClick={() => router.push("/login")}>예</Button>
+              <Button
+                onClick={() => router.push("/login")}
+                className="max-w-20 px-[28.5px] py-[7.5px]"
+              >
+                예
+              </Button>
             </li>
             <li>
-              <Button highlight onClick={() => handleModalClose()}>
+              <Button
+                highlight
+                onClick={() => handleModalClose()}
+                className="max-w-20 px-[28.5px] py-[7.5px]"
+              >
                 아니오
               </Button>
             </li>
