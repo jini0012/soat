@@ -1,10 +1,23 @@
 "use client";
-
+import React, { useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useSession, signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function Header() {
   const pathname = usePathname();
+  const { data: session, status } = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (status !== "authenticated" && status !== "loading") {
+      router.push("/login");
+    }
+    if (session && session.user.userType !== "seller") {
+      router.push("/account");
+    }
+  }, [status]);
 
   const pageTitleMap: Record<string, string | null> = {
     "/manager": null,
@@ -26,7 +39,7 @@ export default function Header() {
         <h2>관리자페이지</h2>
         {subtitle && <h3 className="text-sm">{subtitle}</h3>}
       </div>
-      <button className="flex">
+      <button className="flex" onClick={() => signOut()}>
         <img src="/images/icons/people.svg" className="mr-1" />
         로그아웃
       </button>
