@@ -91,7 +91,7 @@ export default function ReviewArea() {
     <>
       <ul>
         <li className="flex gap-[10px] text-xl mb-[15px] items-center">
-          <img src="images/icons/Subtract-icon.svg" alt="" />
+          <img src="/images/icons/Subtract-icon.svg" alt="" />
           <h2 className="font-bold">한줄평 작성하기</h2>
           <div className="flex items-center gap-1">
             {[1, 2, 3, 4, 5].map((star) => (
