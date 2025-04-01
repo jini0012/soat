@@ -18,7 +18,7 @@ export default function Header() {
   return (
     <header className="flex justify-between items-center p-3                            ">
       <h1>
-        <Link href={"/manager"}>
+        <Link href="/">
           <img src="/images/icons/logo-temp.svg" alt="쏘앳" />
         </Link>
       </h1>
