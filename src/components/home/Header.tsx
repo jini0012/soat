@@ -115,10 +115,7 @@ export default function Header() {
                 </li>
               ) : isSeller ? (
                 <li className="cursor-pointer">
-                  <Link
-                    href="/performances"
-                    className="text-black flex gap-[5px]"
-                  >
+                  <Link href="/manager" className="text-black flex gap-[5px]">
                     <Ticket color="#fc4c13" />내 공연
                   </Link>
                 </li>
