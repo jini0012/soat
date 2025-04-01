@@ -23,7 +23,7 @@ export default function Header() {
     "/manager": null,
     "/manager/performance": "나의 공연 등록 및 관리",
     "/manager/ticket": "티켓 검증",
-    "/manager/user": "관리자 정보 수정",
+    "/manager/edit": "관리자 정보 수정",
   };
 
   const subtitle = pageTitleMap[pathname] || null;
