@@ -446,10 +446,19 @@ export default function ReviewList({ session }: { session: string }) {
           </p>
           <ul className="flex text-sm gap-1">
             <li>
-              <Button onClick={() => router.push("/login")}>예</Button>
+              <Button
+                onClick={() => router.push("/login")}
+                className="max-w-20 px-[28.5px] py-[7.5px]"
+              >
+                예
+              </Button>
             </li>
             <li>
-              <Button highlight onClick={() => handleModalClose()}>
+              <Button
+                highlight
+                onClick={() => handleModalClose()}
+                className="max-w-20 px-[28.5px] py-[7.5px]"
+              >
                 아니오
               </Button>
             </li>
