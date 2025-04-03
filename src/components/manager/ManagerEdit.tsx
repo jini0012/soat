@@ -94,6 +94,7 @@ export default function ManagerEdit() {
         >
           <Button
             size="small"
+            type="button"
             highlight
             className="absolute left-44 sm:left-32 font-normal sm:font-bold"
           >
