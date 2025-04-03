@@ -103,6 +103,7 @@ export function JoinInput({
   validation,
   message,
   max,
+  vertical,
 }: JoinInputProps) {
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (onChange) {
@@ -144,9 +145,9 @@ export function JoinInput({
     <>
       <fieldset className="h-[43px]">
         <label
-          className={`text-sm flex sm:mb-[5px] gap-3 border-b whitespace-nowrap w-full items-center focus-within:border-black sm:text-base ${
+          className={`text-sm flex sm:mb-[5px] border-b whitespace-nowrap w-full  focus-within:border-black sm:text-base ${
             className ? className : ""
-          } `}
+          } ${vertical ? "flex-col" : "gap-3 items-center"}`}
         >
           {label}
           <input
