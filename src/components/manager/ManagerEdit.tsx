@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { JoinInput } from "@/components/controls/Inputs";
 import { Button } from "../controls/Button";
 import axios from "axios";
@@ -10,6 +11,7 @@ export default function ManagerEdit() {
   const [managerName, setManagerName] = useState("");
   const [email, setEmail] = useState<string>("");
   const [address, setAddress] = useState<string>("");
+  const router = useRouter();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -107,6 +109,7 @@ export default function ManagerEdit() {
               size="full"
               className="max-w-24 max-h-[30px] text-sm px-[7.5px] sm:text-base sm:max-w-40 sm:max-h-12 font-normal sm:font-bold"
               type="button"
+              onClick={() => router.back()}
             >
               뒤로가기
             </Button>
