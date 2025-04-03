@@ -1,7 +1,8 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { JoinInput } from "@/components/controls/Inputs";
 import { Button } from "../controls/Button";
+import axios from "axios";
 
 export default function ManagerEdit() {
   const [teamName, setTeamName] = useState<string>("");
@@ -9,6 +10,29 @@ export default function ManagerEdit() {
   const [managerName, setManagerName] = useState("");
   const [email, setEmail] = useState<string>("");
   const [address, setAddress] = useState<string>("");
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await axios.get("/api/account/me");
+        const { user } = response.data;
+        const businessNumData: string = user.businessNum;
+        setTeamName(user.teamName);
+        setBusinessNum(
+          `${businessNumData.slice(0, 3)}-${businessNumData.slice(
+            3,
+            5
+          )}-${businessNumData.slice(5, 10)}`
+        );
+        setManagerName(user.managerName);
+        setEmail(user.email);
+      } catch (error) {
+        console.error("사용자 정보 조회 오류:", error);
+      }
+    };
+
+    fetchUser();
+  }, []);
 
   return (
     <>
@@ -37,30 +61,35 @@ export default function ManagerEdit() {
           label="상호명"
           value={teamName}
           onChange={setTeamName}
+          disabled
           vertical
         />
         <JoinInput
           label="사업자번호"
           value={businessNum}
           onChange={setBusinessNum}
+          disabled
           vertical
         />
         <JoinInput
           label="대표자(관리자) 성명"
           value={managerName}
           onChange={setManagerName}
+          disabled
           vertical
         />
         <JoinInput
           label="주소"
           value={address}
           onChange={setAddress}
+          disabled
           vertical
         />
         <JoinInput
           label="현재 가입된 이메일"
           value={email}
           onChange={setEmail}
+          disabled
           vertical
         >
           <Button
