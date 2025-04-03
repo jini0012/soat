@@ -135,7 +135,7 @@ export function JoinInput({
 
   if (error) {
     className = "border-flesh-500";
-  } else if (!!value) {
+  } else if (!!value && !vertical) {
     className = "border-black";
   } else {
     className = "border-gray-300";
