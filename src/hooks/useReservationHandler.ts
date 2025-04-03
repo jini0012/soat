@@ -2,11 +2,16 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 export default function useReservationHandler(showId: string) {
   const router = useRouter();
-  const { status } = useSession();
+  const { data: session, status } = useSession();
 
   return () => {
     if (status !== "authenticated") {
       alert("로그인이 필요합니다.");
+      return;
+    }
+
+    if (session?.user?.userType === "seller") {
+      alert("판매자는 예약할 수 없습니다.");
       return;
     }
 
