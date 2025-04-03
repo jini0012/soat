@@ -45,6 +45,7 @@ export interface JoinInputProps extends InputBaseProps {
   message?: string;
   disabled?: boolean;
   max?: number;
+  vertical?: boolean;
 }
 
 export interface SearchInputProps extends InputBaseProps {
