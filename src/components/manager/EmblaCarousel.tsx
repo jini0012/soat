@@ -131,6 +131,7 @@ export default function EmblaCarousel() {
                 data={data}
                 isOpen={clickedSlide === num}
                 handleClick={() => handleClick(num)}
+                handleCardOutsideClick={() => handleClick(0)}
                 handleButtonClick={handleButtonClick}
               />
             );

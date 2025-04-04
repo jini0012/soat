@@ -8,6 +8,7 @@ interface SliceProps {
   data: PerformanceData;
   isOpen: boolean;
   handleClick: () => void;
+  handleCardOutsideClick: () => void;
   handleButtonClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
@@ -16,11 +17,13 @@ export default function PerformanceSlide({
   isOpen,
   handleClick,
   handleButtonClick,
+  handleCardOutsideClick,
 }: SliceProps) {
   return (
     <article
       key={data.id}
       className="flex-shrink-0 min-w-0 mb-5 cursor-pointer"
+      onClick={() => handleCardOutsideClick()}
     >
       <Card
         className={`w-40 transition-all duration-200  ${
