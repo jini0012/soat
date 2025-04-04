@@ -26,8 +26,6 @@ export async function GET(request: NextRequest) {
 
     const performances = performancesSnapshot.docs.map((doc) => {
       const data = doc.data();
-      console.log(data.createdAt.toDate());
-
       return {
         id: doc.id,
         ...data,
