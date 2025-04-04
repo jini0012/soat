@@ -147,7 +147,11 @@ export function JoinInput({
         <label
           className={`text-sm flex sm:mb-[5px] border-b whitespace-nowrap w-full  focus-within:border-black sm:text-base ${
             className ? className : ""
-          } ${vertical ? "flex-col" : "gap-3 items-center"}`}
+          } ${
+            vertical
+              ? "flex-col text-flesh-400 font-bold"
+              : "gap-3 items-center"
+          }`}
         >
           {label}
           <input
@@ -156,8 +160,8 @@ export function JoinInput({
             value={value}
             onChange={handleOnChange}
             onBlur={handleOnBlur}
-            className={`focus:outline-none w-full placeholder:text-sm sm:placeholder:text-base ${
-              disabled && "bg-white"
+            className={`focus:outline-none w-full placeholder:text-sm sm:placeholder:text-base text-black font-normal ${
+              disabled && "bg-white cursor-not-allowed"
             }`}
             aria-label={label}
             disabled={disabled}
