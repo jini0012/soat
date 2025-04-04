@@ -62,7 +62,7 @@ export default function EmblaCarousel() {
     };
 
     const viewport = emblaApi.containerNode();
-    viewport.addEventListener("wheel", onWheel);
+    viewport.addEventListener("wheel", onWheel, { passive: true });
 
     return () => {
       viewport.removeEventListener("wheel", onWheel);
