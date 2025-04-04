@@ -1,10 +1,12 @@
 "use client"; // 클라이언트 컴포넌트로 설정
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, use } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import axios from "axios";
 import PerformanceSlide from "./PerformanceSlide";
 import { PerformanceData } from "@/app/api/performance/route";
+import { Button } from "@/components/ui/button";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function EmblaCarousel() {
   const [clickedSlide, setClickedSlide] = useState<number | null>(null); // 클릭한 슬라이드 관리
@@ -41,6 +43,7 @@ export default function EmblaCarousel() {
 
   useEffect(() => {
     if (!emblaApi) return;
+
     const onSelect = () => setCurrentIndex(emblaApi.selectedScrollSnap());
     emblaApi.on("select", onSelect);
     return () => {
@@ -98,9 +101,26 @@ export default function EmblaCarousel() {
     handleDocumentClick(event.nativeEvent);
   };
 
+  // 슬라이드 이동 함수
+  const handleClickPrevBtn = () => emblaApi?.scrollPrev();
+  const handleClickNextBtn = () => emblaApi?.scrollNext();
+  // 공통 버튼 스타일
+  const navButtonClass =
+    "absolute top-60 -translate-y-1/2 z-10 rounded-full bg-background/80 backdrop-blur-sm";
+
   return (
     <section className="relative w-full max-w-4xl mx-auto py-6 px-3">
       <h2 className="text-2xl font-bold mb-6">나의 공연</h2>
+
+      <Button
+        variant="outline"
+        size="icon"
+        className={`${navButtonClass} left-4 md:left-0 -ml-4`}
+        onClick={handleClickPrevBtn}
+        disabled={currentIndex === 0}
+      >
+        <ChevronLeft className="h-4 w-4" />
+      </Button>
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex gap-4" ref={carouselRef}>
           {performanceList.map((data: PerformanceData, index: number) => {
@@ -117,6 +137,14 @@ export default function EmblaCarousel() {
           })}
         </div>
       </div>
+      <Button
+        variant="outline"
+        size="icon"
+        className={`${navButtonClass} right-4 md:right-1 -mr-4`}
+        onClick={handleClickNextBtn}
+      >
+        <ChevronRight className="h-4 w-4" />
+      </Button>
     </section>
   );
 }
