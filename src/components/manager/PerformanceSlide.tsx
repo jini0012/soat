@@ -18,7 +18,10 @@ export default function PerformanceSlide({
   handleButtonClick,
 }: SliceProps) {
   return (
-    <article key={data.id} className="flex-shrink-0 min-w-0 mb-5">
+    <article
+      key={data.id}
+      className="flex-shrink-0 min-w-0 mb-5 cursor-pointer"
+    >
       <Card
         className={`w-40 transition-all duration-200  ${
           isOpen ? "shadow-lg" : "hover:shadow-md"
