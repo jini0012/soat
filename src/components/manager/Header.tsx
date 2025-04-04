@@ -43,7 +43,7 @@ export default function Header() {
         </h2>
         {subtitle && <h3 className="text-sm">{subtitle}</h3>}
       </div>
-      <button className="flex" onClick={() => signOut()}>
+      <button className="flex" onClick={() => signOut({ callbackUrl: "/" })}>
         <img src="/images/icons/people.svg" className="mr-1" />
         로그아웃
       </button>
