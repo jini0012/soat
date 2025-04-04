@@ -2,11 +2,9 @@
 
 import React, { useEffect, useState, useRef } from "react";
 import useEmblaCarousel from "embla-carousel-react";
-import PerformanceMoreBtn from "./PerformanceMoreBtn";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { PerformanceData } from "@/app/api/performance/route";
 import axios from "axios";
+import PerformanceSlide from "./PerformanceSlide";
+import { PerformanceData } from "@/app/api/performance/route";
 
 export default function EmblaCarousel() {
   const [clickedSlide, setClickedSlide] = useState<number | null>(null); // 클릭한 슬라이드 관리
@@ -105,45 +103,16 @@ export default function EmblaCarousel() {
       <h2 className="text-2xl font-bold mb-6">나의 공연</h2>
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex gap-4" ref={carouselRef}>
-          {performanceList.map((data: PerformanceData) => {
-            const dataIndex = performanceList.indexOf(data);
-            const num = dataIndex + 1; // 슬라이드 번호 계산 (1부터 시작)
+          {performanceList.map((data: PerformanceData, index: number) => {
+            const num = index + 1; // 슬라이드 번호
             return (
-              <article key={data.id} className="flex-shrink-0 min-w-0 mb-5">
-                <Card
-                  className={`w-40 transition-all duration-200  ${
-                    clickedSlide === num ? "shadow-lg" : "hover:shadow-md"
-                  }`}
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    handleClick(num);
-                  }}
-                >
-                  <CardContent className="p-0">
-                    <img
-                      src={data.poster.url}
-                      alt={data.poster.fileName}
-                      className="h-60 rounded-t-md object-cover"
-                    />
-                    <div className="p-3">
-                      <Badge variant="outline" className="mb-2">
-                        {data.category}
-                      </Badge>
-                      <h3 className="font-medium text-sm truncate">
-                        {data.title}
-                      </h3>
-                      <span className="text-gray-500 text-sm">
-                        {new Date(data.createdAt).toLocaleDateString("ko-KR")}
-                      </span>
-                      {clickedSlide === num && (
-                        <div className="mt-3">
-                          <PerformanceMoreBtn onClick={handleButtonClick} />
-                        </div>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
-              </article>
+              <PerformanceSlide
+                key={data.id}
+                data={data}
+                isOpen={clickedSlide === num}
+                handleClick={() => handleClick(num)}
+                handleButtonClick={handleButtonClick}
+              />
             );
           })}
         </div>
