@@ -1,11 +1,16 @@
 "use client"; // 클라이언트 컴포넌트로 설정
 
-import React, { useEffect, useState, useCallback, useRef } from "react";
+import React, { useEffect, useState, useRef, use } from "react";
 import useEmblaCarousel from "embla-carousel-react";
-import PerformanceMoreBtn from "./PerformanceMoreBtn";
+import axios from "axios";
+import PerformanceSlide from "./PerformanceSlide";
+import { PerformanceData } from "@/app/api/performance/route";
+import { Button } from "@/components/ui/button";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function EmblaCarousel() {
   const [clickedSlide, setClickedSlide] = useState<number | null>(null); // 클릭한 슬라이드 관리
+  const [performanceList, setPerformanceList] = useState<PerformanceData[]>([]);
   const carouselRef = useRef<HTMLDivElement | null>(null); // carouselRef의 타입을 명시
 
   const handleClick = (num: number) => {
@@ -24,7 +29,21 @@ export default function EmblaCarousel() {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
+    async function fetchPerformanceList() {
+      try {
+        const response = await axios.get("/api/manager/performance");
+        setPerformanceList(response.data); // 공연 목록을 상태에 저장
+      } catch (error) {
+        console.error("공연 목록 불러오기 실패:", error);
+      }
+    }
+
+    fetchPerformanceList();
+  }, []);
+
+  useEffect(() => {
     if (!emblaApi) return;
+
     const onSelect = () => setCurrentIndex(emblaApi.selectedScrollSnap());
     emblaApi.on("select", onSelect);
     return () => {
@@ -46,7 +65,7 @@ export default function EmblaCarousel() {
     };
 
     const viewport = emblaApi.containerNode();
-    viewport.addEventListener("wheel", onWheel);
+    viewport.addEventListener("wheel", onWheel, { passive: true });
 
     return () => {
       viewport.removeEventListener("wheel", onWheel);
@@ -82,40 +101,51 @@ export default function EmblaCarousel() {
     handleDocumentClick(event.nativeEvent);
   };
 
+  // 슬라이드 이동 함수
+  const handleClickPrevBtn = () => emblaApi?.scrollPrev();
+  const handleClickNextBtn = () => emblaApi?.scrollNext();
+  // 공통 버튼 스타일
+  const navButtonClass =
+    "absolute top-60 -translate-y-1/2 z-10 rounded-full bg-background/80 backdrop-blur-sm";
+
   return (
-    <div className="relative w-full max-w-4xl mx-auto py-6 px-3">
+    <section className="relative w-full max-w-4xl mx-auto py-6 px-3">
+      <h2 className="text-2xl font-bold mb-6">나의 공연</h2>
+
+      <Button
+        variant="outline"
+        size="icon"
+        className={`${navButtonClass} left-4 md:left-0 -ml-4`}
+        onClick={handleClickPrevBtn}
+        disabled={currentIndex === 0}
+      >
+        <ChevronLeft className="h-4 w-4" />
+      </Button>
       <div className="overflow-hidden" ref={emblaRef}>
-        <div className="flex" ref={carouselRef}>
-          {[1, 2, 3, 4, 5].map((num) => (
-            <div className="flex flex-col">
-              <div
-                className="flex flex-col"
-                key={num}
-                onClick={(event) => {
-                  event.stopPropagation(); // 외부 클릭을 방지
-                  handleClick(num); // 슬라이드 클릭 시 토글
-                }}
-              >
-                <div className="flex-shrink-0 rounded-md mr-2 px-8 flex items-center justify-center h-60 bg-gray-200 text-2xl font-bold w-[142px] cursor-pointer">
-                  Slide {num}
-                </div>
-                <div className="w-[142px] font-bold overflow-hidden text-ellipsis whitespace-nowrap mt-2 px-1">
-                  2025 주인님 단독 콘서트 {num}
-                </div>
-              </div>
-              {clickedSlide === num && (
-                <div className="mt-4">
-                  <div
-                    className="absolute top-0 left-0 w-full h-full bg-transparent"
-                    onClick={() => setClickedSlide(null)} // 슬라이드 외부 클릭 시 닫기
-                  />
-                  <PerformanceMoreBtn onClick={handleButtonClick} />
-                </div>
-              )}
-            </div>
-          ))}
+        <div className="flex gap-4" ref={carouselRef}>
+          {performanceList.map((data: PerformanceData, index: number) => {
+            const num = index + 1; // 슬라이드 번호
+            return (
+              <PerformanceSlide
+                key={data.id}
+                data={data}
+                isOpen={clickedSlide === num}
+                handleClick={() => handleClick(num)}
+                handleCardOutsideClick={() => handleClick(0)}
+                handleButtonClick={handleButtonClick}
+              />
+            );
+          })}
         </div>
       </div>
-    </div>
+      <Button
+        variant="outline"
+        size="icon"
+        className={`${navButtonClass} right-4 md:right-1 -mr-4`}
+        onClick={handleClickNextBtn}
+      >
+        <ChevronRight className="h-4 w-4" />
+      </Button>
+    </section>
   );
 }

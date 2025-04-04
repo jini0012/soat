@@ -1,16 +1,22 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
 import { useRouter } from "next/navigation";
 import { JoinInput } from "@/components/controls/Inputs";
 import { Button } from "../controls/Button";
 import axios from "axios";
+import { validations } from "@/utils/validations";
 
 export default function ManagerEdit() {
   const [teamName, setTeamName] = useState<string>("");
   const [businessNum, setBusinessNum] = useState<string>("");
   const [managerName, setManagerName] = useState("");
   const [email, setEmail] = useState<string>("");
-  const [address, setAddress] = useState<string>("");
+  const [originalData, setOriginalData] = useState({
+    teamName,
+    managerName,
+    email,
+  });
+  const [isEditBtnDisabled, setIsEditBtnDisabled] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
@@ -20,14 +26,20 @@ export default function ManagerEdit() {
         const { user } = response.data;
         const businessNumData: string = user.businessNum;
         setTeamName(user.teamName);
-        setBusinessNum(
-          `${businessNumData.slice(0, 3)}-${businessNumData.slice(
-            3,
-            5
-          )}-${businessNumData.slice(5, 10)}`
-        );
+        if (businessNumData) {
+          setBusinessNum(
+            businessNumData.replace(/(\d{3})(\d{2})(\d{5})/, "$1-$2-$3")
+          );
+        } else {
+          setBusinessNum("사업자가 아닙니다.");
+        }
         setManagerName(user.managerName);
         setEmail(user.email);
+        setOriginalData({
+          teamName: user.teamName,
+          managerName: user.managerName,
+          email: user.email,
+        });
       } catch (error) {
         console.error("사용자 정보 조회 오류:", error);
       }
@@ -36,59 +48,58 @@ export default function ManagerEdit() {
     fetchUser();
   }, []);
 
+  useEffect(() => {
+    const isChanged =
+      teamName !== originalData.teamName ||
+      managerName !== originalData.managerName;
+
+    const isValid =
+      validations.teamName.safeParse(teamName).success &&
+      validations.managerName.safeParse(managerName).success;
+
+    setIsEditBtnDisabled(!(isChanged && isValid));
+  }, [teamName, managerName]);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    try {
+      const response = await axios.patch("/api/manager/edit", {
+        teamName,
+        managerName,
+      });
+      console.log("수정 완료:", response.data);
+      router.push("/manager");
+    } catch (error) {
+      console.error("수정 오류:", error);
+    }
+  }
+
   return (
     <>
       <form
-        action=""
-        className="m-auto w-full bg-white sm:max-w-[525px] flex flex-col px-16 py-14 gap-[10px] sm:gap-[20px] sm:px-0 relative sm:space-y-2"
+        className="m-auto mt-5 w-full max-w-lg bg-white p-6 space-y-5 sm:space-y-10 rounded-lg border shadow-md relative"
+        onSubmit={handleSubmit}
       >
-        <div className="grid gap-2 grid-cols-2 items-center justify-items-center">
-          <img
-            src="https://placehold.co/100x100"
-            alt=""
-            className="rounded-full row-span-2 size-full min-w-[96px] max-w-48 aspect-ratio-[1/1] object-cover"
-          />
-          <Button
-            type="button"
-            highlight
-            className="font-normal max-w-32 text-sm sm:max-w-48 sm:text-base sm:font-bold "
-          >
-            프로필 이미지 변경하기
-          </Button>
-          <span className="text-xs self-start sm:text-sm">
-            파일 확장자 어쩌구 저쩌구
-          </span>
-        </div>
         <JoinInput
-          label="상호명"
+          label="팀명"
           value={teamName}
           onChange={setTeamName}
-          disabled
           vertical
+          validation={validations.teamName}
+          placeholder="10자 이내의 국문 또는 영문"
+          max={10}
         />
         <JoinInput
-          label="사업자번호"
-          value={businessNum}
-          onChange={setBusinessNum}
-          disabled
-          vertical
-        />
-        <JoinInput
-          label="대표자(관리자) 성명"
+          label="관리자명"
           value={managerName}
           onChange={setManagerName}
-          disabled
+          placeholder="10자 이내의 국문 또는 영문"
+          validation={validations.managerName}
+          max={10}
           vertical
         />
         <JoinInput
-          label="주소"
-          value={address}
-          onChange={setAddress}
-          disabled
-          vertical
-        />
-        <JoinInput
-          label="현재 가입된 이메일"
+          label="이메일"
           value={email}
           onChange={setEmail}
           disabled
@@ -98,11 +109,23 @@ export default function ManagerEdit() {
             size="small"
             type="button"
             highlight
-            className="absolute left-44 sm:left-32 font-normal sm:font-bold"
+            className="absolute right-6  font-normal sm:font-bold"
           >
             이메일(아이디) 변경하기
           </Button>
         </JoinInput>
+
+        <JoinInput
+          label="사업자등록번호"
+          value={businessNum}
+          onChange={setBusinessNum}
+          disabled
+          vertical
+        />
+
+        <p className="text-sm sm:text-base text-gray-500">
+          * 사업자등록번호는 변경이 불가합니다.
+        </p>
         <ul className="mt-7 flex justify-end gap-2">
           <li>
             <Button
@@ -120,6 +143,7 @@ export default function ManagerEdit() {
               className="max-w-24 max-h-[30px] text-sm px-[7.5px] sm:text-base sm:max-w-40 sm:max-h-12 font-normal sm:font-bold"
               type="submit"
               highlight
+              disabled={isEditBtnDisabled}
             >
               수정완료
             </Button>

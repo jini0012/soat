@@ -1,3 +1,7 @@
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Pencil, Eye, Trash } from "lucide-react";
+
 interface PerformanceMoreBtnProps {
   iconSrc?: string;
   label?: string;
@@ -18,17 +22,28 @@ export function PerformanceButton({
     }
   };
 
+  const getIcon = () => {
+    if (iconSrc?.includes("pen")) {
+      return <Pencil className="h-4 w-4 mr-2" />;
+    } else if (iconSrc?.includes("reading-glasses")) {
+      return <Eye className="h-4 w-4 mr-2" />;
+    } else if (iconSrc?.includes("delete")) {
+      return <Trash className="h-4 w-4 mr-2" />;
+    }
+    return null;
+  };
+
   return (
-    <button
+    <Button
+      variant="ghost"
       onClick={handleClick}
-      className={`flex justify-center items-center w-full bg-background border-flesh-200 text-foreground py-1.5
-          hover:bg-flesh-200 hover:text-foreground hover:border-flesh-200 transition
-          active:bg-flesh-300 active:text-foreground active:border-flesh-300
-          ${className}`}
+      className={`flex justify-start items-center w-full rounded-none text-sm font-medium py-2 h-auto
+      hover:bg-muted hover:text-foreground
+      ${className}`}
     >
-      <img src={iconSrc} alt={label} className="w-1/6 mr-1" />
+      {getIcon()}
       {label}
-    </button>
+    </Button>
   );
 }
 
@@ -36,23 +51,27 @@ export default function PerformanceMoreBtn({
   onClick,
 }: PerformanceMoreBtnProps) {
   return (
-    <div className="border-2 border-flesh-200 rounded-md w-[142px] mt-5">
-      <PerformanceButton
-        iconSrc="/images/icons/pen.svg"
-        label="예매 정보 수정"
-        onClick={onClick}
-      />
-      <PerformanceButton
-        iconSrc="/images/icons/reading-glasses.svg"
-        label="예매 확인"
-        className="border-y-2 border-flesh-200 border-dashed"
-        onClick={onClick}
-      />
-      <PerformanceButton
-        iconSrc="/images/icons/delete.svg"
-        label="삭제"
-        onClick={onClick}
-      />
-    </div>
+    <Card className="w-full border shadow-sm">
+      <CardContent className="p-0">
+        <PerformanceButton
+          iconSrc="/images/icons/pen.svg"
+          label="예매 정보 수정"
+          onClick={onClick}
+        />
+        <div className="w-full h-px bg-border" />
+        <PerformanceButton
+          iconSrc="/images/icons/reading-glasses.svg"
+          label="예매 확인"
+          onClick={onClick}
+        />
+        <div className="w-full h-px bg-border" />
+        <PerformanceButton
+          iconSrc="/images/icons/delete.svg"
+          label="삭제"
+          onClick={onClick}
+          className="text-destructive hover:text-destructive hover:bg-destructive/10"
+        />
+      </CardContent>
+    </Card>
   );
 }
