@@ -1,13 +1,16 @@
 "use client"; // 클라이언트 컴포넌트로 설정
 
-import React, { useEffect, useState, useCallback, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import PerformanceMoreBtn from "./PerformanceMoreBtn";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { PerformanceData } from "@/app/api/performance/route";
+import axios from "axios";
 
 export default function EmblaCarousel() {
   const [clickedSlide, setClickedSlide] = useState<number | null>(null); // 클릭한 슬라이드 관리
+  const [performanceList, setPerformanceList] = useState<PerformanceData[]>([]);
   const carouselRef = useRef<HTMLDivElement | null>(null); // carouselRef의 타입을 명시
 
   const handleClick = (num: number) => {
@@ -24,6 +27,19 @@ export default function EmblaCarousel() {
   });
 
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    async function fetchPerformanceList() {
+      try {
+        const response = await axios.get("/api/manager/performance");
+        setPerformanceList(response.data); // 공연 목록을 상태에 저장
+      } catch (error) {
+        console.error("공연 목록 불러오기 실패:", error);
+      }
+    }
+
+    fetchPerformanceList();
+  }, []);
 
   useEffect(() => {
     if (!emblaApi) return;
@@ -89,39 +105,47 @@ export default function EmblaCarousel() {
       <h2 className="text-2xl font-bold mb-6">나의 공연</h2>
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex gap-4" ref={carouselRef}>
-          {[1, 2, 3, 4, 5].map((num) => (
-            <article key={num} className="flex-shrink-0 min-w-0 mb-5">
-              <Card
-                className={`w-40 transition-all duration-200  ${
-                  clickedSlide === num ? "shadow-lg" : "hover:shadow-md"
-                }`}
-                onClick={(event) => {
-                  event.stopPropagation();
-                  handleClick(num);
-                }}
-              >
-                <CardContent className="p-0">
-                  <span className="flex items-center justify-center h-60 bg-muted rounded-t-md text-2xl font-bold">
-                    Slide {num}
-                  </span>
-                  <div className="p-3">
-                    <Badge variant="outline" className="mb-2">
-                      콘서트
-                    </Badge>
-                    <h3 className="font-medium text-sm truncate">
-                      2025 주인님 단독 콘서트 {num}
-                    </h3>
-
-                    {clickedSlide === num && (
-                      <div className="mt-3">
-                        <PerformanceMoreBtn onClick={handleButtonClick} />
-                      </div>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            </article>
-          ))}
+          {performanceList.map((data: PerformanceData) => {
+            const dataIndex = performanceList.indexOf(data);
+            const num = dataIndex + 1; // 슬라이드 번호 계산 (1부터 시작)
+            return (
+              <article key={data.id} className="flex-shrink-0 min-w-0 mb-5">
+                <Card
+                  className={`w-40 transition-all duration-200  ${
+                    clickedSlide === num ? "shadow-lg" : "hover:shadow-md"
+                  }`}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    handleClick(num);
+                  }}
+                >
+                  <CardContent className="p-0">
+                    <img
+                      src={data.poster.url}
+                      alt={data.poster.fileName}
+                      className="h-60 rounded-t-md object-cover"
+                    />
+                    <div className="p-3">
+                      <Badge variant="outline" className="mb-2">
+                        {data.category}
+                      </Badge>
+                      <h3 className="font-medium text-sm truncate">
+                        {data.title}
+                      </h3>
+                      <span className="text-gray-500 text-sm">
+                        {new Date(data.createdAt).toLocaleDateString("ko-KR")}
+                      </span>
+                      {clickedSlide === num && (
+                        <div className="mt-3">
+                          <PerformanceMoreBtn onClick={handleButtonClick} />
+                        </div>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              </article>
+            );
+          })}
         </div>
       </div>
     </section>
