@@ -9,6 +9,8 @@ import {
   Loader2,
   CheckCircle,
   XCircle,
+  RotateCcw,
+  Lightbulb,
 } from "lucide-react";
 
 import axios from "axios";
@@ -20,6 +22,7 @@ export default function TicketScanner() {
     null
   );
   const [loading, setLoading] = useState(false);
+  const [isFlashOn, setIsFlashOn] = useState(false);
 
   async function verifyTicket(code: string): Promise<boolean> {
     try {
@@ -31,6 +34,33 @@ export default function TicketScanner() {
     }
   }
 
+  function handleReset() {
+    setScanResult(null);
+    setLoading(false);
+    scannerRef.current?.stop();
+    scannerRef.current?.start();
+  }
+
+  async function handleToggleLight() {
+    const scanner = scannerRef.current;
+    if (!scanner) return;
+
+    const hasFlash = await scanner.hasFlash();
+    if (hasFlash) {
+      // 플래시 상태를 확인하여 토글
+      if (isFlashOn) {
+        scanner.turnFlashOff();
+        setIsFlashOn(false);
+      } else {
+        {
+          scanner.turnFlashOn();
+          setIsFlashOn(true);
+        }
+      }
+    } else {
+      alert("이 기기는 플래시를 지원하지 않습니다.");
+    }
+  }
 
   useEffect(() => {
     if (videoRef.current) {
@@ -69,6 +99,21 @@ export default function TicketScanner() {
       <Card className="w-full">
         <CardContent className="p-4 flex flex-col items-center space-y-4">
           <h2 className="text-xl font-semibold">🎟️ 티켓 QR 코드 스캔</h2>
+          <ul className="flex items-center justify-center w-full gap-2">
+            <li>
+              <button
+                className="cursor-pointer"
+                onClick={() => handleToggleLight()}
+              >
+                <Lightbulb />
+              </button>
+            </li>
+            <li>
+              <button className="cursor-pointer" onClick={() => handleReset()}>
+                <RotateCcw />
+              </button>
+            </li>
+          </ul>
           <video ref={videoRef} className="w-full rounded-md shadow border" />
           <p className="text-sm text-muted-foreground">
             카메라에 QR 코드를 비춰주세요
