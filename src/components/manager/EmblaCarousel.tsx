@@ -3,6 +3,8 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import PerformanceMoreBtn from "./PerformanceMoreBtn";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 export default function EmblaCarousel() {
   const [clickedSlide, setClickedSlide] = useState<number | null>(null); // 클릭한 슬라이드 관리
@@ -83,39 +85,45 @@ export default function EmblaCarousel() {
   };
 
   return (
-    <div className="relative w-full max-w-4xl mx-auto py-6 px-3">
+    <section className="relative w-full max-w-4xl mx-auto py-6 px-3">
+      <h2 className="text-2xl font-bold mb-6">나의 공연</h2>
       <div className="overflow-hidden" ref={emblaRef}>
-        <div className="flex" ref={carouselRef}>
+        <div className="flex gap-4" ref={carouselRef}>
           {[1, 2, 3, 4, 5].map((num) => (
-            <div className="flex flex-col">
-              <div
-                className="flex flex-col"
-                key={num}
+            <article key={num} className="flex-shrink-0 min-w-0 mb-5">
+              <Card
+                className={`w-40 transition-all duration-200  ${
+                  clickedSlide === num ? "shadow-lg" : "hover:shadow-md"
+                }`}
                 onClick={(event) => {
-                  event.stopPropagation(); // 외부 클릭을 방지
-                  handleClick(num); // 슬라이드 클릭 시 토글
+                  event.stopPropagation();
+                  handleClick(num);
                 }}
               >
-                <div className="flex-shrink-0 rounded-md mr-2 px-8 flex items-center justify-center h-60 bg-gray-200 text-2xl font-bold w-[142px] cursor-pointer">
-                  Slide {num}
-                </div>
-                <div className="w-[142px] font-bold overflow-hidden text-ellipsis whitespace-nowrap mt-2 px-1">
-                  2025 주인님 단독 콘서트 {num}
-                </div>
-              </div>
-              {clickedSlide === num && (
-                <div className="mt-4">
-                  <div
-                    className="absolute top-0 left-0 w-full h-full bg-transparent"
-                    onClick={() => setClickedSlide(null)} // 슬라이드 외부 클릭 시 닫기
-                  />
-                  <PerformanceMoreBtn onClick={handleButtonClick} />
-                </div>
-              )}
-            </div>
+                <CardContent className="p-0">
+                  <span className="flex items-center justify-center h-60 bg-muted rounded-t-md text-2xl font-bold">
+                    Slide {num}
+                  </span>
+                  <div className="p-3">
+                    <Badge variant="outline" className="mb-2">
+                      콘서트
+                    </Badge>
+                    <h3 className="font-medium text-sm truncate">
+                      2025 주인님 단독 콘서트 {num}
+                    </h3>
+
+                    {clickedSlide === num && (
+                      <div className="mt-3">
+                        <PerformanceMoreBtn onClick={handleButtonClick} />
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            </article>
           ))}
         </div>
       </div>
-    </div>
+    </section>
   );
 }
