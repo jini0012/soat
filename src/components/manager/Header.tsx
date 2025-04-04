@@ -29,14 +29,18 @@ export default function Header() {
   const subtitle = pageTitleMap[pathname] || null;
 
   return (
-    <header className="flex justify-between items-center p-3                            ">
+    <header className="flex justify-between items-center p-3 h-16">
       <h1>
         <Link href="/">
           <img src="/images/icons/logo-temp.svg" alt="쏘앳" />
         </Link>
       </h1>
       <div className="flex flex-col items-center">
-        <h2>관리자페이지</h2>
+        <h2>
+          <Link href="/manager" className="text-inherit">
+            관리자페이지
+          </Link>
+        </h2>
         {subtitle && <h3 className="text-sm">{subtitle}</h3>}
       </div>
       <button className="flex" onClick={() => signOut()}>
