@@ -10,11 +10,12 @@ import { useRouter } from "next/navigation";
 export default function UserInfo() {
   const { data: session, status } = useSession();
   const router = useRouter();
-
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [userType, setUserType] = useState("");
+  const [userInfo, setUserInfo] = useState({
+    username: "",
+    email: "",
+    phoneNumber: "",
+    userType: "",
+  });
 
   useEffect(() => {
     if (status !== "authenticated" && status !== "loading") {
@@ -28,14 +29,12 @@ export default function UserInfo() {
       try {
         const response = await axios.get("/api/account/me");
         const { user } = response.data;
-        if (user.userType === "seller") {
-          setUserType("공연 관리자");
-        } else {
-          setUserType("예매 회원");
-        }
-        setUsername(user.username);
-        setEmail(user.email);
-        setPhone(user.phoneNumber);
+        setUserInfo({
+          username: user.username,
+          email: user.email,
+          phoneNumber: user.phoneNumber,
+          userType: user.userType === "seller" ? "공연 관리자" : "예매 회원",
+        });
       } catch (error) {
         console.error("사용자 정보 조회 오류:", error);
       }
@@ -49,13 +48,16 @@ export default function UserInfo() {
       <h2 className="text-sm sm:text-3xl sm:my-6 sm:font-bold">회원 정보</h2>
       <div className="relative">
         <ul className="p-5 rounded-[10px] w-full border-2 border-flesh-200 text-xs sm:h-80 sm:flex sm:flex-col sm:justify-center sm:gap-2 whitespace-nowrap sm:px-3 md:px-5">
-          <Li label="이름" data={username} />
-          <Li label="이메일" data={email} />
+          <Li label="이름" data={userInfo.username} />
+          <Li label="이메일" data={userInfo.email} />
           <Li
             label="휴대폰"
-            data={phone.replace(/^(\d{3})(\d{4})(\d{4})$/, "$1-$2-$3")}
+            data={userInfo.phoneNumber.replace(
+              /^(\d{3})(\d{4})(\d{4})$/,
+              "$1-$2-$3"
+            )}
           />
-          <Li label="회원 유형" data={userType} />
+          <Li label="회원 유형" data={userInfo.userType} />
         </ul>
         <Link
           href="/account/edit"
