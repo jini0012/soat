@@ -109,7 +109,7 @@ export default function EmblaCarousel() {
     "absolute top-60 -translate-y-1/2 z-10 rounded-full bg-background/80 backdrop-blur-sm";
 
   return (
-    <section className="relative w-full max-w-4xl mx-auto py-6 px-3">
+    <section className="relative w-full max-w-4xl mx-auto py-6 px-6">
       <h2 className="text-2xl font-bold mb-6">나의 공연</h2>
 
       <Button

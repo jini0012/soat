@@ -142,7 +142,7 @@ export default function ManagerEdit() {
   }
 
   return (
-    <>
+    <main className="px-6 sm:px-0">
       <form
         className="m-auto mt-5 w-full max-w-lg bg-white p-6 space-y-5 sm:space-y-10 rounded-lg border shadow-md relative"
         onSubmit={handleSubmit}
@@ -249,6 +249,6 @@ export default function ManagerEdit() {
           </li>
         </ul>
       </form>
-    </>
+    </main>
   );
 }
