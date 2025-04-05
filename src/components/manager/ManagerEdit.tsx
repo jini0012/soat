@@ -3,20 +3,33 @@ import React, { useState, useEffect, use } from "react";
 import { useRouter } from "next/navigation";
 import { JoinInput } from "@/components/controls/Inputs";
 import { Button } from "../controls/Button";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { validations } from "@/utils/validations";
+import { set } from "date-fns";
+
+type EmailUpdateState =
+  | "initial"
+  | "emailSent"
+  | "checkVerifyNum"
+  | "success"
+  | "error";
 
 export default function ManagerEdit() {
   const [teamName, setTeamName] = useState<string>("");
   const [businessNum, setBusinessNum] = useState<string>("");
   const [managerName, setManagerName] = useState("");
   const [email, setEmail] = useState<string>("");
+  const [verifyNum, setVerifyNum] = useState<string>("");
   const [originalData, setOriginalData] = useState({
     teamName,
     managerName,
     email,
   });
   const [isEditBtnDisabled, setIsEditBtnDisabled] = useState(true);
+  const [wantToChangeEmail, setWantToChangeEmail] = useState(false);
+  const [emailUpdate, setEmailUpdate] = useState<EmailUpdateState>("initial");
+  const [emailError, setEmailError] = useState<string>("");
+  const [verifyNumError, setVerifyNumError] = useState<string>("");
   const router = useRouter();
 
   useEffect(() => {
@@ -52,30 +65,84 @@ export default function ManagerEdit() {
     const isChanged =
       teamName !== originalData.teamName ||
       managerName !== originalData.managerName;
-
     const isValid =
       validations.teamName.safeParse(teamName).success &&
       validations.managerName.safeParse(managerName).success;
 
-    setIsEditBtnDisabled(!(isChanged && isValid));
-  }, [teamName, managerName]);
+    if (emailUpdate !== "success") {
+      setIsEditBtnDisabled(!(isChanged && isValid));
+    } else {
+      setIsEditBtnDisabled(emailUpdate !== "success");
+    }
+  }, [teamName, managerName, emailUpdate]);
+
+  useEffect(() => {
+    if (emailUpdate === "error") {
+      setEmailError("");
+      setVerifyNumError("");
+    }
+  }, [email, verifyNum]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     try {
-      const response = await axios.patch("/api/manager/edit", {
-        teamName,
-        managerName,
-      });
+      const formData =
+        emailUpdate === "success"
+          ? { teamName, managerName, email }
+          : { teamName, managerName };
+
+      const response = await axios.patch("/api/manager/edit", formData);
       console.log("수정 완료:", response.data);
+      alert("정보 수정이 완료되었습니다.");
       router.push("/manager");
     } catch (error) {
       console.error("수정 오류:", error);
     }
   }
 
+  async function handleEmailChange(e) {
+    const buttonName: string = e.target.textContent;
+    if (buttonName === "이메일(아이디) 변경하기") {
+      setWantToChangeEmail(true);
+      setEmail("");
+      e.target.textContent = "인증번호 전송";
+    } else if (buttonName.includes("인증번호")) {
+      // 이메일 인증 api 호출
+      try {
+        const response = await axios.post("/api/auth/email-verification", {
+          email,
+          userType: "seller",
+        });
+        console.log("인증번호 전송 성공:", response.data);
+        setEmailUpdate("emailSent");
+      } catch (error) {
+        console.error("인증번호 전송 오류:", error);
+        setEmailUpdate("error");
+        if (axios.isAxiosError(error)) {
+          setEmailError(error.response?.data.error);
+        }
+      }
+    }
+  }
+
+  async function handleCheckVerifyNum() {
+    setEmailUpdate("checkVerifyNum");
+    try {
+      const response = await axios.put("/api/auth/email-verification/verify", {
+        email,
+        code: Number(verifyNum),
+      });
+      console.log("인증번호 확인 성공:", response.data);
+      setEmailUpdate("success");
+    } catch (error) {
+      console.error("인증번호 확인 오류:", error);
+      setEmailUpdate("error");
+      setVerifyNumError("인증번호가 일치하지 않습니다.");
+    }
+  }
+
   return (
-    <>
+    <main className="px-6 sm:px-0">
       <form
         className="m-auto mt-5 w-full max-w-lg bg-white p-6 space-y-5 sm:space-y-10 rounded-lg border shadow-md relative"
         onSubmit={handleSubmit}
@@ -102,7 +169,14 @@ export default function ManagerEdit() {
           label="이메일"
           value={email}
           onChange={setEmail}
-          disabled
+          disabled={
+            !wantToChangeEmail ||
+            emailUpdate === "emailSent" ||
+            emailUpdate === "success"
+          }
+          placeholder="이메일을 입력해주세요."
+          validation={validations.email}
+          message={emailError}
           vertical
         >
           <Button
@@ -110,10 +184,35 @@ export default function ManagerEdit() {
             type="button"
             highlight
             className="absolute right-6  font-normal sm:font-bold"
+            disabled={emailUpdate === "emailSent" || emailUpdate === "success"}
+            onClick={(e) => handleEmailChange(e)}
           >
             이메일(아이디) 변경하기
           </Button>
         </JoinInput>
+        {wantToChangeEmail && (
+          <JoinInput
+            label="인증번호"
+            value={verifyNum}
+            onChange={setVerifyNum}
+            disabled={emailUpdate !== "emailSent"}
+            placeholder="인증번호를 입력해주세요."
+            validation={validations.emailVerifyNum}
+            message={verifyNumError}
+            vertical
+          >
+            <Button
+              size="small"
+              type="button"
+              highlight
+              className="absolute right-6 font-normal sm:font-bold"
+              disabled={emailUpdate !== "emailSent"}
+              onClick={() => handleCheckVerifyNum()}
+            >
+              확인
+            </Button>
+          </JoinInput>
+        )}
 
         <JoinInput
           label="사업자등록번호"
@@ -150,6 +249,6 @@ export default function ManagerEdit() {
           </li>
         </ul>
       </form>
-    </>
+    </main>
   );
 }

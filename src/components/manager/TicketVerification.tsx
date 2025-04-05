@@ -95,7 +95,7 @@ export default function TicketScanner() {
   }, [loading]);
 
   return (
-    <div className="flex flex-col items-center justify-center p-6 space-y-6 max-w-xl mx-auto">
+    <main className="flex flex-col items-center justify-center p-6 space-y-6 max-w-xl mx-auto">
       <Card className="w-full">
         <CardContent className="p-4 flex flex-col items-center space-y-4">
           <h2 className="text-xl font-semibold">🎟️ 티켓 QR 코드 스캔</h2>
@@ -142,6 +142,6 @@ export default function TicketScanner() {
           )}
         </CardContent>
       </Card>
-    </div>
+    </main>
   );
 }

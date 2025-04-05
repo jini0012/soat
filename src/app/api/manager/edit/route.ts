@@ -16,7 +16,7 @@ export async function PATCH(request: NextRequest) {
     }
 
     const userId = session.user.id;
-    const { teamName, managerName } = await request.json();
+    const { teamName, managerName, email } = await request.json();
 
     // 필수 항목 확인
     if (!teamName || !managerName) {
@@ -33,16 +33,23 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json({ error: "사용자 정보 없음" }, { status: 404 });
     }
 
-    // 업데이트
-    await sellerRef.update({
+    // 업데이트할 필드 (teamName, managerName, updateAt)
+    const updateData: Record<string, any> = {
       teamName,
       managerName,
       updatedAt: new Date().toISOString(),
-    });
+    };
+
+    // email이 존재할 경우에만 추가
+    if (email) {
+      updateData.email = email;
+    }
+
+    await sellerRef.update(updateData);
 
     return NextResponse.json({ message: "정보가 성공적으로 변경되었습니다." });
   } catch (error) {
-    console.error("팀명/관리자명 수정 오류:", error);
+    console.error("관리자 정보 수정 오류:", error);
     return NextResponse.json(
       { error: "정보 수정 중 오류가 발생했습니다." },
       { status: 500 }
