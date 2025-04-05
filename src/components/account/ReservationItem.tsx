@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { Card, CardContent } from "../ui/card";
+import { Badge } from "../ui/badge";
 
 const reservation = [
   {
@@ -166,7 +168,7 @@ function Ul({ children }: { children: React.ReactNode }) {
   );
 }
 
-function Li({
+function ReservationLi({
   imageUrl,
   title,
   viewDate,
@@ -174,29 +176,44 @@ function Li({
   isViewComplete,
 }: ReservationDataProps) {
   return (
-    <li className="size-full aspect-[90/162] w-[25vw] sm:w-[18vw]">
+    <li className="size-full w-[25vw] sm:w-[18vw] ">
       <Link href={`/account/mybook/${bookId}`}>
         <article>
-          <div className="relative">
-            <img
-              src={`/${imageUrl}`}
-              alt="공연 info"
-              className={`bg-flesh-500 rounded-[10px] mb-1 aspect-[90/130] object-cover ${
-                isViewComplete && "blur-[1px]"
-              }`}
-            />
-            {isViewComplete && (
-              <span className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rotate-[-50deg] text-white text-xs sm:text-sm md:text-xl lg:text-3xl">
-                관람완료
-              </span>
-            )}
-          </div>
-          <h3 className="text-[10px] font-bold text-black w-full sm:text-xs md:text-sm lg:text-lg xl:text-2xl truncate">
-            {title}
-          </h3>
-          <p className="text-[8px] text-gray-300 sm:text-xs md:text-sm lg:text-lg xl:text-2xl">
-            {viewDate}
-          </p>
+          <Card className="relative hover:shadow-lg transition-all duration-200 ">
+            <CardContent className="p-0">
+              <img
+                src={`/${imageUrl}`}
+                alt="공연 info"
+                className={`bg-flesh-500 size-full rounded-t-md sm:mb-1 aspect-[7/6] sm:aspect-[90/130] object-cover ${
+                  isViewComplete && "blur-[1px]"
+                }`}
+              />
+
+              <div className="p-1 sm:p-3">
+                {isViewComplete && (
+                  <Badge
+                    variant={"outline"}
+                    className="absolute top-2 left-2 text-white bg-background/80 backdrop-blur-sm text-[10px] sm:text-xs md:text-sm "
+                  >
+                    관람완료
+                  </Badge>
+                )}
+
+                <Badge
+                  variant={"outline"}
+                  className="px-1 sm:px-3 sm:mb-3 text-[10px] sm:text-xs md:text-sm"
+                >
+                  {"카테고리"}
+                </Badge>
+                <h3 className="text-[10px] font-bold text-black w-full sm:text-xs md:text-sm lg:text-lg truncate">
+                  {title}
+                </h3>
+                <p className="text-[8px] text-gray-300 sm:text-xs md:text-sm lg:text-lg ">
+                  {viewDate}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
         </article>
       </Link>
     </li>
@@ -220,7 +237,7 @@ export default function ReservationListData({
         .slice(0, slice)
         .map((book) => {
           return (
-            <Li
+            <ReservationLi
               key={book.bookId}
               bookId={book.bookId}
               imageUrl={book.image}
