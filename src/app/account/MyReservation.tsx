@@ -4,7 +4,7 @@ import ReservationListData from "@/components/account/ReservationItem";
 function ReservationList() {
   return (
     <section className="max-w-[1000px] relative sm:col-span-2 sm:row-start-1 sm:mr-6 md:mx-6">
-      <h2 className="my-[10px] text-sm sm:text-3xl sm:my-6 sm:font-bold">
+      <h2 className="my-[10px] text-sm sm:text-3xl sm:my-6 font-bold">
         예매 내역
       </h2>
       <Button
@@ -25,7 +25,7 @@ function BeforeReservationList() {
   return (
     <>
       <section className="max-w-[1000px] relative sm:col-span-2 sm:row-start-2 sm:mr-6 md:mx-6">
-        <h2 className="my-[10px] text-sm sm:text-3xl sm:my-6 sm:font-bold">
+        <h2 className="my-[10px] text-sm sm:text-3xl sm:my-6 font-bold">
           지난 예매 내역
         </h2>
         <Button
