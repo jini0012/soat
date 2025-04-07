@@ -1,12 +1,14 @@
 "use client"; // 클라이언트 컴포넌트로 설정
 
-import React, { useEffect, useState, useRef, use } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import axios from "axios";
 import PerformanceSlide from "./PerformanceSlide";
 import { PerformanceData } from "@/app/api/performance/route";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import Link from "next/link";
+import { TicketPlus } from "lucide-react";
 
 export default function EmblaCarousel() {
   const [clickedSlide, setClickedSlide] = useState<number | null>(null); // 클릭한 슬라이드 관리
@@ -111,7 +113,13 @@ export default function EmblaCarousel() {
   return (
     <section className="relative w-full max-w-4xl mx-auto py-6 px-6">
       <h2 className="text-2xl font-bold mb-6">나의 공연</h2>
-
+      <Link
+        href="/enrollment"
+        className="absolute right-6 top-5 bg-flesh-500 hover:bg-flesh-600 active:bg-flesh-700 text-sm px-4 py-2 rounded-md text-white flex items-center gap-2 transition duration-200"
+      >
+        <TicketPlus />
+        공연 등록
+      </Link>
       <Button
         variant="outline"
         size="icon"
