@@ -120,40 +120,48 @@ export default function EmblaCarousel() {
         <TicketPlus />
         공연 등록
       </Link>
-      <Button
-        variant="outline"
-        size="icon"
-        className={`${navButtonClass} left-4 md:left-0 -ml-4`}
-        onClick={handleClickPrevBtn}
-        disabled={currentIndex === 0}
-      >
-        <ChevronLeft className="h-4 w-4" />
-      </Button>
-      <div className="overflow-hidden" ref={emblaRef}>
-        <div className="flex gap-4" ref={carouselRef}>
-          {performanceList.map((data: PerformanceData, index: number) => {
-            const num = index + 1; // 슬라이드 번호
-            return (
-              <PerformanceSlide
-                key={data.id}
-                data={data}
-                isOpen={clickedSlide === num}
-                handleClick={() => handleClick(num)}
-                handleCardOutsideClick={() => handleClick(0)}
-                handleButtonClick={handleButtonClick}
-              />
-            );
-          })}
-        </div>
-      </div>
-      <Button
-        variant="outline"
-        size="icon"
-        className={`${navButtonClass} right-4 md:right-1 -mr-4`}
-        onClick={handleClickNextBtn}
-      >
-        <ChevronRight className="h-4 w-4" />
-      </Button>
+      {performanceList.length > 0 ? (
+        <>
+          <Button
+            variant="outline"
+            size="icon"
+            className={`${navButtonClass} left-4 md:left-0 -ml-4`}
+            onClick={handleClickPrevBtn}
+            disabled={currentIndex === 0}
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+          <div className="overflow-hidden" ref={emblaRef}>
+            <div className="flex gap-4" ref={carouselRef}>
+              {performanceList.map((data: PerformanceData, index: number) => {
+                const num = index + 1; // 슬라이드 번호
+                return (
+                  <PerformanceSlide
+                    key={data.id}
+                    data={data}
+                    isOpen={clickedSlide === num}
+                    handleClick={() => handleClick(num)}
+                    handleCardOutsideClick={() => handleClick(0)}
+                    handleButtonClick={handleButtonClick}
+                  />
+                );
+              })}
+            </div>
+          </div>
+          <Button
+            variant="outline"
+            size="icon"
+            className={`${navButtonClass} right-4 md:right-1 -mr-4`}
+            onClick={handleClickNextBtn}
+          >
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        </>
+      ) : (
+        <p className="flex justify-center text-lg text-gray-500 my-40">
+          등록된 공연이 없습니다.
+        </p>
+      )}
     </section>
   );
 }
