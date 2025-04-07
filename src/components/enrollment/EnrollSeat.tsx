@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import SeatRow from "../seats/SeatRow";
+import SeatSetRow from "../seats/SeatSetRow";
 import ControlRowButton from "../seats/ControlRowButton";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
@@ -22,7 +22,7 @@ export default function EnrollSeat() {
 
   const renderRows = () => {
     return Object.keys(rowsConfigs).map((rowsLabel, index) => {
-      return <SeatRow key={index} seatLabel={rowsLabel} />;
+      return <SeatSetRow key={index} seatLabel={rowsLabel} />;
     });
   };
 
