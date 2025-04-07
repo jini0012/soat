@@ -13,6 +13,7 @@ import { TicketPlus } from "lucide-react";
 export default function EmblaCarousel() {
   const [clickedSlide, setClickedSlide] = useState<number | null>(null); // 클릭한 슬라이드 관리
   const [performanceList, setPerformanceList] = useState<PerformanceData[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const carouselRef = useRef<HTMLDivElement | null>(null); // carouselRef의 타입을 명시
 
   const handleClick = (num: number) => {
@@ -35,6 +36,7 @@ export default function EmblaCarousel() {
       try {
         const response = await axios.get("/api/manager/performance");
         setPerformanceList(response.data); // 공연 목록을 상태에 저장
+        setIsLoading(false);
       } catch (error) {
         console.error("공연 목록 불러오기 실패:", error);
       }
@@ -159,7 +161,9 @@ export default function EmblaCarousel() {
         </>
       ) : (
         <p className="flex justify-center text-lg text-gray-500 my-40">
-          등록된 공연이 없습니다.
+          {isLoading
+            ? "공연 목록을 불러오는 중입니다..."
+            : "등록된 공연이 없습니다."}
         </p>
       )}
     </section>
