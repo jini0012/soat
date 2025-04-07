@@ -19,6 +19,8 @@ export default function PerformanceSlide({
   handleButtonClick,
   handleCardOutsideClick,
 }: SliceProps) {
+  const performId: string = data.id || "error";
+
   return (
     <article
       key={data.id}
@@ -50,7 +52,10 @@ export default function PerformanceSlide({
             </span>
             {isOpen && (
               <div className="mt-3">
-                <PerformanceMoreBtn onClick={handleButtonClick} />
+                <PerformanceMoreBtn
+                  onClick={handleButtonClick}
+                  performId={performId}
+                />
               </div>
             )}
           </div>

@@ -1,12 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Pencil, Eye, Trash } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface PerformanceMoreBtnProps {
   iconSrc?: string;
   label?: string;
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   className?: string;
+  performId: string;
 }
 
 export function PerformanceButton({
@@ -14,11 +16,22 @@ export function PerformanceButton({
   label,
   onClick,
   className,
+  performId,
 }: PerformanceMoreBtnProps) {
+  const router = useRouter();
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     // 원래의 onClick 함수가 있을 경우 추가적으로 실행
     if (onClick) {
       onClick(event);
+    }
+
+    // 수정/확인/삭제 버튼 클릭 시 실행되는 로직
+    if (label?.includes("수정")) {
+      console.log("수정 버튼 클릭됨");
+    } else if (label?.includes("확인")) {
+      router.push(`/manager/performance/${performId}`);
+    } else if (label?.includes("삭제")) {
+      console.log("삭제 버튼 클릭됨");
     }
   };
 
@@ -49,6 +62,7 @@ export function PerformanceButton({
 
 export default function PerformanceMoreBtn({
   onClick,
+  performId,
 }: PerformanceMoreBtnProps) {
   return (
     <Card className="w-full border shadow-sm">
@@ -57,12 +71,14 @@ export default function PerformanceMoreBtn({
           iconSrc="/images/icons/pen.svg"
           label="예매 정보 수정"
           onClick={onClick}
+          performId={performId}
         />
         <div className="w-full h-px bg-border" />
         <PerformanceButton
           iconSrc="/images/icons/reading-glasses.svg"
           label="예매 확인"
           onClick={onClick}
+          performId={performId}
         />
         <div className="w-full h-px bg-border" />
         <PerformanceButton
@@ -70,6 +86,7 @@ export default function PerformanceMoreBtn({
           label="삭제"
           onClick={onClick}
           className="text-destructive hover:text-destructive hover:bg-destructive/10"
+          performId={performId}
         />
       </CardContent>
     </Card>
