@@ -5,22 +5,39 @@ interface SeatItemProps {
   rowID: string;
   seatNumber: number | null;
   isSeat: boolean;
-  onToggle: () => void;
+  onClick: () => void;
+  status?: "processing" | "pending" | "booked";
+  disabled?: boolean;
 }
 export default function SeatItem({
   rowID,
   seatNumber,
   isSeat,
-  onToggle,
+  onClick,
+  disabled = false,
+  status,
 }: SeatItemProps) {
   const handleOnclickSeatItem = () => {
-    onToggle();
+    onClick();
+  };
+  const getStatusClass = (status?: "processing" | "pending" | "booked") => {
+    switch (status) {
+      case "booked":
+        return "bg-red-500";
+      case "pending":
+        return "bg-yellow-400";
+      case "processing":
+        return "bg-blue-400";
+      default:
+        return "bg-gray-200"; // 예약 안 된 좌석
+    }
   };
   return (
     <Button
       variant={isSeat ? "outline" : "ghost"}
-      className={`w-6 h-6 p-1 text-xs ${!isSeat && "bg-gray-200"}`}
+      className={`w-6 h-6 p-1 text-xs  ${isSeat ? getStatusClass(status) : ""}`}
       onClick={handleOnclickSeatItem}
+      disabled={disabled}
     >
       {seatNumber && rowID + seatNumber}
     </Button>
