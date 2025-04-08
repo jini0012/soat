@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { adminDb, adminStorage } from "@/app/api/firebaseAdmin";
 import NextCrypto from "next-crypto";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/auth/authOptions";
 
 const SECRET_KEY = process.env.NEXT_CRYPTO_SECRET_KEY;
 
