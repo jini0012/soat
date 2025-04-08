@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { adminDb, adminStorage } from "@/app/api/firebaseAdmin";
 
-export async function adminUserData() {
+async function adminUserData() {
   try {
     const adminUsers = await adminDb.collection("admin").doc("users").get();
     const adminUsersData = adminUsers.data();
