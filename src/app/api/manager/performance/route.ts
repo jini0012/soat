@@ -1,7 +1,7 @@
 import { NextResponse, NextRequest } from "next/server";
 import { adminDb } from "@/app/api/firebaseAdmin";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/auth/authOptions";
 import { create } from "domain";
 
 export async function GET(request: NextRequest) {
