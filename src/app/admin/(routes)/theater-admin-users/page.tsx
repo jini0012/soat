@@ -79,7 +79,6 @@ export default function TheaterAdminUsersPage() {
     theaterAdminSelect === "all"
       ? theaterAdminData
       : theaterAdminData.filter((user) => user.joinType === theaterAdminSelect);
-  console.log(filteredData);
 
   return (
     <>
