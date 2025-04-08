@@ -9,7 +9,7 @@ if (!SECRET_KEY) {
   throw new Error("NEXT_CRYPTO_SECRET_KEY 환경 변수가 설정되지 않았습니다.");
 }
 
-export async function approveId({ accountId }: { accountId: string }) {
+async function approveId({ accountId }: { accountId: string }) {
   try {
     const userDoc = await adminDb
       .collection("sellerUsers")
