@@ -1,4 +1,4 @@
-import { NextAuthOptions, User } from "next-auth";
+import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { adminDb } from "@/app/api/firebaseAdmin";
 import { compare } from "bcryptjs";
@@ -73,8 +73,8 @@ export const authOptions: NextAuthOptions = {
         token.id = user.id;
         token.isDeleteUser = user.isDeleteUser;
         token.userType === "seller"
-          ? (token.teamName = user.teamName)
-          : (token.username = user.username);
+          ? ((token.teamName = user.teamName) as string)
+          : ((token.username = user.username) as string);
       }
       return token;
     },

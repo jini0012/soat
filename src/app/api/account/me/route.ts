@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/auth/authOptions";
 import { adminDb } from "../../firebaseAdmin";
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     // 현재 세션 확인
     const session = await getServerSession(authOptions);

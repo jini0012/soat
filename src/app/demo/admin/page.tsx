@@ -1,14 +1,11 @@
 "use client";
-
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 
 export default function AdminUserManagement() {
   const [adminUsers, setAdminUsers] = useState<string[]>([]);
   const [newUserId, setNewUserId] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
 
   // 어드민 사용자 목록 불러오기
   const fetchAdminUsers = async () => {

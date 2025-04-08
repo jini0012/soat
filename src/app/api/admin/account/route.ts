@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { adminDb, adminStorage } from "@/app/api/firebaseAdmin";
+import { adminDb } from "@/app/api/firebaseAdmin";
 
 async function adminUserData() {
   try {
@@ -101,7 +101,7 @@ async function removeAdminUser({ userId }: { userId: string }) {
   }
 }
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   return await adminUserData();
 }
 

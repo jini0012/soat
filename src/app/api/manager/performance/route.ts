@@ -1,10 +1,9 @@
-import { NextResponse, NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 import { adminDb } from "@/app/api/firebaseAdmin";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/auth/authOptions";
-import { create } from "domain";
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const session = await getServerSession(authOptions);
 

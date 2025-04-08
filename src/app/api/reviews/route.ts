@@ -15,8 +15,8 @@ export interface ReviewData {
   content: string;
   likeCount: number;
   likedBy: string[]; // 좋아요한 사용자 ID 배열
-  createdAt: any;
-  updatedAt: any;
+  createdAt: string | number | Date | FieldValue;
+  updatedAt: string | number | Date | FieldValue;
 }
 
 // 사용자 정보 가져오는 내부 함수
@@ -47,7 +47,6 @@ export async function GET(request: NextRequest) {
     // 현재 세션 가져오기
     const session = await getServerSession(authOptions);
     const userId = session?.user?.id;
-    const userType = session?.user?.userType;
 
     // 리뷰 데이터 조회
     const reviewsSnapshot = await adminDb

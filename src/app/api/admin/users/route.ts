@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
-import { adminDb, adminStorage } from "@/app/api/firebaseAdmin";
+import { NextResponse } from "next/server";
+import { adminDb } from "@/app/api/firebaseAdmin";
 
 async function buyerUsersList() {
   try {
@@ -23,26 +23,26 @@ async function buyerUsersList() {
   }
 }
 
-async function sellerUsersList() {
-  try {
-    const sellerUsers = await adminDb.collection("sellerUsers").get();
-    const sellerUsersData = sellerUsers.docs.map((doc) => doc.data());
+// async function sellerUsersList() {
+//   try {
+//     const sellerUsers = await adminDb.collection("sellerUsers").get();
+//     const sellerUsersData = sellerUsers.docs.map((doc) => doc.data());
 
-    const sensoredSellerUsersData = sellerUsersData.map((sellerUser) => {
-      return {
-        ...sellerUser,
-        password: undefined,
-      };
-    });
+//     const sensoredSellerUsersData = sellerUsersData.map((sellerUser) => {
+//       return {
+//         ...sellerUser,
+//         password: undefined,
+//       };
+//     });
 
-    return sensoredSellerUsersData;
-  } catch (error) {
-    console.error(error);
-    throw new Error("판매자 정보를 가져오는데 실패했습니다.");
-  }
-}
+//     return sensoredSellerUsersData;
+//   } catch (error) {
+//     console.error(error);
+//     throw new Error("판매자 정보를 가져오는데 실패했습니다.");
+//   }
+// }
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
     const data = await buyerUsersList();
     return NextResponse.json(data);

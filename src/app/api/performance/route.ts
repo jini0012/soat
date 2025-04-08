@@ -26,8 +26,8 @@ export interface PerformanceData {
   price: number;
   sellerId: string;
   sellerTeam: string;
-  createdAt: any;
-  updatedAt: any;
+  createdAt: string | number | Date;
+  updatedAt: string | number | Date;
   seats: TheaterLayoutData;
   // 기타 필요한 필드들
 }
