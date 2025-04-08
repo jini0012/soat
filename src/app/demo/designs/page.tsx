@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button, CloseButton } from "@/components/controls/Button";
 import {
   Checkbox,

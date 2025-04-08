@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { adminDb, adminStorage } from "@/app/api/firebaseAdmin";
+import { adminStorage } from "@/app/api/firebaseAdmin";
 import NextCrypto from "next-crypto";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/auth/authOptions";

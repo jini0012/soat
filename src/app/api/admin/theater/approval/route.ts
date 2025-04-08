@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { adminDb, adminStorage } from "@/app/api/firebaseAdmin";
+import { adminDb } from "@/app/api/firebaseAdmin";
 import NextCrypto from "next-crypto";
 import { NewTheaterAdmin } from "@/types/admin";
 
@@ -44,7 +44,7 @@ async function getTheaterWaitingList() {
   }
 }
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   const waitingTheaters = await getTheaterWaitingList();
 
   if (!waitingTheaters) {

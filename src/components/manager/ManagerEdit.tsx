@@ -1,11 +1,10 @@
 "use client";
-import React, { useState, useEffect, use } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { JoinInput } from "@/components/controls/Inputs";
 import { Button } from "../controls/Button";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { validations } from "@/utils/validations";
-import { set } from "date-fns";
 
 type EmailUpdateState =
   | "initial"

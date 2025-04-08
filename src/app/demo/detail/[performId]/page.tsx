@@ -32,12 +32,11 @@ interface PerformanceData {
   performances: DailyPerformances;
   content: {
     type: string;
-    content: any[];
   };
   sellerId: string;
   sellerTeam: string;
-  createdAt: any;
-  updatedAt: any;
+  createdAt: string | number | Date;
+  updatedAt: string | number | Date;
   account?: string;
 }
 
