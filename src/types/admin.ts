@@ -37,6 +37,13 @@ export interface Banner {
   bannerStatus: string;
 }
 
+export interface NewBanner extends Banner {
+  id: number;
+  bannerImage: File | null;
+  alternativeText: string;
+  bannerLink: string;
+}
+
 export interface SiteAdmin {
   email: string;
   siteAdmin: string;
