@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { adminDb, adminStorage } from "@/app/api/firebaseAdmin";
 
-export async function buyerUsersList() {
+async function buyerUsersList() {
   try {
     const buyerUsers = await adminDb.collection("buyerUsers").get();
     const buyerUsersData = buyerUsers.docs.map((doc) => ({
@@ -23,7 +23,7 @@ export async function buyerUsersList() {
   }
 }
 
-export async function sellerUsersList() {
+async function sellerUsersList() {
   try {
     const sellerUsers = await adminDb.collection("sellerUsers").get();
     const sellerUsersData = sellerUsers.docs.map((doc) => doc.data());
@@ -39,5 +39,14 @@ export async function sellerUsersList() {
   } catch (error) {
     console.error(error);
     throw new Error("판매자 정보를 가져오는데 실패했습니다.");
+  }
+}
+
+export async function GET(req: NextRequest) {
+  try {
+    const data = await buyerUsersList();
+    return NextResponse.json(data);
+  } catch (error) {
+    return NextResponse.json({ error: "서버 에러 발생" }, { status: 500 });
   }
 }

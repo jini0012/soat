@@ -11,7 +11,7 @@ if (!SECRET_KEY) {
 
 const crypto = new NextCrypto(SECRET_KEY);
 
-export async function getTheaterWaitingList() {
+async function getTheaterWaitingList() {
   try {
     const waitingTheatersDoc = await adminDb
       .collection("sellerUsers")
@@ -36,7 +36,7 @@ export async function getTheaterWaitingList() {
         return decryptedTheater;
       })
     );
-
+    console.log("데이터", decryptedWaitingTheaters);
     return decryptedWaitingTheaters as NewTheaterAdmin[];
   } catch (error) {
     console.error(error);
@@ -44,17 +44,15 @@ export async function getTheaterWaitingList() {
   }
 }
 
-// Admin 권한 개발 후 주석 해제
+export async function GET(request: NextRequest) {
+  const waitingTheaters = await getTheaterWaitingList();
 
-// export async function GET(request: NextRequest) {
-//   const waitingTheaters = await getTheaterWaitingList();
+  if (!waitingTheaters) {
+    return NextResponse.json(
+      { error: "극장 목록을 불러오는 데 실패했습니다." },
+      { status: 500 }
+    );
+  }
 
-//   if (!waitingTheaters) {
-//     return NextResponse.json(
-//       { error: "극장 목록을 불러오는 데 실패했습니다." },
-//       { status: 500 }
-//     );
-//   }
-
-//   return NextResponse.json(waitingTheaters);
-// }
+  return NextResponse.json(waitingTheaters);
+}

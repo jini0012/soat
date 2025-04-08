@@ -6,6 +6,7 @@ export interface GeneralUser {
   username: string;
   createdAt: string;
   phoneNumber: string;
+  password?: undefined;
 }
 
 export interface TheaterAdminUser {
