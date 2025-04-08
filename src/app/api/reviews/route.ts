@@ -210,8 +210,8 @@ export async function POST(request: NextRequest) {
 
       if (performanceDoc.exists) {
         const performanceData = performanceDoc.data();
-        const currentRatingSum = performanceData.ratingSum || 0;
-        const currentRatingCount = performanceData.ratingCount || 0;
+        const currentRatingSum = performanceData?.ratingSum || 0;
+        const currentRatingCount = performanceData?.ratingCount || 0;
 
         const newRatingSum = currentRatingSum + ratings;
         const newRatingCount = currentRatingCount + 1;
@@ -285,7 +285,7 @@ export async function PUT(request: NextRequest) {
       }
 
       const reviewData = reviewDoc.data();
-      const likedBy = reviewData.likedBy || [];
+      const likedBy = reviewData?.likedBy || [];
       const timestamp = FieldValue.serverTimestamp();
 
       // 이미 좋아요를 누른 사용자인지 확인
@@ -296,7 +296,7 @@ export async function PUT(request: NextRequest) {
         likedBy.push(userId);
         transaction.update(reviewRef, {
           likedBy: likedBy,
-          likeCount: reviewData.likeCount + 1,
+          likeCount: reviewData?.likeCount + 1,
           updatedAt: timestamp,
         });
       } else if (action === "unlike" && userIndex !== -1) {
@@ -304,7 +304,7 @@ export async function PUT(request: NextRequest) {
         likedBy.splice(userIndex, 1);
         transaction.update(reviewRef, {
           likedBy: likedBy,
-          likeCount: Math.max(0, reviewData.likeCount - 1),
+          likeCount: Math.max(0, reviewData?.likeCount - 1),
           updatedAt: timestamp,
         });
       }
@@ -361,7 +361,7 @@ export async function DELETE(request: NextRequest) {
     const reviewData = reviewDoc.data();
 
     // 작성자 확인 - 자신이 작성한 리뷰만 삭제 가능
-    if (reviewData.userId !== userId) {
+    if (reviewData?.userId !== userId) {
       return NextResponse.json(
         { error: "자신이 작성한 리뷰만 삭제할 수 있습니다." },
         { status: 403 }
@@ -381,8 +381,8 @@ export async function DELETE(request: NextRequest) {
 
       if (performDoc.exists) {
         const performData = performDoc.data();
-        const currentRatingSum = performData.ratingSum || 0;
-        const currentRatingCount = performData.ratingCount || 0;
+        const currentRatingSum = performData?.ratingSum || 0;
+        const currentRatingCount = performData?.ratingCount || 0;
 
         // 해당 리뷰 평점을 제외한 새로운 합계와 개수 계산
         const newRatingCount = currentRatingCount - 1;
@@ -477,7 +477,7 @@ export async function PATCH(request: NextRequest) {
     const reviewData = reviewDoc.data();
 
     // 작성자 확인 - 자신이 작성한 리뷰만 수정 가능
-    if (reviewData.userId !== userId) {
+    if (reviewData?.userId !== userId) {
       return NextResponse.json(
         { error: "자신이 작성한 리뷰만 수정할 수 있습니다." },
         { status: 403 }
@@ -500,7 +500,7 @@ export async function PATCH(request: NextRequest) {
 
       if (performDoc.exists) {
         const performData = performDoc.data();
-        const currentRatingSum = performData.ratingSum || 0;
+        const currentRatingSum = performData?.ratingSum || 0;
 
         // 평점이 변경된 경우에만 공연 평점 업데이트
         if (oldRatings !== ratings) {
@@ -508,7 +508,7 @@ export async function PATCH(request: NextRequest) {
           const newRatingSum = currentRatingSum - oldRatings + ratings;
 
           // 평균 재계산
-          const ratingCount = performData.ratingCount || 0;
+          const ratingCount = performData?.ratingCount || 0;
           const newAverageRating = parseFloat(
             (newRatingSum / ratingCount).toFixed(1)
           );
