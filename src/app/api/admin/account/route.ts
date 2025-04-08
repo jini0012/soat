@@ -23,7 +23,7 @@ async function adminUserData() {
   }
 }
 
-export async function addAdminUser({ userId }: { userId: string }) {
+async function addAdminUser({ userId }: { userId: string }) {
   try {
     const adminUsers = await adminDb.collection("admin").doc("users").get();
     const adminUsersData = adminUsers.data();
@@ -61,7 +61,7 @@ export async function addAdminUser({ userId }: { userId: string }) {
   }
 }
 
-export async function removeAdminUser({ userId }: { userId: string }) {
+async function removeAdminUser({ userId }: { userId: string }) {
   try {
     const adminUsers = await adminDb.collection("admin").doc("users").get();
     const adminUsersData = adminUsers.data();
