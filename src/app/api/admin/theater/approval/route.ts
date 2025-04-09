@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { adminDb } from "@/app/api/firebaseAdmin";
 import NextCrypto from "next-crypto";
 import { NewTheaterAdmin } from "@/types/admin";

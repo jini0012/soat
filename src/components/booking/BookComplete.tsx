@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { useState } from "react";
 import { Button } from "../controls/Button";
 import BookSection from "./BookSection";
 import ButtonRow from "./ButtonRow";

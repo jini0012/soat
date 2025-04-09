@@ -35,7 +35,7 @@ export async function GET() {
     const userData = userDoc.data();
 
     // 비밀번호는 제외하고 반환
-    const { password, ...userDataWithoutPassword } = userData!;
+    const { password: _password, ...userDataWithoutPassword } = userData!;
 
     return NextResponse.json({
       user: {
