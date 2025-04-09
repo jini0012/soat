@@ -47,6 +47,7 @@ export async function GET() {
     const data = await buyerUsersList();
     return NextResponse.json(data);
   } catch (error) {
+    console.error("서버 에러 발생:", error);
     return NextResponse.json({ error: "서버 에러 발생" }, { status: 500 });
   }
 }

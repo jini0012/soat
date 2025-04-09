@@ -72,9 +72,11 @@ export const authOptions: NextAuthOptions = {
         token.userType = user.userType;
         token.id = user.id;
         token.isDeleteUser = user.isDeleteUser;
-        token.userType === "seller"
-          ? ((token.teamName = user.teamName) as string)
-          : ((token.username = user.username) as string);
+        if (token.userType === "seller") {
+          (token.teamName = user.teamName) as string;
+        } else {
+          (token.username = user.username) as string;
+        }
       }
       return token;
     },
@@ -83,9 +85,11 @@ export const authOptions: NextAuthOptions = {
         session.user.id = token.id as string;
         session.user.userType = token.userType as "buyer" | "seller";
         session.user.isDeleteUser = token.isDeleteUser as boolean;
-        session.user.userType === "seller"
-          ? (session.user.teamName = token.teamName as string)
-          : (session.user.username = token.username as string);
+        if (session.user.userType === "seller") {
+          session.user.teamName = token.teamName as string;
+        } else {
+          session.user.username = token.username as string;
+        }
       }
       return session;
     },

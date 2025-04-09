@@ -54,7 +54,12 @@ export default function EnrollRehydration({
         }
 
         // `isDirty, step` 값을 제외한 비교를 위해 필터링
-        const { isDirty, step, _persist, ...filteredStoredState } = storedState;
+        const {
+          isDirty: _isDirty,
+          step: _step,
+          _persist: __persist,
+          ...filteredStoredState
+        } = storedState;
         const {
           isDirty: ignoredIsDirty,
           step: ignoredStep,
