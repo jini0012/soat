@@ -74,9 +74,7 @@ export default function UserInfoUpdate() {
       currentPassword: password,
     };
     try {
-      const response = await axios.post("/api/account/delete", {
-        data: formData,
-      });
+      const response = await axios.post("/api/account/delete", formData);
 
       if (response.status === 200) {
         setIsOpenModal(true);
