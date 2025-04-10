@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
     const userType = session.user.userType;
 
     const formData = await request.json();
-    const { currentPassword } = formData;
+    const { currentPassword } = formData.data;
 
     // 필수 입력값 검증
     if (!currentPassword || !userType) {
