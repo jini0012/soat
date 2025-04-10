@@ -33,13 +33,13 @@ export interface Review {
 }
 
 export interface Banner {
+  id: number;
   bannerTitle: string;
   registrationDate: string;
   bannerStatus: string;
 }
 
 export interface NewBanner extends Banner {
-  id: number;
   bannerImage: File | null;
   alternativeText: string;
   bannerLink: string;
