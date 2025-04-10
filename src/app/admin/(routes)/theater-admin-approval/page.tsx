@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic"; // 동적 렌더링 강제 설정
+
 import AdminHeader from "../../../../components/admin/AdminHeader";
 import AdminMain from "@/components/admin/AdminMain";
 import TheaterAdminApprovalTable from "@/components/admin/TheaterAdminApprovalTable";
