@@ -6,7 +6,7 @@ interface TableRowProps<T> {
   onClick: () => void;
 }
 
-export default function TableRow<T extends Record<string, unknown>>({
+export default function TableRow<T extends Record<string, any>>({
   rowData,
   headers,
   fieldMapping,
