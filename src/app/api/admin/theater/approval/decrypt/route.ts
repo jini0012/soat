@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { NextRequest, NextResponse } from "next/server";
 import { adminStorage } from "@/app/api/firebaseAdmin";
 import NextCrypto from "next-crypto";
