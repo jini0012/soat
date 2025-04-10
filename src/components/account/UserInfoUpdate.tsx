@@ -74,7 +74,7 @@ export default function UserInfoUpdate() {
       currentPassword: password,
     };
     try {
-      const response = await axios.delete("/api/account/delete", {
+      const response = await axios.post("/api/account/delete", {
         data: formData,
       });
 

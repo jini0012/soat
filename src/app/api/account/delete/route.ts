@@ -4,7 +4,7 @@ import { compare } from "bcryptjs";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/auth/authOptions";
 
-export async function DELETE(request: NextRequest) {
+export async function POST(request: NextRequest) {
   try {
     // 현재 세션 확인
     const session = await getServerSession(authOptions);
