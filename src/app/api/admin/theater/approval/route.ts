@@ -36,7 +36,6 @@ async function getTheaterWaitingList() {
         return decryptedTheater;
       })
     );
-    console.log("데이터", decryptedWaitingTheaters);
     return decryptedWaitingTheaters as NewTheaterAdmin[];
   } catch (error) {
     console.error(error);
