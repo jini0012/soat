@@ -8,27 +8,47 @@ import {
   Map,
   Ticket as TicketIcon,
 } from "lucide-react";
-import { bookWithPerformance } from "@/types/reservation";
+import { Skeleton } from "../ui/skeleton";
 
-export default function Ticket(data: bookWithPerformance) {
+interface TicketProps {
+  title: string;
+  performanceDate: string;
+  performanceTime: string;
+  address: string;
+  detailAddress: string;
+  selectedSeats: string[];
+  reservationId: string;
+  status: string; // "booked" | "pending" | "processing" | "cancel" | "pendingRefund"
+}
+
+export default function Ticket({
+  title,
+  performanceDate,
+  performanceTime,
+  address,
+  detailAddress,
+  selectedSeats,
+  reservationId,
+  status,
+}: TicketProps) {
   return (
     <article className="relative bg-white rounded-xl overflow-hidden shadow-xl border border-gray-200 flex flex-col justify-center items-center">
       <div className="relative p-6 pb-0 w-full max-w-md">
-        <h2 className="sr-only">티켓: {data.performanceDetails.title}</h2>
+        <h2 className="sr-only">티켓: {title}</h2>
         <div className="flex items-center mb-2">
           <TicketIcon className="text-flesh-500 mr-2" size={20} />
           <h3 className="text-base sm:text-2xl font-bold bg-gradient-to-r from-flesh-500 to-flesh-700 bg-clip-text text-transparent">
-            {data.performanceDetails.title}
+            {title}
           </h3>
         </div>
 
         <div className="sm:space-y-2 mt-4">
           <p className="flex items-center text-sm font-medium text-gray-700">
             <Calendar className="inline-block w-4 h-4 mr-2 text-flesh-500" />
-            {data.performanceDate}
+            {performanceDate}
             <span className="mx-2">•</span>
             <Clock className="inline-block w-4 h-4 mr-1 text-flesh-500" />
-            {data.performanceTime}
+            {performanceTime}
           </p>
 
           <p className="flex items-start text-sm text-gray-700 font-medium">
@@ -36,14 +56,12 @@ export default function Ticket(data: bookWithPerformance) {
               size={16}
               className="flex-shrink-0 mt-1 text-flesh-500 mr-2"
             />
-            <span className="w-fit">{data.performanceDetails.address}</span>
+            <span className="w-fit">{address}</span>
           </p>
 
           <p className="flex items-start text-sm text-gray-600">
             <Map size={16} className="flex-shrink-0 mt-1 text-flesh-500 mr-2" />
-            <span className="w-fit">
-              {data.performanceDetails.detailAddress}
-            </span>
+            <span className="w-fit">{detailAddress}</span>
           </p>
         </div>
       </div>
@@ -53,13 +71,24 @@ export default function Ticket(data: bookWithPerformance) {
         <div className="flex gap-x-2">
           <div className="w-1/2">
             <div className="bg-flesh-50 bg-opacity-20 rounded-lg p-2 flex flex-col items-center justify-center border border-flesh-100 h-full">
-              <QRCode
-                value={data.reservationId}
-                className="w-full h-auto p-2 bg-white"
-              />
-              <p className="text-xs pt-2 text-gray-500 text-center mt-1 break-keep">
-                입장 시 QR 코드를 보여 주세요
-              </p>
+              {status === " booked" ? (
+                <>
+                  <QRCode
+                    value={reservationId}
+                    className="w-full h-auto p-2 bg-white"
+                  />
+                  <p className="text-xs pt-2 text-gray-500 text-center mt-1 break-keep">
+                    입장 시 QR 코드를 보여 주세요
+                  </p>
+                </>
+              ) : (
+                <>
+                  <Skeleton className="w-full aspect-[1/1] p-2" />
+                  <p className="text-xs pt-2 text-gray-500 text-center mt-1 break-keep">
+                    예약 완료시 QR 코드가 생성됩니다.
+                  </p>
+                </>
+              )}
             </div>
           </div>
 
@@ -67,14 +96,14 @@ export default function Ticket(data: bookWithPerformance) {
             <div className="bg-flesh-50 bg-opacity-20 rounded-lg p-3 border border-flesh-100">
               <p className="text-xs text-flesh-700 mb-2">좌석 번호</p>
               <p className="font-bold text-lg text-flesh-900">
-                {data.selectedSeats.join(", ")}
+                {selectedSeats.join(", ")}
               </p>
             </div>
 
             <div className="bg-flesh-50 bg-opacity-20 rounded-lg p-3 border border-flesh-100">
               <p className="text-xs text-flesh-700 mb-2">예매 번호</p>
               <p className="font-bold text-sm text-flesh-900 break-all">
-                {data.reservationId}
+                {reservationId}
               </p>
             </div>
           </div>

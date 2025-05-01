@@ -38,16 +38,23 @@ export default function ReservationDetail({ bookId }: { bookId: string }) {
         const response = await axios.get(`/api/account/book/${bookId}`);
         setDetailData(response.data);
         const status = response.data.paymentStatus;
-        if (status === "pending") {
-          setPaymentStatus("입금 대기");
-        } else if (status === "booked") {
-          setPaymentStatus("결제 완료");
-        } else if (status === "pendingRefund") {
-          setPaymentStatus("환불 대기");
-        } else if (status === "cancel") {
-          setPaymentStatus("예매 취소");
-        } else {
-          setPaymentStatus("예매중");
+
+        switch (status) {
+          case "pending":
+            setPaymentStatus("입금 대기");
+            break;
+          case "booked":
+            setPaymentStatus("결제 완료");
+            break;
+          case "pendingRefund":
+            setPaymentStatus("환불 대기");
+            break;
+          case "cancel":
+            setPaymentStatus("예매 취소");
+            break;
+          default:
+            setPaymentStatus("예매중");
+            break;
         }
       } catch (error) {
         console.error("Error fetching booking details:", error);
@@ -80,16 +87,18 @@ export default function ReservationDetail({ bookId }: { bookId: string }) {
   };
 
   const handleCheckQrCode = () => {
-    // if (paymentStatus === "미입금") {
-    //   showToast("결제 완료 후 QR 확인이 가능합니다.", "error");
-    // } else if (paymentStatus === "결제 완료") {
-    //   handleShowModal(true);
-    // }
-    handleShowModal(true);
-  };
-
-  const handleModalClose = () => {
-    handleShowModal(false);
+    switch (paymentStatus) {
+      case "예매중":
+        showToast("예매 완료 후 QR 티켓 확인이 가능합니다.", "error");
+        break;
+      case "입금 대기":
+      case "결제 완료":
+        handleShowModal(true);
+        break;
+      default:
+        showToast("예매 취소된 공연은 QR 티켓 확인이 불가합니다.", "error");
+        break;
+    }
   };
 
   const isPerformanceEnded =
@@ -222,14 +231,23 @@ export default function ReservationDetail({ bookId }: { bookId: string }) {
           {/* QR 확인 모달 */}
           <Modal
             isOpen={showModal}
-            onClose={() => handleModalClose()}
+            onClose={() => handleShowModal(false)}
             className="relative p-[0px]"
           >
             <>
-              <Ticket {...detailData} />
+              <Ticket
+                title={detailData.performanceDetails.title}
+                performanceDate={detailData.performanceDate}
+                performanceTime={detailData.performanceTime}
+                address={detailData.performanceDetails.address}
+                detailAddress={detailData.performanceDetails.detailAddress}
+                selectedSeats={detailData.selectedSeats}
+                reservationId={detailData.reservationId}
+                status={detailData.paymentStatus}
+              />
               <CloseButton
                 className="absolute top-6 right-6"
-                onClick={() => handleModalClose()}
+                onClick={() => handleShowModal(false)}
               />
             </>
           </Modal>
