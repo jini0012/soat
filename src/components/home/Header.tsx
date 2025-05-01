@@ -59,7 +59,9 @@ export default function Header() {
   return (
     <header className="relative">
       {/* 메인 헤더 */}
-      <div className="px-4 md:px-[140px] py-4 md:py-[40px] flex items-center justify-between">
+      <div
+        className={`px-4 md:px-[140px] py-4 md:py-[40px] flex items-center justify-between whitespace-nowrap gap-8 ${isMenuOpen && "fixed bg-white w-full z-10"}`}
+      >
         {/* 로고와 검색 영역 */}
         <div className="flex relative">
           <h1>
@@ -184,11 +186,12 @@ export default function Header() {
                         handleLogout(e);
                         toggleMenu();
                       }}
-                      className="text-black flex gap-[5px] items-center p-2 hover:bg-gray-100 rounded"
+                      className="text-black flex gap-[9px] items-center p-2 hover:bg-gray-100 rounded"
                     >
                       <img
                         src="/images/icons/mypage-login-icon.svg"
                         alt="로그아웃"
+                        className="pl-1"
                       />
                       로그아웃
                     </a>
@@ -222,7 +225,7 @@ export default function Header() {
                   <li className="cursor-pointer">
                     <Link
                       href="/login"
-                      className="text-black flex gap-[5px] items-center p-2 hover:bg-gray-100 rounded"
+                      className="text-black flex gap-[9px] items-center p-2 hover:bg-gray-100 rounded"
                       onClick={toggleMenu}
                     >
                       <img
